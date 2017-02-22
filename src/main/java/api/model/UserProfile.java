@@ -5,9 +5,10 @@ import java.util.concurrent.atomic.AtomicLong;
 /**
  * Created by sergeybutorin on 20.02.17.
  */
+
 public class UserProfile {
     private static final AtomicLong ID_GENERATOR = new AtomicLong(0);
-    private long id;
+    private final long id;
     private String login;
     private String email;
     private String password;
