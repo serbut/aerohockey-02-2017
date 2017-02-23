@@ -34,13 +34,17 @@ public class UserController {
         if (StringUtils.isEmpty(login)
                 || StringUtils.isEmpty(password)
                 || StringUtils.isEmpty(email)) {
-            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Wrong parameters");
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(new ErrorResponse("Wrong parameters"));
+        }
+
+        if (httpSession.getAttribute(httpSession.getId()) != null) {
+            return ResponseEntity.status(HttpStatus.FORBIDDEN).body(new ErrorResponse("In this session user already logged in"));
         }
 
         final UserProfile existingUser = accountService.getUser(login);
 
         if (existingUser != null) {
-            return ResponseEntity.status(HttpStatus.CONFLICT).body("User already exists");
+            return ResponseEntity.status(HttpStatus.CONFLICT).body(new ErrorResponse("User already exists"));
         }
 
         final UserProfile newUser = accountService.addUser(login, email, password);
@@ -56,13 +60,17 @@ public class UserController {
 
         if (StringUtils.isEmpty(login)
                 || StringUtils.isEmpty(password)) {
-            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Wrong parameters");
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(new ErrorResponse("Wrong parameters"));
+        }
+
+        if (httpSession.getAttribute(httpSession.getId()) != null) {
+            return ResponseEntity.status(HttpStatus.FORBIDDEN).body(new ErrorResponse("In this session user already logged in"));
         }
 
         final UserProfile user = accountService.getUser(login);
 
         if (user == null) {
-            return ResponseEntity.status(HttpStatus.NOT_FOUND).body("User doesn't exists");
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(new ErrorResponse("User doesn't exists"));
         }
 
         if(user.getPassword().equals(password) && user.getLogin().equals(login)){
@@ -71,14 +79,14 @@ public class UserController {
             return ResponseEntity.ok(new UserResponse(user.getLogin(), user.getEmail()));
         }
 
-        return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("Incorrect login/password");
+        return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(new ErrorResponse("Incorrect login/password"));
     }
 
     @RequestMapping(path = "/api/user", method = RequestMethod.GET, produces = "application/json")
     public ResponseEntity getCurrentUser(HttpSession httpSession) {
         final UserProfile user = accountService.getUser((String)httpSession.getAttribute(httpSession.getId()));
         if (user == null) {
-            return ResponseEntity.status(HttpStatus.FORBIDDEN).body("User not authorized");
+            return ResponseEntity.status(HttpStatus.FORBIDDEN).body(new ErrorResponse("User not authorized"));
         } else {
             return ResponseEntity.ok(new UserResponse(user.getLogin(), user.getEmail()));
         }
@@ -88,18 +96,18 @@ public class UserController {
     public ResponseEntity changePassword(@RequestBody GetUserRequest body, HttpSession httpSession) {
         final UserProfile user = accountService.getUser((String) httpSession.getAttribute(httpSession.getId()));
         if (user == null) {
-            return ResponseEntity.status(HttpStatus.FORBIDDEN).body("User not authorized");
+            return ResponseEntity.status(HttpStatus.FORBIDDEN).body(new ErrorResponse("User not authorised"));
         }
 
         final String oldPassword = body.getOldPassword();
         final String newPassword = body.getPassword();
 
         if (StringUtils.isEmpty(oldPassword) || StringUtils.isEmpty(newPassword)) {
-            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Wrong parameters");
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(new ErrorResponse("Wrong parameters"));
         }
 
         if (!user.getPassword().equals(oldPassword)) {
-            return ResponseEntity.status(HttpStatus.FORBIDDEN).body("Incorrect old password");
+            return ResponseEntity.status(HttpStatus.FORBIDDEN).body(new ErrorResponse("Incorrect old password"));
         }
 
         user.setPassword(newPassword);
@@ -112,7 +120,7 @@ public class UserController {
     public ResponseEntity changeUserData(@RequestBody GetUserRequest body, HttpSession httpSession) {
         final UserProfile user = accountService.getUser((String)httpSession.getAttribute(httpSession.getId()));
         if (user == null) {
-            return ResponseEntity.status(HttpStatus.FORBIDDEN).body("User not authorized");
+            return ResponseEntity.status(HttpStatus.FORBIDDEN).body(new ErrorResponse("User not authorized"));
         } else {
             final String oldLogin = user.getLogin();
             final String newLogin = body.getLogin();
@@ -137,7 +145,7 @@ public class UserController {
             httpSession.removeAttribute(httpSession.getId());
             return ResponseEntity.ok("User logged out");
         }
-        return ResponseEntity.status(HttpStatus.FORBIDDEN).body("User not authorized");
+        return ResponseEntity.status(HttpStatus.FORBIDDEN).body(new ErrorResponse("User not authorized"));
     }
 
     private static final class GetUserRequest {
@@ -196,6 +204,20 @@ public class UserController {
         @SuppressWarnings("unused")
         public String getEmail() {
             return email;
+        }
+    }
+
+    private static final class ErrorResponse {
+
+        private final String error;
+
+        ErrorResponse(String error) {
+            this.error = error;
+        }
+
+        @SuppressWarnings("unused")
+        public String getError() {
+            return error;
         }
     }
 }
