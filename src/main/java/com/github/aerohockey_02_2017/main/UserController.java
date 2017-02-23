@@ -16,7 +16,8 @@ import javax.servlet.http.HttpSession;
  */
 
 @RestController
-@CrossOrigin(origins = "https://myfastball3.herokuapp.com")
+@CrossOrigin(origins = "https://app.swaggerhub.com/")
+//@CrossOrigin(origins = "https://myfastball3.herokuapp.com")
 public class UserController {
     private final AccountService accountService;
 
