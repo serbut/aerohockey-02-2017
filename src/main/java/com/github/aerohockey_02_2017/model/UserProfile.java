@@ -1,4 +1,4 @@
-package api.model;
+package com.github.aerohockey_02_2017.model;
 
 import java.util.concurrent.atomic.AtomicLong;
 

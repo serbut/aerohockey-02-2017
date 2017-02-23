@@ -1,6 +1,6 @@
-package api.services;
+package com.github.aerohockey_02_2017.services;
 
-import api.model.UserProfile;
+import com.github.aerohockey_02_2017.model.UserProfile;
 import org.springframework.stereotype.Service;
 
 import javax.validation.constraints.NotNull;

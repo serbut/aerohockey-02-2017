@@ -1,13 +1,14 @@
-package api.main;
+package com.github.aerohockey_02_2017.main;
 
-import api.model.UserProfile;
+import com.github.aerohockey_02_2017.model.UserProfile;
+import com.github.aerohockey_02_2017.services.AccountService;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.util.StringUtils;
 import org.springframework.web.bind.annotation.*;
-import api.services.AccountService;
+
 import javax.servlet.http.HttpSession;
 
 /**
@@ -130,42 +131,13 @@ public class UserController {
     }
 
     @RequestMapping(path = "/api/logout", method = RequestMethod.POST)
-    public HttpStatus logout(HttpSession httpSession) {
-        httpSession.removeAttribute(httpSession.getId());
-        return HttpStatus.OK;
+    public ResponseEntity logout(HttpSession httpSession) {
+        if (httpSession.getAttribute(httpSession.getId()) != null) {
+            httpSession.removeAttribute(httpSession.getId());
+            return ResponseEntity.ok("User logged out");
+        }
+        return ResponseEntity.status(HttpStatus.FORBIDDEN).body("User not authorized");
     }
-
-//    private static final class GetUserRequest {
-//        @JsonProperty("login")
-//        private String login;
-//        @JsonProperty("password")
-//        private String password;
-//        @JsonProperty("email")
-//        private String email;
-//
-//        @SuppressWarnings("unused")
-//        private GetUserRequest() {
-//        }
-//
-//        @SuppressWarnings("unused")
-//        private GetUserRequest(String login, String password, String email) {
-//            this.login = login;
-//            this.password = password;
-//            this.email = email;
-//        }
-//
-//        public String getLogin() {
-//            return login;
-//        }
-//
-//        public String getPassword() {
-//            return password;
-//        }
-//
-//        public String getEmail() {
-//            return email;
-//        }
-//    }
 
     private static final class GetUserRequest {
         @JsonProperty("login")
