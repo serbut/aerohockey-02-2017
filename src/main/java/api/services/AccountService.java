@@ -28,6 +28,6 @@ public class AccountService {
 
     public void changeData(String login, UserProfile newUser) {
         userNameToUserProfile.remove(login);
-        userNameToUserProfile.put(login, newUser);
+        userNameToUserProfile.put(newUser.getLogin(), newUser);
     }
 }

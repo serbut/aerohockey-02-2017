@@ -15,11 +15,11 @@ import javax.servlet.http.HttpSession;
  */
 
 @RestController
-public class RegistrationController {
+public class UserController {
     private final AccountService accountService;
 
     @Autowired
-    public RegistrationController(AccountService accountService) {
+    public UserController(AccountService accountService) {
         this.accountService = accountService;
     }
 
@@ -44,26 +44,31 @@ public class RegistrationController {
         final UserProfile newUser = accountService.addUser(login, email, password);
         final String sessionId = httpSession.getId();
         httpSession.setAttribute(sessionId, newUser.getLogin());
-        return ResponseEntity.ok("User " + login + " successfully registered. ID = " + newUser.getId());
+        return ResponseEntity.ok(new UserResponse(newUser.getLogin(), newUser.getEmail()));
     }
 
     @RequestMapping(path = "/api/login", method = RequestMethod.POST, produces = "application/json", consumes = "application/json")
     public ResponseEntity login(@RequestBody GetUserRequest body, HttpSession httpSession) {
         final String login = body.getLogin();
         final String password = body.getPassword();
+
         if (StringUtils.isEmpty(login)
                 || StringUtils.isEmpty(password)) {
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Wrong parameters");
         }
+
         final UserProfile user = accountService.getUser(login);
+
         if (user == null) {
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body("User doesn't exists");
         }
-        if(user.getPassword().equals(password)){
+
+        if(user.getPassword().equals(password) && user.getLogin().equals(login)){
             final String sessionId = httpSession.getId();
             httpSession.setAttribute(sessionId, user.getLogin());
-            return ResponseEntity.ok("User " + login + " successfully logged in");
+            return ResponseEntity.ok(new UserResponse(user.getLogin(), user.getEmail()));
         }
+
         return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("Incorrect login/password");
     }
 
@@ -73,19 +78,42 @@ public class RegistrationController {
         if (user == null) {
             return ResponseEntity.status(HttpStatus.FORBIDDEN).body("User not authorized");
         } else {
-            return ResponseEntity.ok("Current user id = " + user.getId() + "; Login: " + user.getLogin());
+            return ResponseEntity.ok(new UserResponse(user.getLogin(), user.getEmail()));
         }
     }
 
-    @RequestMapping(path = "/api/change-user-data", method = RequestMethod.POST)
-    public ResponseEntity changeUserData(UserNewDataRequest body, HttpSession httpSession) {
+    @RequestMapping(path = "/api/change-password", method = RequestMethod.POST, produces = "application/json", consumes = "application/json")
+    public ResponseEntity changePassword(@RequestBody GetUserRequest body, HttpSession httpSession) {
+        final UserProfile user = accountService.getUser((String) httpSession.getAttribute(httpSession.getId()));
+        if (user == null) {
+            return ResponseEntity.status(HttpStatus.FORBIDDEN).body("User not authorized");
+        }
+
+        final String oldPassword = body.getOldPassword();
+        final String newPassword = body.getPassword();
+
+        if (StringUtils.isEmpty(oldPassword) || StringUtils.isEmpty(newPassword)) {
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Wrong parameters");
+        }
+
+        if (!user.getPassword().equals(oldPassword)) {
+            return ResponseEntity.status(HttpStatus.FORBIDDEN).body("Incorrect old password");
+        }
+
+        user.setPassword(newPassword);
+        accountService.changeData(user.getLogin(), user);
+        return ResponseEntity.ok(new UserResponse(user.getLogin(), user.getEmail()));
+
+    }
+
+    @RequestMapping(path = "/api/change-user-data", method = RequestMethod.POST, produces = "application/json", consumes = "application/json")
+    public ResponseEntity changeUserData(@RequestBody GetUserRequest body, HttpSession httpSession) {
         final UserProfile user = accountService.getUser((String)httpSession.getAttribute(httpSession.getId()));
         if (user == null) {
             return ResponseEntity.status(HttpStatus.FORBIDDEN).body("User not authorized");
         } else {
+            final String oldLogin = user.getLogin();
             final String newLogin = body.getLogin();
-            final String oldPassword = body.getOldPassword();
-            final String newPassword = body.getPassword();
             final String newEmail = body.getEmail();
 
             if(!StringUtils.isEmpty(newLogin)) {
@@ -96,13 +124,8 @@ public class RegistrationController {
                 user.setEmail(newEmail);
             }
 
-            if(!StringUtils.isEmpty(oldPassword) && !StringUtils.isEmpty(newPassword)) {
-                if(user.getPassword().equals(oldPassword)){
-                    user.setPassword(newPassword);
-                }
-            }
-            //accountService.changeData(user);
-            return ResponseEntity.ok("Current user id = " + user.getId() + "; Login: " + user.getLogin());
+            accountService.changeData(oldLogin, user);
+            return ResponseEntity.ok(new UserResponse(user.getLogin(), user.getEmail()));
         }
     }
 
@@ -112,39 +135,39 @@ public class RegistrationController {
         return HttpStatus.OK;
     }
 
+//    private static final class GetUserRequest {
+//        @JsonProperty("login")
+//        private String login;
+//        @JsonProperty("password")
+//        private String password;
+//        @JsonProperty("email")
+//        private String email;
+//
+//        @SuppressWarnings("unused")
+//        private GetUserRequest() {
+//        }
+//
+//        @SuppressWarnings("unused")
+//        private GetUserRequest(String login, String password, String email) {
+//            this.login = login;
+//            this.password = password;
+//            this.email = email;
+//        }
+//
+//        public String getLogin() {
+//            return login;
+//        }
+//
+//        public String getPassword() {
+//            return password;
+//        }
+//
+//        public String getEmail() {
+//            return email;
+//        }
+//    }
+
     private static final class GetUserRequest {
-        @JsonProperty("login")
-        private String login;
-        @JsonProperty("password")
-        private String password;
-        @JsonProperty("email")
-        private String email;
-
-        @SuppressWarnings("unused")
-        private GetUserRequest() {
-        }
-
-        @SuppressWarnings("unused")
-        private GetUserRequest(String login, String password, String email) {
-            this.login = login;
-            this.password = password;
-            this.email = email;
-        }
-
-        public String getLogin() {
-            return login;
-        }
-
-        public String getPassword() {
-            return password;
-        }
-
-        public String getEmail() {
-            return email;
-        }
-    }
-
-    private static final class UserNewDataRequest {
         @JsonProperty("login")
         private String login;
         @JsonProperty("old-password")
@@ -155,11 +178,11 @@ public class RegistrationController {
         private String email;
 
         @SuppressWarnings("unused")
-        private UserNewDataRequest() {
+        private GetUserRequest() {
         }
 
         @SuppressWarnings("unused")
-        private UserNewDataRequest(String login, String oldPassword, String password, String email) {
+        private GetUserRequest(String login, String oldPassword, String password, String email) {
             this.login = login;
             this.oldPassword = oldPassword;
             this.password = password;
@@ -178,6 +201,26 @@ public class RegistrationController {
             return password;
         }
 
+        public String getEmail() {
+            return email;
+        }
+    }
+
+    private static final class UserResponse {
+        private final String login;
+        private final String email;
+
+        UserResponse(String login, String email) {
+            this.login = login;
+            this.email = email;
+        }
+
+        @SuppressWarnings("unused")
+        public String getLogin() {
+            return login;
+        }
+
+        @SuppressWarnings("unused")
         public String getEmail() {
             return email;
         }
