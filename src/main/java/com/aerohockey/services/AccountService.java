@@ -1,6 +1,6 @@
-package com.github.aerohockey_02_2017.services;
+package com.aerohockey.services;
 
-import com.github.aerohockey_02_2017.model.UserProfile;
+import com.aerohockey.model.UserProfile;
 import org.springframework.stereotype.Service;
 
 import javax.validation.constraints.NotNull;
@@ -22,12 +22,11 @@ public class AccountService {
         return newUser;
     }
 
-    public UserProfile getUser(String login) {
+    public UserProfile getUserByLogin(String login) {
         return userNameToUserProfile.get(login);
     }
 
-    public void changeData(String login, UserProfile newUser) {
-        userNameToUserProfile.remove(login);
-        userNameToUserProfile.put(newUser.getLogin(), newUser);
+    public void changeData(UserProfile newUser) {
+        userNameToUserProfile.replace(newUser.getLogin(), newUser);
     }
 }

@@ -1,4 +1,4 @@
-package com.github.aerohockey_02_2017.model;
+package com.aerohockey.model;
 
 import java.util.concurrent.atomic.AtomicLong;
 
@@ -9,7 +9,7 @@ import java.util.concurrent.atomic.AtomicLong;
 public class UserProfile {
     private static final AtomicLong ID_GENERATOR = new AtomicLong(0);
     private final long id;
-    private String login;
+    private final String login;
     private String email;
     private String password;
 
@@ -19,6 +19,13 @@ public class UserProfile {
         this.email = email;
         this.password = password;
     }
+
+    /*public UserProfile(long id, String login, String email, String password) {
+        this.id = id;
+        this.login = login;
+        this.email = email;
+        this.password = password;
+    }*/
 
     @SuppressWarnings("unused")
     public long getId() {
@@ -38,10 +45,6 @@ public class UserProfile {
     @SuppressWarnings("unused")
     public String getEmail() {
         return email;
-    }
-
-    public void setLogin(String login) {
-        this.login = login;
     }
 
     public void setEmail(String email) {

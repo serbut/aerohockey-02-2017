@@ -1,7 +1,7 @@
-package com.github.aerohockey_02_2017.main;
+package com.aerohockey.main;
 
-import com.github.aerohockey_02_2017.model.UserProfile;
-import com.github.aerohockey_02_2017.services.AccountService;
+import com.aerohockey.model.UserProfile;
+import com.aerohockey.services.AccountService;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -37,20 +37,19 @@ public class UserController {
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(new ErrorResponse("Wrong parameters"));
         }
 
-        if (httpSession.getAttribute(httpSession.getId()) != null) {
+        if (httpSession.getAttribute("userLogin") != null) {
             return ResponseEntity.status(HttpStatus.FORBIDDEN).body(new ErrorResponse("In this session user already logged in"));
         }
 
-        final UserProfile existingUser = accountService.getUser(login);
+        final UserProfile existingUser = accountService.getUserByLogin(login);
 
         if (existingUser != null) {
             return ResponseEntity.status(HttpStatus.CONFLICT).body(new ErrorResponse("User already exists"));
         }
 
         final UserProfile newUser = accountService.addUser(login, email, password);
-        final String sessionId = httpSession.getId();
-        httpSession.setAttribute(sessionId, newUser.getLogin());
-        return ResponseEntity.ok(new UserResponse(newUser.getLogin(), newUser.getEmail()));
+        httpSession.setAttribute("userLogin", newUser.getLogin());
+        return ResponseEntity.ok(new UserResponse(newUser.getId(), newUser.getLogin(), newUser.getEmail()));
     }
 
     @RequestMapping(path = "/api/login", method = RequestMethod.POST, produces = "application/json", consumes = "application/json")
@@ -63,20 +62,19 @@ public class UserController {
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(new ErrorResponse("Wrong parameters"));
         }
 
-        if (httpSession.getAttribute(httpSession.getId()) != null) {
+        if (httpSession.getAttribute("userLogin") != null) {
             return ResponseEntity.status(HttpStatus.FORBIDDEN).body(new ErrorResponse("In this session user already logged in"));
         }
 
-        final UserProfile user = accountService.getUser(login);
+        final UserProfile user = accountService.getUserByLogin(login);
 
         if (user == null) {
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body(new ErrorResponse("User doesn't exists"));
         }
 
         if (user.getPassword().equals(password) && user.getLogin().equals(login)) {
-            final String sessionId = httpSession.getId();
-            httpSession.setAttribute(sessionId, user.getLogin());
-            return ResponseEntity.ok(new UserResponse(user.getLogin(), user.getEmail()));
+            httpSession.setAttribute("userLogin", user.getLogin());
+            return ResponseEntity.ok(new UserResponse(user.getId(), user.getLogin(), user.getEmail()));
         }
 
         return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(new ErrorResponse("Incorrect login/password"));
@@ -84,17 +82,17 @@ public class UserController {
 
     @RequestMapping(path = "/api/user", method = RequestMethod.GET, produces = "application/json")
     public ResponseEntity getCurrentUser(HttpSession httpSession) {
-        final UserProfile user = accountService.getUser((String) httpSession.getAttribute(httpSession.getId()));
+        final UserProfile user = accountService.getUserByLogin((String) httpSession.getAttribute("userLogin"));
         if (user == null) {
             return ResponseEntity.status(HttpStatus.FORBIDDEN).body(new ErrorResponse("User not authorized"));
         } else {
-            return ResponseEntity.ok(new UserResponse(user.getLogin(), user.getEmail()));
+            return ResponseEntity.ok(new UserResponse(user.getId(), user.getLogin(), user.getEmail()));
         }
     }
 
     @RequestMapping(path = "/api/change-password", method = RequestMethod.POST, produces = "application/json", consumes = "application/json")
     public ResponseEntity changePassword(@RequestBody GetUserRequest body, HttpSession httpSession) {
-        final UserProfile user = accountService.getUser((String) httpSession.getAttribute(httpSession.getId()));
+        final UserProfile user = accountService.getUserByLogin((String) httpSession.getAttribute("userLogin"));
         if (user == null) {
             return ResponseEntity.status(HttpStatus.FORBIDDEN).body(new ErrorResponse("User not authorised"));
         }
@@ -111,38 +109,32 @@ public class UserController {
         }
 
         user.setPassword(newPassword);
-        accountService.changeData(user.getLogin(), user);
-        return ResponseEntity.ok(new UserResponse(user.getLogin(), user.getEmail()));
+        accountService.changeData(user);
+        return ResponseEntity.ok(new UserResponse(user.getId(), user.getLogin(), user.getEmail()));
 
     }
 
     @RequestMapping(path = "/api/change-user-data", method = RequestMethod.POST, produces = "application/json", consumes = "application/json")
     public ResponseEntity changeUserData(@RequestBody GetUserRequest body, HttpSession httpSession) {
-        final UserProfile user = accountService.getUser((String) httpSession.getAttribute(httpSession.getId()));
+        final UserProfile user = accountService.getUserByLogin((String) httpSession.getAttribute("userLogin"));
         if (user == null) {
             return ResponseEntity.status(HttpStatus.FORBIDDEN).body(new ErrorResponse("User not authorized"));
         } else {
-            final String oldLogin = user.getLogin();
-            final String newLogin = body.getLogin();
             final String newEmail = body.getEmail();
-
-            if (!StringUtils.isEmpty(newLogin)) {
-                user.setLogin(newLogin);
-            }
 
             if (!StringUtils.isEmpty(newEmail)) {
                 user.setEmail(newEmail);
             }
 
-            accountService.changeData(oldLogin, user);
-            return ResponseEntity.ok(new UserResponse(user.getLogin(), user.getEmail()));
+            accountService.changeData(user);
+            return ResponseEntity.ok(new UserResponse(user.getId(), user.getLogin(), user.getEmail()));
         }
     }
 
     @RequestMapping(path = "/api/logout", method = RequestMethod.POST)
     public ResponseEntity logout(HttpSession httpSession) {
-        if (httpSession.getAttribute(httpSession.getId()) != null) {
-            httpSession.removeAttribute(httpSession.getId());
+        if (httpSession.getAttribute("userLogin") != null) {
+            httpSession.removeAttribute("userLogin");
             return ResponseEntity.ok("User logged out");
         }
         return ResponseEntity.status(HttpStatus.FORBIDDEN).body(new ErrorResponse("User not authorized"));
@@ -188,12 +180,19 @@ public class UserController {
     }
 
     private static final class UserResponse {
+        private final long id;
         private final String login;
         private final String email;
 
-        UserResponse(String login, String email) {
+        UserResponse(long id, String login, String email) {
+            this.id = id;
             this.login = login;
             this.email = email;
+        }
+
+        @SuppressWarnings("unused")
+        public long getId() {
+            return id;
         }
 
         @SuppressWarnings("unused")

@@ -1,4 +1,4 @@
-package com.github.aerohockey_02_2017;
+package com.aerohockey;
 
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
