@@ -16,7 +16,7 @@ import javax.servlet.http.HttpSession;
  */
 
 @RestController
-@CrossOrigin(origins = "https://myfastball3.herokuapp.com")
+@CrossOrigin(origins = {"https://myfastball3.herokuapp.com", "http://localhost", "http://127.0.0.1"})
 public class UserController {
     private final AccountService accountService;
 
@@ -73,7 +73,7 @@ public class UserController {
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body(new ErrorResponse("User doesn't exists"));
         }
 
-        if(user.getPassword().equals(password) && user.getLogin().equals(login)){
+        if (user.getPassword().equals(password) && user.getLogin().equals(login)) {
             final String sessionId = httpSession.getId();
             httpSession.setAttribute(sessionId, user.getLogin());
             return ResponseEntity.ok(new UserResponse(user.getLogin(), user.getEmail()));
@@ -84,7 +84,7 @@ public class UserController {
 
     @RequestMapping(path = "/api/user", method = RequestMethod.GET, produces = "application/json")
     public ResponseEntity getCurrentUser(HttpSession httpSession) {
-        final UserProfile user = accountService.getUser((String)httpSession.getAttribute(httpSession.getId()));
+        final UserProfile user = accountService.getUser((String) httpSession.getAttribute(httpSession.getId()));
         if (user == null) {
             return ResponseEntity.status(HttpStatus.FORBIDDEN).body(new ErrorResponse("User not authorized"));
         } else {
@@ -118,7 +118,7 @@ public class UserController {
 
     @RequestMapping(path = "/api/change-user-data", method = RequestMethod.POST, produces = "application/json", consumes = "application/json")
     public ResponseEntity changeUserData(@RequestBody GetUserRequest body, HttpSession httpSession) {
-        final UserProfile user = accountService.getUser((String)httpSession.getAttribute(httpSession.getId()));
+        final UserProfile user = accountService.getUser((String) httpSession.getAttribute(httpSession.getId()));
         if (user == null) {
             return ResponseEntity.status(HttpStatus.FORBIDDEN).body(new ErrorResponse("User not authorized"));
         } else {
@@ -126,11 +126,11 @@ public class UserController {
             final String newLogin = body.getLogin();
             final String newEmail = body.getEmail();
 
-            if(!StringUtils.isEmpty(newLogin)) {
+            if (!StringUtils.isEmpty(newLogin)) {
                 user.setLogin(newLogin);
             }
 
-            if(!StringUtils.isEmpty(newEmail)) {
+            if (!StringUtils.isEmpty(newEmail)) {
                 user.setEmail(newEmail);
             }
 
