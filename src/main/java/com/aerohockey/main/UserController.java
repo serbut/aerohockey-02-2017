@@ -17,7 +17,6 @@ import javax.servlet.http.HttpSession;
 
 @RestController
 @CrossOrigin(origins = {"https://myfastball3.herokuapp.com", "http://localhost:3000", "http://127.0.0.1:3000"})
-@SessionAttributes("userLogin")
 public class UserController {
     private final AccountService accountService;
 
@@ -135,7 +134,7 @@ public class UserController {
     @RequestMapping(path = "/api/logout", method = RequestMethod.POST)
     public ResponseEntity logout(HttpSession httpSession) {
         if (httpSession.getAttribute("userLogin") != null) {
-            httpSession.removeAttribute("userLogin");
+            httpSession.invalidate();
             return ResponseEntity.ok("User logged out");
         }
         return ResponseEntity.status(HttpStatus.FORBIDDEN).body(new ErrorResponse("User not authorized"));
