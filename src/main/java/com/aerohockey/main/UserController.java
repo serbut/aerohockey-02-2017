@@ -3,6 +3,8 @@ package com.aerohockey.main;
 import com.aerohockey.model.UserProfile;
 import com.aerohockey.services.AccountService;
 import com.fasterxml.jackson.annotation.JsonProperty;
+import org.json.simple.JSONArray;
+import org.json.simple.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -10,6 +12,7 @@ import org.springframework.util.StringUtils;
 import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpSession;
+import java.util.List;
 
 /**
  * Created by sergeybutorin on 20.02.17.
@@ -49,7 +52,7 @@ public class UserController {
 
         final UserProfile newUser = accountService.addUser(login, email, password);
         httpSession.setAttribute("userLogin", newUser.getLogin());
-        return ResponseEntity.ok(new UserResponse(newUser.getId(), newUser.getLogin(), newUser.getEmail()));
+        return ResponseEntity.ok(UserResponse(newUser.getId(), newUser.getLogin(), newUser.getEmail()));
     }
 
     @RequestMapping(path = "/api/login", method = RequestMethod.POST, produces = "application/json", consumes = "application/json")
@@ -74,7 +77,7 @@ public class UserController {
 
         if (user.getPassword().equals(password) && user.getLogin().equals(login)) {
             httpSession.setAttribute("userLogin", user.getLogin());
-            return ResponseEntity.ok(new UserResponse(user.getId(), user.getLogin(), user.getEmail()));
+            return ResponseEntity.ok(UserResponse(user.getId(), user.getLogin(), user.getEmail()));
         }
 
         return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(new ErrorResponse("Incorrect login/password"));
@@ -86,8 +89,14 @@ public class UserController {
         if (user == null) {
             return ResponseEntity.status(HttpStatus.FORBIDDEN).body(new ErrorResponse("User not authorized"));
         } else {
-            return ResponseEntity.ok(new UserResponse(user.getId(), user.getLogin(), user.getEmail()));
+            return ResponseEntity.ok(UserResponse(user.getId(), user.getLogin(), user.getEmail()));
         }
+    }
+
+    @RequestMapping(path = "/api/leaderboard", method = RequestMethod.GET, produces = "application/json")
+    public ResponseEntity getLeadearboard() {
+        final List<UserProfile> users = accountService.getLeaders();
+        return ResponseEntity.ok(LeaderboardResponse(users));
     }
 
     @RequestMapping(path = "/api/change-password", method = RequestMethod.POST, produces = "application/json", consumes = "application/json")
@@ -110,7 +119,7 @@ public class UserController {
 
         user.setPassword(newPassword);
         accountService.changeData(user);
-        return ResponseEntity.ok(new UserResponse(user.getId(), user.getLogin(), user.getEmail()));
+        return ResponseEntity.ok(UserResponse(user.getId(), user.getLogin(), user.getEmail()));
 
     }
 
@@ -127,7 +136,7 @@ public class UserController {
             }
 
             accountService.changeData(user);
-            return ResponseEntity.ok(new UserResponse(user.getId(), user.getLogin(), user.getEmail()));
+            return ResponseEntity.ok(UserResponse(user.getId(), user.getLogin(), user.getEmail()));
         }
     }
 
@@ -179,33 +188,6 @@ public class UserController {
         }
     }
 
-    private static final class UserResponse {
-        private final long id;
-        private final String login;
-        private final String email;
-
-        UserResponse(long id, String login, String email) {
-            this.id = id;
-            this.login = login;
-            this.email = email;
-        }
-
-        @SuppressWarnings("unused")
-        public long getId() {
-            return id;
-        }
-
-        @SuppressWarnings("unused")
-        public String getLogin() {
-            return login;
-        }
-
-        @SuppressWarnings("unused")
-        public String getEmail() {
-            return email;
-        }
-    }
-
     private static final class ErrorResponse {
 
         private final String error;
@@ -218,5 +200,21 @@ public class UserController {
         public String getError() {
             return error;
         }
+    }
+
+    private static JSONObject UserResponse(long id, String login, String email) {
+        JSONObject userDetailsJson = new JSONObject();
+        userDetailsJson.put("id", id);
+        userDetailsJson.put("login", login);
+        userDetailsJson.put("email", email);
+        return userDetailsJson;
+    }
+
+    private String LeaderboardResponse(List<UserProfile> users) {
+        JSONArray jsonArray = new JSONArray();
+        for(UserProfile u : users) {
+            jsonArray.add(UserResponse(u.getId(), u.getLogin(), u.getEmail()));
+        }
+        return jsonArray.toString();
     }
 }

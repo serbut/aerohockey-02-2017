@@ -4,7 +4,9 @@ import com.aerohockey.model.UserProfile;
 import org.springframework.stereotype.Service;
 
 import javax.validation.constraints.NotNull;
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 /**
@@ -24,6 +26,14 @@ public class AccountService {
 
     public UserProfile getUserByLogin(String login) {
         return userNameToUserProfile.get(login);
+    }
+
+    public List<UserProfile> getLeaders() {
+        final List<UserProfile> leaders = new ArrayList<>();
+        for (UserProfile user : userNameToUserProfile.values()) {
+            leaders.add(user);
+        }
+        return leaders;
     }
 
     public void changeData(UserProfile newUser) {
