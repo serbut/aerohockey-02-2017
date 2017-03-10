@@ -1,6 +1,8 @@
 package com.aerohockey.model;
 
 import java.util.concurrent.atomic.AtomicLong;
+import java.util.Random;
+
 
 /**
  * Created by sergeybutorin on 20.02.17.
@@ -8,24 +10,21 @@ import java.util.concurrent.atomic.AtomicLong;
 
 public class UserProfile {
     private static final AtomicLong ID_GENERATOR = new AtomicLong(0);
+    static final Random randomGenerator = new Random();
+
     private final long id;
     private final String login;
     private String email;
     private String password;
+    private int rating;
 
     public UserProfile(String login, String email, String password) {
         this.id = ID_GENERATOR.getAndIncrement();
         this.login = login;
         this.email = email;
         this.password = password;
+        this.rating = randomGenerator.nextInt(100);
     }
-
-    /*public UserProfile(long id, String login, String email, String password) {
-        this.id = id;
-        this.login = login;
-        this.email = email;
-        this.password = password;
-    }*/
 
     @SuppressWarnings("unused")
     public long getId() {
@@ -45,6 +44,11 @@ public class UserProfile {
     @SuppressWarnings("unused")
     public String getEmail() {
         return email;
+    }
+
+    @SuppressWarnings("unused")
+    public int getRating() {
+        return rating;
     }
 
     public void setEmail(String email) {

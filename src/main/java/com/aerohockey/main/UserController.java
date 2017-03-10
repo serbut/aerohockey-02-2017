@@ -18,6 +18,7 @@ import java.util.List;
  * Created by sergeybutorin on 20.02.17.
  */
 
+@SuppressWarnings("unchecked")
 @RestController
 @CrossOrigin(origins = {"https://myfastball3.herokuapp.com", "http://localhost:3000", "http://127.0.0.1:3000"})
 public class UserController {
@@ -52,7 +53,7 @@ public class UserController {
 
         final UserProfile newUser = accountService.addUser(login, email, password);
         httpSession.setAttribute("userLogin", newUser.getLogin());
-        return ResponseEntity.ok(UserResponse(newUser.getId(), newUser.getLogin(), newUser.getEmail()));
+        return ResponseEntity.ok(userResponse(newUser));
     }
 
     @RequestMapping(path = "/api/login", method = RequestMethod.POST, produces = "application/json", consumes = "application/json")
@@ -77,7 +78,7 @@ public class UserController {
 
         if (user.getPassword().equals(password) && user.getLogin().equals(login)) {
             httpSession.setAttribute("userLogin", user.getLogin());
-            return ResponseEntity.ok(UserResponse(user.getId(), user.getLogin(), user.getEmail()));
+            return ResponseEntity.ok(userResponse(user));
         }
 
         return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(new ErrorResponse("Incorrect login/password"));
@@ -89,14 +90,14 @@ public class UserController {
         if (user == null) {
             return ResponseEntity.status(HttpStatus.FORBIDDEN).body(new ErrorResponse("User not authorized"));
         } else {
-            return ResponseEntity.ok(UserResponse(user.getId(), user.getLogin(), user.getEmail()));
+            return ResponseEntity.ok(userResponse(user));
         }
     }
 
     @RequestMapping(path = "/api/leaderboard", method = RequestMethod.GET, produces = "application/json")
-    public ResponseEntity getLeadearboard() {
+    public ResponseEntity<String> getLeadearboard() {
         final List<UserProfile> users = accountService.getLeaders();
-        return ResponseEntity.ok(LeaderboardResponse(users));
+        return ResponseEntity.ok(leaderboardResponse(users).toJSONString());
     }
 
     @RequestMapping(path = "/api/change-password", method = RequestMethod.POST, produces = "application/json", consumes = "application/json")
@@ -119,7 +120,7 @@ public class UserController {
 
         user.setPassword(newPassword);
         accountService.changeData(user);
-        return ResponseEntity.ok(UserResponse(user.getId(), user.getLogin(), user.getEmail()));
+        return ResponseEntity.ok(userResponse(user));
 
     }
 
@@ -136,7 +137,7 @@ public class UserController {
             }
 
             accountService.changeData(user);
-            return ResponseEntity.ok(UserResponse(user.getId(), user.getLogin(), user.getEmail()));
+            return ResponseEntity.ok(userResponse(user));
         }
     }
 
@@ -202,19 +203,20 @@ public class UserController {
         }
     }
 
-    private static JSONObject UserResponse(long id, String login, String email) {
-        JSONObject userDetailsJson = new JSONObject();
-        userDetailsJson.put("id", id);
-        userDetailsJson.put("login", login);
-        userDetailsJson.put("email", email);
+    private static JSONObject userResponse(UserProfile userProfile) {
+        final JSONObject userDetailsJson = new JSONObject();
+        userDetailsJson.put("id", userProfile.getId());
+        userDetailsJson.put("login", userProfile.getLogin());
+        userDetailsJson.put("email", userProfile.getEmail());
+        userDetailsJson.put("rating", userProfile.getRating());
         return userDetailsJson;
     }
 
-    private String LeaderboardResponse(List<UserProfile> users) {
-        JSONArray jsonArray = new JSONArray();
+    private JSONArray leaderboardResponse(List<UserProfile> users) {
+        final JSONArray jsonArray = new JSONArray();
         for(UserProfile u : users) {
-            jsonArray.add(UserResponse(u.getId(), u.getLogin(), u.getEmail()));
+            jsonArray.add(userResponse(u));
         }
-        return jsonArray.toString();
+        return jsonArray;
     }
 }
