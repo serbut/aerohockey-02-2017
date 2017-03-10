@@ -30,7 +30,7 @@ public class UserController {
     }
 
     @RequestMapping(path = "/api/signup", method = RequestMethod.POST, produces = "application/json", consumes = "application/json")
-    public ResponseEntity signup(@RequestBody GetUserRequest body, HttpSession httpSession) {
+    public ResponseEntity signup(@RequestBody UserProfile body, HttpSession httpSession) {
         final String login = body.getLogin();
         final String password = body.getPassword();
         final String email = body.getEmail();
@@ -57,7 +57,7 @@ public class UserController {
     }
 
     @RequestMapping(path = "/api/login", method = RequestMethod.POST, produces = "application/json", consumes = "application/json")
-    public ResponseEntity login(@RequestBody GetUserRequest body, HttpSession httpSession) {
+    public ResponseEntity login(@RequestBody UserProfile body, HttpSession httpSession) {
         final String login = body.getLogin();
         final String password = body.getPassword();
 
@@ -73,7 +73,7 @@ public class UserController {
         final UserProfile user = accountService.getUserByLogin(login);
 
         if (user == null) {
-            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(new ErrorResponse("User doesn't exists"));
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(new ErrorResponse("Incorrect login/password"));
         }
 
         if (user.getPassword().equals(password) && user.getLogin().equals(login)) {
@@ -101,7 +101,7 @@ public class UserController {
     }
 
     @RequestMapping(path = "/api/change-password", method = RequestMethod.POST, produces = "application/json", consumes = "application/json")
-    public ResponseEntity changePassword(@RequestBody GetUserRequest body, HttpSession httpSession) {
+    public ResponseEntity changePassword(@RequestBody UserProfile body, HttpSession httpSession) {
         final UserProfile user = accountService.getUserByLogin((String) httpSession.getAttribute("userLogin"));
         if (user == null) {
             return ResponseEntity.status(HttpStatus.FORBIDDEN).body(new ErrorResponse("User not authorised"));
@@ -125,7 +125,7 @@ public class UserController {
     }
 
     @RequestMapping(path = "/api/change-user-data", method = RequestMethod.POST, produces = "application/json", consumes = "application/json")
-    public ResponseEntity changeUserData(@RequestBody GetUserRequest body, HttpSession httpSession) {
+    public ResponseEntity changeUserData(@RequestBody UserProfile body, HttpSession httpSession) {
         final UserProfile user = accountService.getUserByLogin((String) httpSession.getAttribute("userLogin"));
         if (user == null) {
             return ResponseEntity.status(HttpStatus.FORBIDDEN).body(new ErrorResponse("User not authorized"));
@@ -148,45 +148,6 @@ public class UserController {
             return ResponseEntity.ok("User logged out");
         }
         return ResponseEntity.status(HttpStatus.FORBIDDEN).body(new ErrorResponse("User not authorized"));
-    }
-
-    private static final class GetUserRequest {
-        @JsonProperty("login")
-        private String login;
-        @JsonProperty("old-password")
-        private String oldPassword;
-        @JsonProperty("password")
-        private String password;
-        @JsonProperty("email")
-        private String email;
-
-        @SuppressWarnings("unused")
-        private GetUserRequest() {
-        }
-
-        @SuppressWarnings("unused")
-        private GetUserRequest(String login, String oldPassword, String password, String email) {
-            this.login = login;
-            this.oldPassword = oldPassword;
-            this.password = password;
-            this.email = email;
-        }
-
-        public String getLogin() {
-            return login;
-        }
-
-        public String getOldPassword() {
-            return oldPassword;
-        }
-
-        public String getPassword() {
-            return password;
-        }
-
-        public String getEmail() {
-            return email;
-        }
     }
 
     private static final class ErrorResponse {

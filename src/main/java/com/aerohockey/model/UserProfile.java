@@ -1,5 +1,7 @@
 package com.aerohockey.model;
 
+import com.fasterxml.jackson.annotation.JsonProperty;
+
 import java.util.concurrent.atomic.AtomicLong;
 import java.util.Random;
 
@@ -12,11 +14,20 @@ public class UserProfile {
     private static final AtomicLong ID_GENERATOR = new AtomicLong(0);
     static final Random randomGenerator = new Random();
 
-    private final long id;
-    private final String login;
+    private long id;
+    @JsonProperty("login")
+    private String login;
+    @JsonProperty("email")
     private String email;
+    @JsonProperty("password")
     private String password;
+    @JsonProperty("old-password")
+    private String oldPassword;
     private int rating;
+
+    @SuppressWarnings("unused")
+    private UserProfile() {
+    }
 
     public UserProfile(String login, String email, String password) {
         this.id = ID_GENERATOR.getAndIncrement();
@@ -45,6 +56,11 @@ public class UserProfile {
     public String getEmail() {
         return email;
     }
+
+    public String getOldPassword() {
+        return oldPassword;
+    }
+
 
     @SuppressWarnings("unused")
     public int getRating() {
