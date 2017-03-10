@@ -27,6 +27,7 @@ public class UserController {
     @Autowired
     public UserController(AccountService accountService) {
         this.accountService = accountService;
+        accountService.addSomeUsers(10);
     }
 
     @RequestMapping(path = "/api/signup", method = RequestMethod.POST, produces = "application/json", consumes = "application/json")
