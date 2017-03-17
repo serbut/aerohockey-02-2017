@@ -37,6 +37,6 @@ public class AccountService {
     }
 
     public void changeData(UserProfile newUser) {
-        userNameToUserProfile.replace(newUser.getLogin(), newUser);
+        userNameToUserProfile.put(newUser.getLogin(), newUser);
     }
 }
