@@ -13,10 +13,10 @@ public class AccountServiceTest {
     private AccountService accountService;
     private final String defaultLogin = "foo";
 
-    @Before
-    public void setup(){
-        accountService = new AccountService();
-    }
+//    @Before
+//    public void setup(){
+//        accountService = new AccountService();
+//    }
 
     public UserProfile addUser(String name){
         final String defailtPassword = "123";

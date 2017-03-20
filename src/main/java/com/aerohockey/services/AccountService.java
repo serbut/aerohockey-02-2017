@@ -1,6 +1,10 @@
 package com.aerohockey.services;
 
 import com.aerohockey.model.UserProfile;
+import org.springframework.dao.DuplicateKeyException;
+import org.springframework.dao.EmptyResultDataAccessException;
+import org.springframework.jdbc.core.JdbcTemplate;
+import org.springframework.jdbc.core.RowMapper;
 import org.springframework.stereotype.Service;
 
 import javax.validation.constraints.NotNull;
@@ -17,18 +21,29 @@ import java.util.Map;
 public class AccountService {
     private final Map<String, UserProfile> userNameToUserProfile = new HashMap<>();
 
-    @NotNull
+    private final JdbcTemplate template;
+    AccountService(JdbcTemplate template) {
+        this.template = template;
+    }
+
     public UserProfile addUser(@NotNull String login, @NotNull String email, @NotNull String password) {
-        if(userNameToUserProfile.containsKey(login)) {
+        final UserProfile user = new UserProfile(login, email, password);
+        try {
+            final String query = "INSERT INTO users (login, email, password) VALUES (?, ?, ?)";
+            template.update(query, login, email, password);
+        }
+        catch (DuplicateKeyException e) {
             return null;
         }
-        final UserProfile newUser = new UserProfile(login, email, password);
-        userNameToUserProfile.put(login, newUser);
-        return newUser;
+        return user;
     }
 
     public UserProfile getUserByLogin(String login) {
-        return userNameToUserProfile.get(login);
+        try {
+            return template.queryForObject("SELECT * FROM users WHERE login = ?", userMapper, login);
+        } catch (EmptyResultDataAccessException e) {
+            return null;
+        }
     }
 
     public List<UserProfile> getLeaders() {
@@ -40,6 +55,19 @@ public class AccountService {
     }
 
     public void changeData(UserProfile newUser) {
-        userNameToUserProfile.put(newUser.getLogin(), newUser);
+        final String query = "UPDATE users SET " +
+                "email = COALESCE (?, email), " +
+                "password = COALESCE (?, password)" +
+                "WHERE login = ?";
+        template.update(query, newUser.getEmail(), newUser.getPassword(), newUser.getLogin());
     }
+
+    private static final RowMapper<UserProfile> userMapper = (rs, rowNum) -> {
+        final int id = rs.getInt("id");
+        final String login = rs.getString("login");
+        final String email = rs.getString("email");
+        final String password = rs.getString("password");
+        final int rating = rs.getInt("rating");
+        return new UserProfile(id, login, email, password, rating);
+    };
 }

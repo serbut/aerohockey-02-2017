@@ -2,16 +2,11 @@ package com.aerohockey.model;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 
-import java.util.concurrent.atomic.AtomicLong;
-
-
 /**
  * Created by sergeybutorin on 20.02.17.
  */
 
 public class UserProfile {
-    private static final AtomicLong ID_GENERATOR = new AtomicLong(0);
-
     private long id;
     @JsonProperty("login")
     private String login;
@@ -27,8 +22,15 @@ public class UserProfile {
     private UserProfile() {
     }
 
+    public UserProfile(int id, String login, String email, String password, int rating) {
+        this.id = id;
+        this.login = login;
+        this.email = email;
+        this.password = password;
+        this.rating = rating;
+    }
+
     public UserProfile(String login, String email, String password) {
-        this.id = ID_GENERATOR.getAndIncrement();
         this.login = login;
         this.email = email;
         this.password = password;

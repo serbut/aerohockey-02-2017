@@ -24,8 +24,8 @@ public class UserControllerTest {
     @Autowired
     private TestRestTemplate restTemplate;
 
-    final String defaultPassword = "123";
-    final String defaultEmail = "foo@mail.ru";
+    private final String defaultPassword = "123";
+    private final String defaultEmail = "foo@mail.ru";
 
 
     private List<String> signup(String login, String email, String password, HttpStatus httpStatus){

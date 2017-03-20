@@ -2,8 +2,6 @@ package com.aerohockey.controller;
 
 import com.aerohockey.model.UserProfile;
 import com.aerohockey.services.AccountService;
-import org.json.simple.JSONArray;
-import org.json.simple.JSONObject;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -14,6 +12,10 @@ import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpSession;
 import java.util.List;
+
+import static com.aerohockey.controller.Responses.errorResponse;
+import static com.aerohockey.controller.Responses.leaderboardResponse;
+import static com.aerohockey.controller.Responses.userResponse;
 
 /**
  * Created by sergeybutorin on 20.02.17.
@@ -151,28 +153,5 @@ public class UserController {
             return ResponseEntity.ok("");
         }
         return ResponseEntity.status(HttpStatus.FORBIDDEN).body(errorResponse("User not authorized"));
-    }
-
-    private static String errorResponse(String errorMsg) {
-        final JSONObject userDetailsJson = new JSONObject();
-        userDetailsJson.put("error", errorMsg);
-        return userDetailsJson.toJSONString();
-    }
-
-    private static JSONObject userResponse(UserProfile userProfile) {
-        final JSONObject userDetailsJson = new JSONObject();
-        userDetailsJson.put("id", userProfile.getId());
-        userDetailsJson.put("login", userProfile.getLogin());
-        userDetailsJson.put("email", userProfile.getEmail());
-        userDetailsJson.put("rating", userProfile.getRating());
-        return userDetailsJson;
-    }
-
-    private JSONArray leaderboardResponse(List<UserProfile> users) {
-        final JSONArray jsonArray = new JSONArray();
-        for(UserProfile u : users) {
-            jsonArray.add(userResponse(u));
-        }
-        return jsonArray;
     }
 }
