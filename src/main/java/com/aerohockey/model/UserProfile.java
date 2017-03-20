@@ -35,6 +35,11 @@ public class UserProfile {
         this.rating = 0;
     }
 
+    public UserProfile(String oldPassword, String password) {
+        this.oldPassword = oldPassword;
+        this.password = password;
+    }
+
     @SuppressWarnings("unused")
     public long getId() {
         return id;

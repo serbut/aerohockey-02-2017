@@ -19,6 +19,9 @@ public class AccountService {
 
     @NotNull
     public UserProfile addUser(@NotNull String login, @NotNull String email, @NotNull String password) {
+        if(userNameToUserProfile.containsKey(login)) {
+            return null;
+        }
         final UserProfile newUser = new UserProfile(login, email, password);
         userNameToUserProfile.put(login, newUser);
         return newUser;

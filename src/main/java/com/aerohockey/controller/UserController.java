@@ -7,10 +7,10 @@ import org.json.simple.JSONObject;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
 import org.springframework.util.StringUtils;
+import org.springframework.http.*;
 import org.springframework.web.bind.annotation.*;
+
 
 import javax.servlet.http.HttpSession;
 import java.util.List;
@@ -47,13 +47,10 @@ public class UserController {
             return ResponseEntity.status(HttpStatus.FORBIDDEN).body(errorResponse("In this session user already logged in"));
         }
 
-        final UserProfile existingUser = accountService.getUserByLogin(login);
-
-        if (existingUser != null) {
+        final UserProfile newUser = accountService.addUser(login, email, password);
+        if (newUser == null) {
             return ResponseEntity.status(HttpStatus.CONFLICT).body(errorResponse("User already exists"));
         }
-
-        final UserProfile newUser = accountService.addUser(login, email, password);
         httpSession.setAttribute("userLogin", newUser.getLogin());
         LOGGER.info("User {} registered", login);
         return ResponseEntity.ok(userResponse(newUser));
@@ -126,7 +123,6 @@ public class UserController {
         accountService.changeData(user);
         LOGGER.info("Password for user {} successfully changed.", httpSession.getAttribute("userLogin"));
         return ResponseEntity.ok(userResponse(user));
-
     }
 
     @RequestMapping(path = "/api/change-user-data", method = RequestMethod.POST, produces = "application/json", consumes = "application/json")
@@ -152,7 +148,7 @@ public class UserController {
         if (httpSession.getAttribute("userLogin") != null) {
             LOGGER.info("User {} logged out", httpSession.getAttribute("userLogin"));
             httpSession.invalidate();
-            return ResponseEntity.ok("User logged out.");
+            return ResponseEntity.ok("");
         }
         return ResponseEntity.status(HttpStatus.FORBIDDEN).body(errorResponse("User not authorized"));
     }

@@ -12,24 +12,34 @@ import static org.junit.Assert.*;
 public class AccountServiceTest {
     private AccountService accountService;
     private final String defaultLogin = "foo";
-    private final String defaultEmail = "foo@mail.ru";
-    private final String defailtPassword = "123";
 
     @Before
     public void setup(){
         accountService = new AccountService();
     }
 
+    public UserProfile addUser(String name){
+        final String defailtPassword = "123";
+        final String defaultEmail = "foo@mail.ru";
+        return accountService.addUser(name, defaultEmail, defailtPassword);
+    }
+
     @Test
-    public void checkAddUser(){
-        final UserProfile testUser = accountService.addUser(defaultLogin, defaultEmail, defailtPassword);
+    public void testAddUserSimple(){
+        final UserProfile testUser = addUser(defaultLogin);
         assertNotNull(testUser);
         assertSame(testUser, accountService.getUserByLogin(defaultLogin));
     }
 
     @Test
-    public void checkChangeEmail() {
-        final UserProfile testUser = accountService.addUser(defaultLogin, defaultEmail, defailtPassword);
+    public void testAddUserConflict(){
+        addUser(defaultLogin);
+        assertNull(addUser(defaultLogin));
+    }
+
+    @Test
+    public void testChangeEmail() {
+        final UserProfile testUser = addUser(defaultLogin);
         final String newEmail = "newemail@mail.ru";
         testUser.setEmail(newEmail);
         accountService.changeData(testUser);
@@ -37,8 +47,8 @@ public class AccountServiceTest {
     }
 
     @Test
-    public void checkUpdateRating() {
-        final UserProfile testUser = accountService.addUser(defaultLogin, defaultEmail, defailtPassword);
+    public void testUpdateRating() {
+        final UserProfile testUser = addUser(defaultLogin);
         final int ratingValue = 10;
         testUser.changeRating(ratingValue); //increasing rating
         accountService.changeData(testUser);
@@ -49,8 +59,7 @@ public class AccountServiceTest {
     }
 
     @Test
-    public void checkLeaderboard() {
-        final UserProfile testUser = accountService.addUser(defaultLogin, defaultEmail, defailtPassword);
-
+    public void testGetEmpty() {
+        assertNull(accountService.getUserByLogin("empty"));
     }
 }
