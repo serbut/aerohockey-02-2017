@@ -51,9 +51,10 @@ public class AccountService {
     public void changeData(UserProfile newUser) {
         final String query = "UPDATE users SET " +
                 "email = COALESCE (?, email), " +
-                "password = COALESCE (?, password) " +
+                "password = COALESCE (?, password), " +
+                "rating = COALESCE (?, rating) " +
                 "WHERE login = ?";
-        template.update(query, newUser.getEmail(), newUser.getPassword(), newUser.getLogin());
+        template.update(query, newUser.getEmail(), newUser.getPassword(), newUser.getRating(), newUser.getLogin());
     }
 
     private static final RowMapper<UserProfile> userMapper = (rs, rowNum) -> {
