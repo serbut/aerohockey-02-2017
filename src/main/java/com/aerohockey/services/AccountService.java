@@ -8,10 +8,7 @@ import org.springframework.jdbc.core.RowMapper;
 import org.springframework.stereotype.Service;
 
 import javax.validation.constraints.NotNull;
-import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
 /**
  * Created by sergeybutorin on 18.02.17.
@@ -19,8 +16,6 @@ import java.util.Map;
 
 @Service
 public class AccountService {
-    private final Map<String, UserProfile> userNameToUserProfile = new HashMap<>();
-
     private final JdbcTemplate template;
     AccountService(JdbcTemplate template) {
         this.template = template;
@@ -46,18 +41,17 @@ public class AccountService {
         }
     }
 
-    public List<UserProfile> getLeaders() {
-        final List<UserProfile> leaders = new ArrayList<>();
-        for (UserProfile user : userNameToUserProfile.values()) {
-            leaders.add(user);
-        }
-        return leaders;
+    public List<UserProfile> getLeaders(int page, int limit) {
+        String query = "SELECT * FROM users " +
+                "ORDER BY rating " +
+                " LIMIT ? OFFSET ?";
+        return template.query(query, userMapper, limit, page);
     }
 
     public void changeData(UserProfile newUser) {
         final String query = "UPDATE users SET " +
                 "email = COALESCE (?, email), " +
-                "password = COALESCE (?, password)" +
+                "password = COALESCE (?, password) " +
                 "WHERE login = ?";
         template.update(query, newUser.getEmail(), newUser.getPassword(), newUser.getLogin());
     }

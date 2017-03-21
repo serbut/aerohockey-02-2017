@@ -34,7 +34,6 @@ public class UserProfile {
         this.login = login;
         this.email = email;
         this.password = password;
-        this.rating = 0;
     }
 
     public UserProfile(String oldPassword, String password) {

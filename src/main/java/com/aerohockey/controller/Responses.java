@@ -18,7 +18,6 @@ public class Responses {
 
     static JSONObject userResponse(UserProfile userProfile) {
         final JSONObject userDetailsJson = new JSONObject();
-        userDetailsJson.put("id", userProfile.getId());
         userDetailsJson.put("login", userProfile.getLogin());
         userDetailsJson.put("email", userProfile.getEmail());
         userDetailsJson.put("rating", userProfile.getRating());

@@ -5,6 +5,9 @@ import com.aerohockey.services.AccountService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.annotation.Bean;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.util.StringUtils;
 import org.springframework.http.*;
 import org.springframework.web.bind.annotation.*;
@@ -33,6 +36,11 @@ public class UserController {
         this.accountService = accountService;
     }
 
+    @Bean
+    public PasswordEncoder passwordEncoder() {
+        return new BCryptPasswordEncoder();
+    }
+
     @RequestMapping(path = "/api/signup", method = RequestMethod.POST, produces = "application/json", consumes = "application/json")
     public ResponseEntity signup(@RequestBody UserProfile body, HttpSession httpSession) {
         final String login = body.getLogin();
@@ -49,7 +57,7 @@ public class UserController {
             return ResponseEntity.status(HttpStatus.FORBIDDEN).body(errorResponse("In this session user already logged in"));
         }
 
-        final UserProfile newUser = accountService.addUser(login, email, password);
+        final UserProfile newUser = accountService.addUser(login, email, passwordEncoder().encode(password));
         if (newUser == null) {
             return ResponseEntity.status(HttpStatus.CONFLICT).body(errorResponse("User already exists"));
         }
@@ -78,7 +86,7 @@ public class UserController {
             return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(errorResponse("Incorrect login/password"));
         }
 
-        if (user.getPassword().equals(password) && user.getLogin().equals(login)) {
+        if (passwordEncoder().matches(password, user.getPassword()) && user.getLogin().equals(login)) {
             httpSession.setAttribute("userLogin", user.getLogin());
             LOGGER.info("User {} logged in", login);
             return ResponseEntity.ok(userResponse(user));
@@ -99,7 +107,7 @@ public class UserController {
 
     @RequestMapping(path = "/api/leaderboard", method = RequestMethod.GET, produces = "application/json")
     public ResponseEntity<String> getLeadearboard() {
-        final List<UserProfile> users = accountService.getLeaders();
+        final List<UserProfile> users = accountService.getLeaders(0, 100);
         return ResponseEntity.ok(leaderboardResponse(users).toJSONString());
     }
 
@@ -117,11 +125,11 @@ public class UserController {
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(errorResponse("Wrong parameters"));
         }
 
-        if (!user.getPassword().equals(oldPassword)) {
+        if (!passwordEncoder().matches(oldPassword, user.getPassword())) {
             return ResponseEntity.status(HttpStatus.FORBIDDEN).body(errorResponse("Incorrect old password"));
         }
 
-        user.setPassword(newPassword);
+        user.setPassword(passwordEncoder().encode(newPassword));
         accountService.changeData(user);
         LOGGER.info("Password for user {} successfully changed.", httpSession.getAttribute("userLogin"));
         return ResponseEntity.ok(userResponse(user));
