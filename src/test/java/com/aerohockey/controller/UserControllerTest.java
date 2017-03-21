@@ -145,4 +145,9 @@ public class UserControllerTest {
 
         logout(cookie, HttpStatus.OK);
     }
+
+    @Test
+    public void testLeaderboard() {
+
+    }
 }

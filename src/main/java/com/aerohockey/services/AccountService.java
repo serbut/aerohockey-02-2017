@@ -22,7 +22,6 @@ public class AccountService {
     }
 
     public UserProfile addUser(@NotNull String login, @NotNull String email, @NotNull String password) {
-        final UserProfile user = new UserProfile(login, email, password);
         try {
             final String query = "INSERT INTO users (login, email, password) VALUES (?, ?, ?)";
             template.update(query, login, email, password);
@@ -30,34 +29,40 @@ public class AccountService {
         catch (DuplicateKeyException e) {
             return null;
         }
-        return user;
+        return getUserByLogin(login);
     }
 
     public UserProfile getUserByLogin(String login) {
         try {
-            return template.queryForObject("SELECT * FROM users WHERE login = ?", userMapper, login);
+            return template.queryForObject("SELECT * FROM users WHERE login = ?", USER_PROFILE_ROW_MAPPER, login);
         } catch (EmptyResultDataAccessException e) {
             return null;
         }
     }
 
-    public List<UserProfile> getLeaders(int page, int limit) {
-        String query = "SELECT * FROM users " +
-                "ORDER BY rating " +
+    public List<UserProfile> getLeaders(int limit, int page) {
+        final String query = "SELECT * FROM users " +
+                "ORDER BY rating DESC " +
                 " LIMIT ? OFFSET ?";
-        return template.query(query, userMapper, limit, page);
+        return template.query(query, USER_PROFILE_ROW_MAPPER, limit, limit * (page - 1));
+    }
+
+    public void updateRating(UserProfile newUser) {
+        final String query = "UPDATE users SET " +
+                "rating = COALESCE (?, rating) " +
+                "WHERE login = ?";
+        template.update(query, newUser.getRating(), newUser.getLogin());
     }
 
     public void changeData(UserProfile newUser) {
         final String query = "UPDATE users SET " +
                 "email = COALESCE (?, email), " +
-                "password = COALESCE (?, password), " +
-                "rating = COALESCE (?, rating) " +
+                "password = COALESCE (?, password) " +
                 "WHERE login = ?";
-        template.update(query, newUser.getEmail(), newUser.getPassword(), newUser.getRating(), newUser.getLogin());
+        template.update(query, newUser.getEmail(), newUser.getPassword(), newUser.getLogin());
     }
 
-    private static final RowMapper<UserProfile> userMapper = (rs, rowNum) -> {
+    private static final RowMapper<UserProfile> USER_PROFILE_ROW_MAPPER = (rs, rowNum) -> {
         final int id = rs.getInt("id");
         final String login = rs.getString("login");
         final String email = rs.getString("email");

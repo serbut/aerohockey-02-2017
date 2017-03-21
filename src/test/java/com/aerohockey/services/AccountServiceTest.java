@@ -9,6 +9,9 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.test.context.junit4.SpringRunner;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import static org.junit.Assert.*;
 
 /**
@@ -25,15 +28,15 @@ public class AccountServiceTest {
     public void setup(){
         accountService = new AccountService(template);
     }
-    private UserProfile addUser(String name){
+    private UserProfile addUser(String login){
         final String defailtPassword = "123";
         final String defaultEmail = "foo@mail.ru";
-        return accountService.addUser(name, defaultEmail, defailtPassword);
+        return accountService.addUser(login, defaultEmail, defailtPassword);
     }
 
     @Test
     public void testAddUserSimple(){
-        final String login = "foo";
+        final String login = "userSimple";
         final UserProfile testUser = addUser(login);
         assertNotNull(testUser);
         assertSame(login, testUser.getLogin());
@@ -41,15 +44,14 @@ public class AccountServiceTest {
 
     @Test
     public void testAddUserConflict(){
-        final String login = "foo";
+        final String login = "userConflict";
         addUser(login);
         assertNull(addUser(login));
     }
 
     @Test
     public void testChangeEmail() {
-        final String login = "userChangeEmail";
-        final UserProfile testUser = addUser(login);
+        final UserProfile testUser = addUser("userChangeEmail");
         final String newEmail = "newemail@mail.ru";
         testUser.setEmail(newEmail);
         accountService.changeData(testUser);
@@ -58,8 +60,7 @@ public class AccountServiceTest {
 
     @Test
     public void testUpdateRating() {
-        final String login = "userUpdateRating";
-        final UserProfile testUser = addUser(login);
+        final UserProfile testUser = addUser("userUpdateRating");
         final int ratingValue = 10;
         testUser.changeRating(ratingValue); //increasing rating
         accountService.changeData(testUser);
@@ -72,5 +73,31 @@ public class AccountServiceTest {
     @Test
     public void testGetEmpty() {
         assertNull(accountService.getUserByLogin("empty"));
+    }
+
+    @Test
+    public void testGetLeaders() {
+        UserProfile user = addUser("user1");
+        user.changeRating(10);
+        accountService.updateRating(user);
+
+        final List<UserProfile> users = new ArrayList<>();
+        users.add(user);
+
+        user = addUser("user2");
+        user.changeRating(5);
+        accountService.updateRating(user);
+        users.add(user);
+
+        user = addUser("user3");
+        user.changeRating(1);
+        accountService.updateRating(user);
+        users.add(user);
+
+        final List<UserProfile> leaders = accountService.getLeaders(users.size(), 1);
+
+        for(int i = 0; i < users.size(); i++){
+            assertEquals(users.get(i).getLogin(), leaders.get(i).getLogin());
+        }
     }
 }

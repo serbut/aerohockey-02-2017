@@ -24,7 +24,6 @@ import static com.aerohockey.controller.Responses.userResponse;
  * Created by sergeybutorin on 20.02.17.
  */
 
-@SuppressWarnings("unchecked")
 @RestController
 @CrossOrigin(origins = {"https://myfastball3.herokuapp.com", "http://localhost:3000", "http://127.0.0.1:3000"})
 public class UserController {
@@ -106,8 +105,9 @@ public class UserController {
     }
 
     @RequestMapping(path = "/api/leaderboard", method = RequestMethod.GET, produces = "application/json")
-    public ResponseEntity<String> getLeadearboard() {
-        final List<UserProfile> users = accountService.getLeaders(0, 100);
+    public ResponseEntity<String> getLeadearboard(@RequestParam(name = "page", required = false, defaultValue = "1") int page) {
+        final int limit = 10;
+        final List<UserProfile> users = accountService.getLeaders(limit, page);
         return ResponseEntity.ok(leaderboardResponse(users).toJSONString());
     }
 
