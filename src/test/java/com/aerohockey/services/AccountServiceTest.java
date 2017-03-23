@@ -8,6 +8,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.test.context.junit4.SpringRunner;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -19,39 +20,41 @@ import static org.junit.Assert.*;
  */
 @RunWith(SpringRunner.class)
 @SpringBootTest
+@Transactional
 public class AccountServiceTest {
     @Autowired
     private JdbcTemplate template;
+
     private AccountService accountService;
+
+    final String defaultLogin = "user";
+    final String defailtPassword = "123";
+    final String defaultEmail = "user@mail.ru";
 
     @Before
     public void setup(){
         accountService = new AccountService(template);
     }
     private UserProfile addUser(String login){
-        final String defailtPassword = "123";
-        final String defaultEmail = "foo@mail.ru";
         return accountService.addUser(login, defaultEmail, defailtPassword);
     }
 
     @Test
     public void testAddUserSimple(){
-        final String login = "userSimple";
-        final UserProfile testUser = addUser(login);
+        final UserProfile testUser = addUser(defaultLogin);
         assertNotNull(testUser);
-        assertSame(login, testUser.getLogin());
+        assertSame(defaultLogin, testUser.getLogin());
     }
 
     @Test
     public void testAddUserConflict(){
-        final String login = "userConflict";
-        addUser(login);
-        assertNull(addUser(login));
+        addUser(defaultLogin);
+        assertNull(addUser(defaultLogin));
     }
 
     @Test
     public void testChangeEmail() {
-        final UserProfile testUser = addUser("userChangeEmail");
+        final UserProfile testUser = addUser(defaultLogin);
         final String newEmail = "newemail@mail.ru";
         testUser.setEmail(newEmail);
         accountService.changeData(testUser);
@@ -60,7 +63,7 @@ public class AccountServiceTest {
 
     @Test
     public void testUpdateRating() {
-        final UserProfile testUser = addUser("userUpdateRating");
+        final UserProfile testUser = addUser(defaultLogin);
         final int ratingValue = 10;
         testUser.changeRating(ratingValue); //increasing rating
         accountService.changeData(testUser);
