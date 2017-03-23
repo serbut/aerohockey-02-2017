@@ -128,7 +128,6 @@ public class UserControllerTest {
         logout(cookie, HttpStatus.OK);
 
         cookie = login(login, defaultPassword, HttpStatus.OK);
-//        login(login, defaultPassword, HttpStatus.FORBIDDEN);
 
         logout(cookie, HttpStatus.OK);
 
