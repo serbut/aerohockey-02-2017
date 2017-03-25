@@ -1,6 +1,8 @@
 package com.aerohockey.controller;
 
 import com.aerohockey.model.UserProfile;
+import com.aerohockey.responses.LeaderboardResponse;
+import com.aerohockey.responses.UserResponse;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -10,22 +12,27 @@ import org.springframework.http.*;
 import org.springframework.test.context.junit4.SpringRunner;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
+import java.util.Random;
 
 import static org.springframework.boot.test.context.SpringBootTest.WebEnvironment.RANDOM_PORT;
+import static com.aerohockey.services.AccountServiceImpl.USERS_ON_PAGE;
 
 import static org.junit.Assert.*;
 /**
  * Created by sergeybutorin on 16.03.17.
  */
 
-@SpringBootTest(webEnvironment = RANDOM_PORT)
 @RunWith(SpringRunner.class)
+@SpringBootTest(webEnvironment = RANDOM_PORT)
 @Transactional
 public class UserControllerTest {
     @Autowired
     private TestRestTemplate restTemplate;
 
+    final String defaultLogin = "user";
     private final String defaultPassword = "123";
     private final String defaultEmail = "foo@mail.ru";
 
@@ -86,32 +93,61 @@ public class UserControllerTest {
         assertEquals(email, result.getBody().getEmail());
     }
 
-    private void getCurrentUser(List<String> cookie, HttpStatus httpStatus){
+    private void getCurrentUser(List<String> cookie, String login, HttpStatus httpStatus){
         final HttpHeaders requestHeaders = new HttpHeaders();
         requestHeaders.put(HttpHeaders.COOKIE, cookie);
         final HttpEntity requestEntity = new HttpEntity(requestHeaders);
 
-        final ResponseEntity result = restTemplate.exchange("/api/user", HttpMethod.GET, requestEntity, UserProfile.class);
+        final ResponseEntity<UserProfile> result = restTemplate.exchange("/api/user", HttpMethod.GET, requestEntity, UserProfile.class);
         assertEquals(httpStatus, result.getStatusCode());
+        if(result.getStatusCode() == HttpStatus.OK) {
+            assertEquals(login, result.getBody().getLogin());
+        }
+    }
+
+    private void getLeaderboard(List<String> userLogins, HttpStatus httpStatus) {
+        final HttpEntity requestEntity = new HttpEntity(null);
+        for (int i = 0; i < Math.ceil(userLogins.size() / USERS_ON_PAGE); i++) {
+            final ResponseEntity<LeaderboardResponse> result = restTemplate.exchange("/api/leaderboard?page={page}",
+                    HttpMethod.GET,
+                    requestEntity,
+                    LeaderboardResponse.class,
+                    i + 1);
+            assertEquals(httpStatus, result.getStatusCode());
+
+            final List<UserResponse> resultUsers = result.getBody().getUsers();
+            for (int j = 0; j < resultUsers.size(); j++) {
+                assertEquals(userLogins.get(j + i * USERS_ON_PAGE), resultUsers.get(j).getLogin());
+            }
+        }
+    }
+
+    public String generateRandomString(int length) {
+        final char[] chars = "abcdefghijklmnopqrstuvwxyz".toCharArray();
+        final StringBuilder sb = new StringBuilder();
+        final Random random = new Random();
+        for (int i = 0; i < length; i++) {
+            final char c = chars[random.nextInt(chars.length)];
+            sb.append(c);
+        }
+        return sb.toString();
     }
 
     @Test
     public void testSignup() {
-        final String login = "testSignup";
-        signup(login, "", defaultPassword, HttpStatus.BAD_REQUEST);
+        signup(defaultLogin, "", defaultPassword, HttpStatus.BAD_REQUEST);
         signup("", defaultEmail, defaultPassword, HttpStatus.BAD_REQUEST);
-        signup(login, defaultEmail, "", HttpStatus.BAD_REQUEST);
+        signup(defaultLogin, defaultEmail, "", HttpStatus.BAD_REQUEST);
 
-        final List<String> cookie = signup(login, defaultEmail, defaultPassword, HttpStatus.OK);
+        final List<String> cookie = signup(defaultLogin, defaultEmail, defaultPassword, HttpStatus.OK);
         logout(cookie, HttpStatus.OK);
 
-        signup(login, "bar@mail.ru", defaultPassword, HttpStatus.FORBIDDEN); // try to create user with existing login
+        signup(defaultLogin, "bar@mail.ru", defaultPassword, HttpStatus.FORBIDDEN); // try to create user with existing login
     }
 
     @Test
     public void logout() {
-        final String login = "testLogout";
-        final List<String> cookie = signup(login, defaultEmail, defaultPassword, HttpStatus.OK);
+        final List<String> cookie = signup(defaultLogin, defaultEmail, defaultPassword, HttpStatus.OK);
 
         logout(cookie, HttpStatus.OK);
 
@@ -120,44 +156,41 @@ public class UserControllerTest {
 
     @Test
     public void testLogin() {
-        final String login = "testLogin";
-        login(login, "", HttpStatus.BAD_REQUEST);
+        login(defaultLogin, "", HttpStatus.BAD_REQUEST);
         login("", defaultPassword, HttpStatus.BAD_REQUEST);
 
-        List<String> cookie = signup(login, defaultEmail, defaultPassword, HttpStatus.OK);
+        List<String> cookie = signup(defaultLogin, defaultEmail, defaultPassword, HttpStatus.OK);
         logout(cookie, HttpStatus.OK);
 
-        cookie = login(login, defaultPassword, HttpStatus.OK);
+        cookie = login(defaultLogin, defaultPassword, HttpStatus.OK);
 
         logout(cookie, HttpStatus.OK);
 
         login("notExist", defaultPassword, HttpStatus.FORBIDDEN); //login with incorrect login
-        login(login, "incorrectPassword", HttpStatus.FORBIDDEN); //login with incorrect password
+        login(defaultLogin, "incorrectPassword", HttpStatus.FORBIDDEN); //login with incorrect password
     }
 
     @Test
     public void testGetCurrentUser() {
-        final String login = "testGetCurrentUser";
-        final List<String> cookie = signup(login, defaultEmail, defaultPassword, HttpStatus.OK);
+        final List<String> cookie = signup(defaultLogin, defaultEmail, defaultPassword, HttpStatus.OK);
 
-        getCurrentUser(cookie, HttpStatus.OK);
+        getCurrentUser(cookie, defaultLogin, HttpStatus.OK);
         logout(cookie, HttpStatus.OK);
 
-        getCurrentUser(cookie, HttpStatus.FORBIDDEN);
+        getCurrentUser(cookie, defaultLogin, HttpStatus.FORBIDDEN);
     }
 
     @Test
     public void testChangePassword() {
-        final String login = "testChangePassword";
         final String newPassword = "qwe";
-        List<String> cookie = signup(login, defaultEmail, defaultPassword, HttpStatus.OK);
+        List<String> cookie = signup(defaultLogin, defaultEmail, defaultPassword, HttpStatus.OK);
 
         changePassword(cookie, defaultPassword, newPassword, HttpStatus.OK);
         logout(cookie, HttpStatus.OK);
 
-        login(login, defaultPassword, HttpStatus.FORBIDDEN); //try to login with old password
+        login(defaultLogin, defaultPassword, HttpStatus.FORBIDDEN); //try to login with old password
 
-        cookie = login(login, newPassword, HttpStatus.OK); //login with new password
+        cookie = login(defaultLogin, newPassword, HttpStatus.OK); //login with new password
 
         changePassword(cookie, "wrongPassword", "password", HttpStatus.FORBIDDEN); //try to change password with incorrect old password
 
@@ -166,9 +199,8 @@ public class UserControllerTest {
 
     @Test
     public void testChangeUserData() {
-        final String login = "testChangeUserData";
         final String newEmail = "testChangeUserData@mail.ru";
-        final List<String> cookie = signup(login, defaultEmail, defaultPassword, HttpStatus.OK);
+        final List<String> cookie = signup(defaultLogin, defaultEmail, defaultPassword, HttpStatus.OK);
 
         changeData(cookie, newEmail, HttpStatus.OK);
         logout(cookie, HttpStatus.OK);
@@ -176,6 +208,15 @@ public class UserControllerTest {
 
     @Test
     public void testLeaderboard() {
-        //TODO
+        final List<String> userLogins = new ArrayList<>();
+        final int usersCount = 25;
+        for (int i = 0; i < usersCount; i++) {
+            final String login = generateRandomString(10);
+            final List<String> cookie = signup(login, login + "@mail.ru", "123", HttpStatus.OK);
+            logout(cookie, HttpStatus.OK);
+            userLogins.add(login);
+        }
+        Collections.sort(userLogins);
+        getLeaderboard(userLogins, HttpStatus.OK);
     }
 }

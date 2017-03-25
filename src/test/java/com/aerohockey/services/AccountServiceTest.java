@@ -25,7 +25,7 @@ public class AccountServiceTest {
     @Autowired
     private JdbcTemplate template;
 
-    private AccountService accountService;
+    private AccountServiceImpl accountServiceImpl;
 
     final String defaultLogin = "user";
     final String defailtPassword = "123";
@@ -33,10 +33,10 @@ public class AccountServiceTest {
 
     @Before
     public void setup(){
-        accountService = new AccountService(template);
+        accountServiceImpl = new AccountServiceImpl(template);
     }
     private UserProfile addUser(String login){
-        return accountService.addUser(login, defaultEmail, defailtPassword);
+        return accountServiceImpl.addUser(login, defaultEmail, defailtPassword);
     }
 
     @Test
@@ -57,7 +57,7 @@ public class AccountServiceTest {
         final UserProfile testUser = addUser(defaultLogin);
         final String newEmail = "newemail@mail.ru";
         testUser.setEmail(newEmail);
-        accountService.changeData(testUser);
+        accountServiceImpl.changeData(testUser);
         assertSame(newEmail, testUser.getEmail());
     }
 
@@ -66,38 +66,38 @@ public class AccountServiceTest {
         final UserProfile testUser = addUser(defaultLogin);
         final int ratingValue = 10;
         testUser.changeRating(ratingValue); //increasing rating
-        accountService.changeData(testUser);
+        accountServiceImpl.changeData(testUser);
         assertSame(ratingValue, testUser.getRating());
         testUser.changeRating(-ratingValue); // decreasing rating
-        accountService.changeData(testUser);
+        accountServiceImpl.changeData(testUser);
         assertSame(0, testUser.getRating());
     }
 
     @Test
     public void testGetEmpty() {
-        assertNull(accountService.getUserByLogin("empty"));
+        assertNull(accountServiceImpl.getUserByLogin("empty"));
     }
 
     @Test
     public void testGetLeaders() {
         UserProfile user = addUser("user1");
         user.changeRating(10);
-        accountService.updateRating(user);
+        accountServiceImpl.updateRating(user);
 
         final List<UserProfile> users = new ArrayList<>();
         users.add(user);
 
         user = addUser("user2");
         user.changeRating(5);
-        accountService.updateRating(user);
+        accountServiceImpl.updateRating(user);
         users.add(user);
 
         user = addUser("user3");
         user.changeRating(1);
-        accountService.updateRating(user);
+        accountServiceImpl.updateRating(user);
         users.add(user);
 
-        final List<UserProfile> leaders = accountService.getLeaders(users.size(), 1);
+        final List<UserProfile> leaders = accountServiceImpl.getLeaders(1);
 
         for(int i = 0; i < users.size(); i++){
             assertEquals(users.get(i).getLogin(), leaders.get(i).getLogin());

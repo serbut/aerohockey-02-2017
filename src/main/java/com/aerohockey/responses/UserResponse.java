@@ -13,7 +13,6 @@ public class UserResponse {
         this.rating = user.getRating();
     }
 
-    @SuppressWarnings("unused")
     public String getLogin() {
         return login;
     }
