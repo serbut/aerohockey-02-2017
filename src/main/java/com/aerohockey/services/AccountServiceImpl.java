@@ -22,6 +22,11 @@ public class AccountServiceImpl implements AccountService{
         this.template = template;
     }
 
+    public void clear() {
+        final String clearTable = "TRUNCATE TABLE users";
+        template.execute(clearTable);
+    }
+
     @Override
     public UserProfile addUser(@NotNull String login, @NotNull String email, @NotNull String password) {
         try {

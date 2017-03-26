@@ -32,9 +32,10 @@ public class AccountServiceTest {
     final String defaultEmail = "user@mail.ru";
 
     @Before
-    public void setup(){
+    public void setup() {
         accountServiceImpl = new AccountServiceImpl(template);
     }
+
     private UserProfile addUser(String login){
         return accountServiceImpl.addUser(login, defaultEmail, defailtPassword);
     }

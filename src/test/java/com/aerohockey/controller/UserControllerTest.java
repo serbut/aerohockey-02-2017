@@ -3,6 +3,8 @@ package com.aerohockey.controller;
 import com.aerohockey.model.UserProfile;
 import com.aerohockey.responses.LeaderboardResponse;
 import com.aerohockey.responses.UserResponse;
+import com.aerohockey.services.AccountServiceImpl;
+import org.junit.After;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -32,9 +34,17 @@ public class UserControllerTest {
     @Autowired
     private TestRestTemplate restTemplate;
 
+    @Autowired
+    private AccountServiceImpl accountServiceImpl;
+
     final String defaultLogin = "user";
     private final String defaultPassword = "123";
     private final String defaultEmail = "foo@mail.ru";
+
+    @After
+    public void clear() {
+        accountServiceImpl.clear();
+    }
 
     private List<String> getCookie(ResponseEntity<UserProfile> result) {
         final List<String> cookie = result.getHeaders().get("Set-Cookie");
@@ -83,13 +93,13 @@ public class UserControllerTest {
         assertEquals(httpStatus, result.getStatusCode());
     }
 
-    private void changeData(List<String> cookie, String email, HttpStatus httpStatus) {
+    private void changeData(List<String> cookie, String email) {
         final HttpHeaders requestHeaders = new HttpHeaders();
         requestHeaders.put(HttpHeaders.COOKIE, cookie);
         final HttpEntity<UserProfile> requestEntity = new HttpEntity<>(new UserProfile(null, email, null), requestHeaders);
 
         final ResponseEntity<UserProfile> result = restTemplate.postForEntity("/api/change-user-data", requestEntity, UserProfile.class);
-        assertEquals(httpStatus, result.getStatusCode());
+        assertEquals(HttpStatus.OK, result.getStatusCode());
         assertEquals(email, result.getBody().getEmail());
     }
 
@@ -105,7 +115,7 @@ public class UserControllerTest {
         }
     }
 
-    private void getLeaderboard(List<String> userLogins, HttpStatus httpStatus) {
+    private void getLeaderboard(List<String> userLogins) {
         final HttpEntity requestEntity = new HttpEntity(null);
         for (int i = 0; i < Math.ceil(userLogins.size() / USERS_ON_PAGE); i++) {
             final ResponseEntity<LeaderboardResponse> result = restTemplate.exchange("/api/leaderboard?page={page}",
@@ -113,7 +123,7 @@ public class UserControllerTest {
                     requestEntity,
                     LeaderboardResponse.class,
                     i + 1);
-            assertEquals(httpStatus, result.getStatusCode());
+            assertEquals(HttpStatus.OK, result.getStatusCode());
 
             final List<UserResponse> resultUsers = result.getBody().getUsers();
             for (int j = 0; j < resultUsers.size(); j++) {
@@ -202,7 +212,7 @@ public class UserControllerTest {
         final String newEmail = "testChangeUserData@mail.ru";
         final List<String> cookie = signup(defaultLogin, defaultEmail, defaultPassword, HttpStatus.OK);
 
-        changeData(cookie, newEmail, HttpStatus.OK);
+        changeData(cookie, newEmail);
         logout(cookie, HttpStatus.OK);
     }
 
@@ -217,6 +227,6 @@ public class UserControllerTest {
             userLogins.add(login);
         }
         Collections.sort(userLogins);
-        getLeaderboard(userLogins, HttpStatus.OK);
+        getLeaderboard(userLogins);
     }
 }
