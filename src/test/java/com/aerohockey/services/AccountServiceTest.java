@@ -27,7 +27,7 @@ public class AccountServiceTest {
 
     private AccountServiceImpl accountServiceImpl;
 
-    final String defaultLogin = "user";
+    final String defaultLogin = "user-test";
     final String defailtPassword = "123";
     final String defaultEmail = "user@mail.ru";
 
@@ -69,6 +69,7 @@ public class AccountServiceTest {
         testUser.changeRating(ratingValue); //increasing rating
         accountServiceImpl.changeData(testUser);
         assertSame(ratingValue, testUser.getRating());
+
         testUser.changeRating(-ratingValue); // decreasing rating
         accountServiceImpl.changeData(testUser);
         assertSame(0, testUser.getRating());
@@ -81,7 +82,7 @@ public class AccountServiceTest {
 
     @Test
     public void testGetLeaders() {
-        UserProfile user = addUser("user1");
+        UserProfile user = addUser("user3");
         user.changeRating(10);
         accountServiceImpl.updateRating(user);
 
@@ -93,7 +94,7 @@ public class AccountServiceTest {
         accountServiceImpl.updateRating(user);
         users.add(user);
 
-        user = addUser("user3");
+        user = addUser("user1");
         user.changeRating(1);
         accountServiceImpl.updateRating(user);
         users.add(user);

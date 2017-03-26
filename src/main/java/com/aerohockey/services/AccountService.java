@@ -1,6 +1,7 @@
 package com.aerohockey.services;
 
 import com.aerohockey.model.UserProfile;
+import com.sun.istack.internal.Nullable;
 
 import javax.validation.constraints.NotNull;
 import java.util.List;
@@ -10,9 +11,9 @@ import java.util.List;
  */
 @SuppressWarnings("unused")
 public interface AccountService {
-    UserProfile addUser(@NotNull String login, @NotNull String email, @NotNull String password);
-    UserProfile getUserByLogin(String login);
-    List<UserProfile> getLeaders(int page);
-    void updateRating(UserProfile newUser);
-    void changeData(UserProfile newUser);
+    @Nullable UserProfile addUser(@NotNull String login, @NotNull String email, @NotNull String password);
+    @Nullable UserProfile getUserByLogin(@NotNull String login);
+    List<UserProfile> getLeaders(@NotNull int page);
+    void updateRating(@NotNull UserProfile newUser);
+    void changeData(@NotNull UserProfile newUser);
 }
