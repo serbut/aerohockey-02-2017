@@ -1,7 +1,6 @@
 package com.aerohockey.services;
 
 import com.aerohockey.model.UserProfile;
-import com.sun.istack.internal.Nullable;
 import org.springframework.dao.DuplicateKeyException;
 import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.jdbc.core.JdbcTemplate;
@@ -28,7 +27,6 @@ public class AccountServiceImpl implements AccountService{
         template.execute(clearTable);
     }
 
-    @Nullable
     @Override
     public UserProfile addUser(@NotNull String login, @NotNull String email, @NotNull String password) {
         try {
@@ -41,7 +39,6 @@ public class AccountServiceImpl implements AccountService{
         return getUserByLogin(login);
     }
 
-    @Nullable
     @Override
     public UserProfile getUserByLogin(@NotNull String login) {
         try {
