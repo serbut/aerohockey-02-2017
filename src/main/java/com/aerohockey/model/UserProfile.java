@@ -1,6 +1,7 @@
 package com.aerohockey.model;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
+import org.jetbrains.annotations.Nullable;
 
 /**
  * Created by sergeybutorin on 20.02.17.
@@ -30,7 +31,7 @@ public class UserProfile {
         this.rating = rating;
     }
 
-    public UserProfile(String login, String email, String password) {
+    public UserProfile(@Nullable String login, String email, @Nullable String password) {
         this.login = login;
         this.email = email;
         this.password = password;

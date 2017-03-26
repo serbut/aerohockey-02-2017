@@ -6,8 +6,9 @@ import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.RowMapper;
 import org.springframework.stereotype.Service;
+import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 
-import javax.validation.constraints.NotNull;
 import java.util.List;
 
 /**
@@ -28,7 +29,7 @@ public class AccountServiceImpl implements AccountService{
     }
 
     @Override
-    public UserProfile addUser(@NotNull String login, @NotNull String email, @NotNull String password) {
+    public @Nullable UserProfile addUser(@NotNull String login, @NotNull String email, @NotNull String password) {
         try {
             final String query = "INSERT INTO users (login, email, password) VALUES (?, ?, ?)";
             template.update(query, login, email, password);
@@ -40,7 +41,7 @@ public class AccountServiceImpl implements AccountService{
     }
 
     @Override
-    public UserProfile getUserByLogin(@NotNull String login) {
+    public @Nullable UserProfile getUserByLogin(@NotNull String login) {
         try {
             return template.queryForObject("SELECT * FROM users WHERE login = ?", USER_PROFILE_ROW_MAPPER, login);
         } catch (EmptyResultDataAccessException e) {

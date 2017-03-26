@@ -1,6 +1,7 @@
 package com.aerohockey.services;
 
 import com.aerohockey.model.UserProfile;
+import org.jetbrains.annotations.Nullable;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -36,7 +37,7 @@ public class AccountServiceTest {
         accountServiceImpl = new AccountServiceImpl(template);
     }
 
-    private UserProfile addUser(String login){
+    private @Nullable UserProfile addUser(String login){
         return accountServiceImpl.addUser(login, defaultEmail, defailtPassword);
     }
 
@@ -56,6 +57,7 @@ public class AccountServiceTest {
     @Test
     public void testChangeEmail() {
         final UserProfile testUser = addUser(defaultLogin);
+        assertNotNull(testUser);
         final String newEmail = "newemail@mail.ru";
         testUser.setEmail(newEmail);
         accountServiceImpl.changeData(testUser);
@@ -65,6 +67,7 @@ public class AccountServiceTest {
     @Test
     public void testUpdateRating() {
         final UserProfile testUser = addUser(defaultLogin);
+        assertNotNull(testUser);
         final int ratingValue = 10;
         testUser.changeRating(ratingValue); //increasing rating
         accountServiceImpl.changeData(testUser);
@@ -83,6 +86,7 @@ public class AccountServiceTest {
     @Test
     public void testGetLeaders() {
         UserProfile user = addUser("user3");
+        assertNotNull(user);
         user.changeRating(10);
         accountServiceImpl.updateRating(user);
 
@@ -90,11 +94,13 @@ public class AccountServiceTest {
         users.add(user);
 
         user = addUser("user2");
+        assertNotNull(user);
         user.changeRating(5);
         accountServiceImpl.updateRating(user);
         users.add(user);
 
         user = addUser("user1");
+        assertNotNull(user);
         user.changeRating(1);
         accountServiceImpl.updateRating(user);
         users.add(user);
