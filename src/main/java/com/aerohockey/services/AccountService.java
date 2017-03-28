@@ -12,7 +12,7 @@ import java.util.List;
 @SuppressWarnings("unused")
 public interface AccountService {
     @Nullable UserProfile addUser(@NotNull String login, @NotNull String email, @NotNull String password);
-    @Nullable UserProfile getUserByLogin(@NotNull String login);
+    @Nullable UserProfile getUserByLogin(String login);
     List<UserProfile> getLeaders(int page);
     void updateRating(@NotNull UserProfile newUser);
     void changeData(@NotNull UserProfile newUser);

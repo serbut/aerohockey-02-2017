@@ -45,7 +45,7 @@ public class AccountServiceTest {
     public void testAddUserSimple(){
         final UserProfile testUser = addUser(defaultLogin);
         assertNotNull(testUser);
-        assertSame(defaultLogin, testUser.getLogin());
+        assertEquals(defaultLogin, testUser.getLogin());
     }
 
     @Test
@@ -61,7 +61,7 @@ public class AccountServiceTest {
         final String newEmail = "newemail@mail.ru";
         testUser.setEmail(newEmail);
         accountServiceImpl.changeData(testUser);
-        assertSame(newEmail, testUser.getEmail());
+        assertEquals(newEmail, testUser.getEmail());
     }
 
     @Test

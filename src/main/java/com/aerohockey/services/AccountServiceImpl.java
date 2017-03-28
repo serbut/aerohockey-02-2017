@@ -1,6 +1,9 @@
 package com.aerohockey.services;
 
 import com.aerohockey.model.UserProfile;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.dao.DataAccessException;
 import org.springframework.dao.DuplicateKeyException;
 import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.jdbc.core.JdbcTemplate;
@@ -19,6 +22,8 @@ import java.util.List;
 public class AccountServiceImpl implements AccountService{
     private final JdbcTemplate template;
     public static final int USERS_ON_PAGE = 10;
+    private static final Logger LOGGER = LoggerFactory.getLogger(AccountServiceImpl.class);
+
     AccountServiceImpl(JdbcTemplate template) {
         this.template = template;
     }
@@ -26,6 +31,7 @@ public class AccountServiceImpl implements AccountService{
     public void clear() {
         final String clearTable = "TRUNCATE TABLE users";
         template.execute(clearTable);
+        LOGGER.info("Table users successfully cleared.");
     }
 
     @Override
@@ -33,18 +39,25 @@ public class AccountServiceImpl implements AccountService{
         try {
             final String query = "INSERT INTO users (login, email, password) VALUES (?, ?, ?)";
             template.update(query, login, email, password);
-        }
-        catch (DuplicateKeyException e) {
+        } catch (DuplicateKeyException e) {
+            LOGGER.info("User with login {} already exists.", login);
+            return null;
+        } catch (DataAccessException e) {
+            LOGGER.info(e.getLocalizedMessage());
             return null;
         }
         return getUserByLogin(login);
     }
 
     @Override
-    public @Nullable UserProfile getUserByLogin(@NotNull String login) {
+    public @Nullable UserProfile getUserByLogin(String login) {
         try {
             return template.queryForObject("SELECT * FROM users WHERE login = ?", USER_PROFILE_ROW_MAPPER, login);
         } catch (EmptyResultDataAccessException e) {
+            LOGGER.info("User with login {} not found.", login);
+            return null;
+        } catch (DataAccessException e) {
+            LOGGER.info(e.getLocalizedMessage());
             return null;
         }
     }
