@@ -13,6 +13,8 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
+import java.util.stream.Collectors;
 
 import static org.junit.Assert.*;
 
@@ -56,25 +58,31 @@ public class AccountServiceTest {
 
     @Test
     public void testChangeEmail() {
-        final UserProfile testUser = addUser(defaultLogin);
+        UserProfile testUser = addUser(defaultLogin);
         assertNotNull(testUser);
         final String newEmail = "newemail@mail.ru";
         testUser.setEmail(newEmail);
         accountServiceImpl.changeData(testUser);
+        testUser = accountServiceImpl.getUserByLogin(testUser.getLogin());
+        assertNotNull(testUser);
         assertEquals(newEmail, testUser.getEmail());
     }
 
     @Test
     public void testUpdateRating() {
-        final UserProfile testUser = addUser(defaultLogin);
+        UserProfile testUser = addUser(defaultLogin);
         assertNotNull(testUser);
         final int ratingValue = 10;
         testUser.changeRating(ratingValue); //increasing rating
-        accountServiceImpl.changeData(testUser);
+        accountServiceImpl.updateRating(testUser);
+        testUser = accountServiceImpl.getUserByLogin(testUser.getLogin());
+        assertNotNull(testUser);
         assertSame(ratingValue, testUser.getRating());
 
         testUser.changeRating(-ratingValue); // decreasing rating
-        accountServiceImpl.changeData(testUser);
+        accountServiceImpl.updateRating(testUser);
+        testUser = accountServiceImpl.getUserByLogin(testUser.getLogin());
+        assertNotNull(testUser);
         assertSame(0, testUser.getRating());
     }
 
