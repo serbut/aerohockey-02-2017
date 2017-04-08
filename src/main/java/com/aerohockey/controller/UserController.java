@@ -22,7 +22,7 @@ import java.util.List;
  */
 
 @RestController
-@CrossOrigin(origins = {"https://fastball.herokuapp.com", "https://fastball-front.herokuapp.com", "http://localhost:3000", "http://127.0.0.1:3000"})
+@CrossOrigin(origins = {"http://fastball.herokuapp.com", "http://localhost:3000", "http://127.0.0.1:3000"})
 public class UserController {
     private final AccountServiceImpl accountServiceImpl;
     private final PasswordEncoder passwordEncoder;
