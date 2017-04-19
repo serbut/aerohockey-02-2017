@@ -7,11 +7,14 @@ import org.jetbrains.annotations.NotNull;
  * Created by sergeybutorin on 14.04.17.
  */
 public class PlatformCoords {
+    public  PlatformCoords() {
+    }
+
     public PlatformCoords(@JsonProperty("x") double x) {
         this.x = x;
     }
 
-    public final double x;
+    public double x;
 
     public @NotNull PlatformCoords add(@NotNull PlatformCoords addition) {
         return new PlatformCoords(x + addition.x);

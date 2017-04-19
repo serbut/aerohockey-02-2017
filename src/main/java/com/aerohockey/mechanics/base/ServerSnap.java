@@ -9,6 +9,7 @@ import java.util.List;
  */
 public class ServerSnap {
     @NotNull List<ServerPlayerSnap> players;
+    private long serverFrameTime;
 
     public @NotNull List<ServerPlayerSnap> getPlayers() {
         return players;
@@ -18,5 +19,11 @@ public class ServerSnap {
         this.players = players;
     }
 
+    public long getServerFrameTime() {
+        return serverFrameTime;
+    }
 
+    public void setServerFrameTime(long serverFrameTime) {
+        this.serverFrameTime = serverFrameTime;
+    }
 }

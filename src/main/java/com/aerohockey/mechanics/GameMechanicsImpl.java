@@ -10,6 +10,7 @@ import com.aerohockey.websocket.RemotePointService;
 import org.jetbrains.annotations.NotNull;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.stereotype.Service;
 
 import java.util.*;
 import java.util.concurrent.ConcurrentLinkedQueue;
@@ -17,6 +18,8 @@ import java.util.concurrent.ConcurrentLinkedQueue;
 /**
  * Created by sergeybutorin on 14.04.17.
  */
+@SuppressWarnings({"unused", "FieldMayBeFinal"})
+@Service
 public class GameMechanicsImpl implements GameMechanics {
     private static final @NotNull Logger LOGGER = LoggerFactory.getLogger(GameMechanicsImpl.class);
 
@@ -37,7 +40,7 @@ public class GameMechanicsImpl implements GameMechanics {
     private final @NotNull Queue<Runnable> tasks = new ConcurrentLinkedQueue<>();
 
     @SuppressWarnings("LongLine")
-    public GameMechanicsImpl(@NotNull AccountService accountService, @NotNull ClientSnapService clientSnapService,
+    public GameMechanicsImpl(@NotNull AccountService accountService, @NotNull ServerSnapService serverSnapService,
                              @NotNull RemotePointService remotePointService,
                              @NotNull GameSessionService gameSessionService) {
         this.accountService = accountService;

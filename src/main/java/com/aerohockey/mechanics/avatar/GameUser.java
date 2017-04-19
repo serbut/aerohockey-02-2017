@@ -1,5 +1,6 @@
 package com.aerohockey.mechanics.avatar;
 
+import com.aerohockey.mechanics.base.PlatformCoords;
 import com.aerohockey.mechanics.base.ServerPlayerSnap;
 import com.aerohockey.model.UserProfile;
 import org.jetbrains.annotations.NotNull;
@@ -9,9 +10,11 @@ import org.jetbrains.annotations.NotNull;
  */
 public class GameUser {
     private final UserProfile userProfile;
+    private final PlatformCoords platform;
 
     public GameUser(UserProfile userProfile) {
         this.userProfile = userProfile;
+        platform = new PlatformCoords();
     }
 
     public UserProfile getUserProfile() {

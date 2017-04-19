@@ -2,6 +2,7 @@ package com.aerohockey.mechanics.internal;
 
 import com.aerohockey.mechanics.GameSession;
 import com.aerohockey.mechanics.avatar.GameUser;
+import com.aerohockey.mechanics.base.ServerPlayerSnap;
 import com.aerohockey.mechanics.requests.StartGame;
 import com.aerohockey.websocket.Message;
 import com.aerohockey.websocket.RemotePointService;
@@ -56,30 +57,17 @@ public class GameInitService {
         final GameUser self = gameSession.getSelf(userId);
         final StartGame.Request initGameMessage = new StartGame.Request();
 
-//        final List<ServerPlayerSnap> playerSnaps = new ArrayList<>();
-//        final Map<Long, String> names = new HashMap<>();
-//        final Map<Long, String> colors = new HashMap<>();
-//        final Map<Long, String> gunColors = new HashMap<>();
-//
-//        colors.put(userId, Config.SELF_COLOR);
-//        gunColors.put(userId, Config.SELF_GUN_COLOR);
-//        colors.put(gameSession.getEnemy(self).getId(), Config.ENEMY_COLOR);
-//        gunColors.put(gameSession.getEnemy(self).getId(), Config.ENEMY_GUN_COLOR);
-//
-//        final Collection<GameUser> players = new ArrayList<>();
-//        players.add(gameSession.getFirst());
-//        players.add(gameSession.getSecond());
-//        for (GameUser player : players) {
-//            playerSnaps.add(player.generateSnap());
-//            names.put(player.getId(), player.getUserProfile().getLogin());
-//        }
-//
-//        initGameMessage.setSelf(userId);
-//        initGameMessage.setSelfSquareId(gameSession.getSelf(userId).getSquare().getId());
-//        initGameMessage.setColors(colors);
-//        initGameMessage.setGunColors(gunColors);
-//        initGameMessage.setNames(names);
-//        initGameMessage.setPlayers(playerSnaps);
+        final List<ServerPlayerSnap> playerSnaps = new ArrayList<>();
+
+        final Collection<GameUser> players = new ArrayList<>();
+        players.add(gameSession.getFirst());
+        players.add(gameSession.getSecond());
+        for (GameUser player : players) {
+            playerSnaps.add(player.generateSnap());
+        }
+
+        initGameMessage.setSelf(userId);
+        initGameMessage.setPlayers(playerSnaps);
         return initGameMessage;
     }
 }

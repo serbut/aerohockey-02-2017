@@ -39,6 +39,7 @@ public class ServerSnapService {
         final ServerSnap snap = new ServerSnap();
 
         snap.setPlayers(playersSnaps);
+        snap.setServerFrameTime(frameTime);
         try {
             final Message message = new Message(ServerSnap.class.getName(), objectMapper.writeValueAsString(snap));
             for (GameUser player : players) {
