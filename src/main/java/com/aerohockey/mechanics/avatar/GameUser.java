@@ -5,16 +5,18 @@ import com.aerohockey.mechanics.base.ServerPlayerSnap;
 import com.aerohockey.model.UserProfile;
 import org.jetbrains.annotations.NotNull;
 
+import static com.aerohockey.mechanics.Config.*;
+
 /**
  * Created by sergeybutorin on 15.04.17.
  */
 public class GameUser {
     private final UserProfile userProfile;
-    private final PlatformCoords platform;
+    private PlatformCoords platform; // хз хз
 
     public GameUser(UserProfile userProfile) {
         this.userProfile = userProfile;
-        platform = new PlatformCoords();
+        platform = new PlatformCoords(PLAYGROUND_WIDTH/2);
     }
 
     public UserProfile getUserProfile() {
@@ -28,7 +30,16 @@ public class GameUser {
     public @NotNull ServerPlayerSnap generateSnap() {
         final ServerPlayerSnap result = new ServerPlayerSnap();
         result.setUserId(getId());
+        result.setPlatformCoords(platform); // хз хз
         return result;
+    }
+
+    public PlatformCoords getPlatform() {
+        return platform;
+    }
+
+    public void setPlatform(PlatformCoords platform) {
+        this.platform = platform;
     }
 
     @Override

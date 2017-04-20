@@ -1,11 +1,9 @@
 package com.aerohockey.mechanics.requests;
 
 import com.aerohockey.mechanics.base.ServerPlayerSnap;
-import com.aerohockey.model.UserProfile;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.List;
-import java.util.Map;
 
 /**
  * Created by sergeybutorin on 13.04.17.

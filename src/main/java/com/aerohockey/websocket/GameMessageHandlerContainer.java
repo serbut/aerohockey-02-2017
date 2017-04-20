@@ -14,7 +14,6 @@ import java.util.Map;
 
 @Service
 public class GameMessageHandlerContainer implements MessageHandlerContainer {
-    @SuppressWarnings("ConstantConditions")
     private static final @NotNull Logger LOGGER = LoggerFactory.getLogger(GameMessageHandlerContainer.class);
     final Map<Class<?>, MessageHandler<?>> handlerMap = new HashMap<>();
 

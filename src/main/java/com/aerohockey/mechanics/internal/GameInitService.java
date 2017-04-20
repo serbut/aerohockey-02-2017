@@ -31,8 +31,6 @@ public class GameInitService {
     }
 
     public void initGameFor(@NotNull GameSession gameSession) {
-        gameSession.getFirst();
-        gameSession.getSecond();
         final Collection<GameUser> players = new ArrayList<>();
         players.add(gameSession.getFirst());
         players.add(gameSession.getSecond());

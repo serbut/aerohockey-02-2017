@@ -4,6 +4,7 @@ import com.aerohockey.mechanics.avatar.GameUser;
 import com.aerohockey.model.UserProfile;
 import org.jetbrains.annotations.NotNull;
 
+import java.util.Objects;
 import java.util.concurrent.atomic.AtomicLong;
 
 /**
@@ -22,10 +23,10 @@ public class GameSession {
     }
 
     public @NotNull GameUser getEnemy(@NotNull GameUser user) {
-        if (user == first) {
+        if (Objects.equals(user, first)) {
             return second;
         }
-        if (user == second) {
+        if (Objects.equals(user, second)) {
             return first;
         }
         throw new IllegalArgumentException("Requested enemy for game but user not participant");
@@ -54,9 +55,9 @@ public class GameSession {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
 
-        final GameSession that = (GameSession) o;
+        final GameSession session = (GameSession) o;
 
-        return sessionId.equals(that.sessionId);
+        return sessionId.equals(session.sessionId);
 
     }
 

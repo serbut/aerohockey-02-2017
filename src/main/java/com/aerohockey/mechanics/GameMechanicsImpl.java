@@ -23,23 +23,28 @@ import java.util.concurrent.ConcurrentLinkedQueue;
 public class GameMechanicsImpl implements GameMechanics {
     private static final @NotNull Logger LOGGER = LoggerFactory.getLogger(GameMechanicsImpl.class);
 
-    private @NotNull AccountService accountService;
+    private @NotNull
+    final AccountService accountService;
 
-    private @NotNull ClientSnapService clientSnapService;
+    private @NotNull
+    final ClientSnapService clientSnapService;
 
-    private @NotNull ServerSnapService serverSnapService;
+    private @NotNull
+    final ServerSnapService serverSnapService;
 
-    private @NotNull RemotePointService remotePointService;
+    private @NotNull
+    final RemotePointService remotePointService;
 
-    private @NotNull GameSessionService gameSessionService;
+    private @NotNull
+    final GameSessionService gameSessionService;
 
     private @NotNull Set<Long> playingUsers = new HashSet<>();
 
-    private @NotNull ConcurrentLinkedQueue<Long> waiters = new ConcurrentLinkedQueue<>();
+    private @NotNull
+    final ConcurrentLinkedQueue<Long> waiters = new ConcurrentLinkedQueue<>();
 
     private final @NotNull Queue<Runnable> tasks = new ConcurrentLinkedQueue<>();
 
-    @SuppressWarnings("LongLine")
     public GameMechanicsImpl(@NotNull AccountService accountService, @NotNull ServerSnapService serverSnapService,
                              @NotNull RemotePointService remotePointService,
                              @NotNull GameSessionService gameSessionService) {

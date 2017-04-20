@@ -9,6 +9,7 @@ import java.util.List;
  */
 public class ServerSnap {
     @NotNull List<ServerPlayerSnap> players;
+    @NotNull BallCoords ballCoords;
     private long serverFrameTime;
 
     public @NotNull List<ServerPlayerSnap> getPlayers() {
@@ -17,6 +18,14 @@ public class ServerSnap {
 
     public void setPlayers(@NotNull List<ServerPlayerSnap> players) {
         this.players = players;
+    }
+
+    public @NotNull BallCoords ballCoords() {
+        return ballCoords;
+    }
+
+    public void setBallCoords(BallCoords ballCoords) {
+        this.ballCoords = ballCoords;
     }
 
     public long getServerFrameTime() {

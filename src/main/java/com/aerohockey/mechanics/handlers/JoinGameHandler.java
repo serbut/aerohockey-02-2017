@@ -2,7 +2,6 @@ package com.aerohockey.mechanics.handlers;
 
 import com.aerohockey.mechanics.GameMechanics;
 import com.aerohockey.mechanics.requests.JoinGame;
-import com.aerohockey.mechanics.requests.StartGame;
 import com.aerohockey.websocket.HandleException;
 import com.aerohockey.websocket.MessageHandler;
 import com.aerohockey.websocket.MessageHandlerContainer;
@@ -16,8 +15,10 @@ import javax.annotation.PostConstruct;
  */
 @Component
 public class JoinGameHandler extends MessageHandler<JoinGame.Request> {
-    private @NotNull GameMechanics gameMechanics;
-    private @NotNull MessageHandlerContainer messageHandlerContainer;
+    private @NotNull
+    final GameMechanics gameMechanics;
+    private @NotNull
+    final MessageHandlerContainer messageHandlerContainer;
 
     public JoinGameHandler(@NotNull GameMechanics gameMechanics, @NotNull MessageHandlerContainer messageHandlerContainer) {
         super(JoinGame.Request.class);

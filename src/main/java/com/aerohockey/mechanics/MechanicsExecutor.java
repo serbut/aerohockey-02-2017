@@ -22,9 +22,10 @@ public class MechanicsExecutor implements Runnable {
 
     private final @NotNull GameMechanics gameMechanics;
 
-    private @NotNull Clock clock = Clock.systemDefaultZone();
+    private @NotNull
+    final Clock clock = Clock.systemDefaultZone();
 
-    private Executor tickExecutor = Executors.newSingleThreadExecutor();
+    private final Executor tickExecutor = Executors.newSingleThreadExecutor();
 
     @Autowired
     public MechanicsExecutor(@NotNull GameMechanics gameMechanics) {
@@ -38,7 +39,6 @@ public class MechanicsExecutor implements Runnable {
 
     @Override
     public void run() {
-        //noinspection InfiniteLoopStatement
         long lastFrameMillis = STEP_TIME;
         while (true) {
             final long before = clock.millis();
