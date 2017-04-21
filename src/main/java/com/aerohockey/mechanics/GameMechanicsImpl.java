@@ -23,25 +23,19 @@ import java.util.concurrent.ConcurrentLinkedQueue;
 public class GameMechanicsImpl implements GameMechanics {
     private static final @NotNull Logger LOGGER = LoggerFactory.getLogger(GameMechanicsImpl.class);
 
-    private @NotNull
-    final AccountService accountService;
+    private final @NotNull AccountService accountService;
 
-    private @NotNull
-    final ClientSnapService clientSnapService;
+    private final @NotNull ClientSnapService clientSnapService;
 
-    private @NotNull
-    final ServerSnapService serverSnapService;
+    private final @NotNull ServerSnapService serverSnapService;
 
-    private @NotNull
-    final RemotePointService remotePointService;
+    private final @NotNull RemotePointService remotePointService;
 
-    private @NotNull
-    final GameSessionService gameSessionService;
+    private final @NotNull GameSessionService gameSessionService;
 
     private @NotNull Set<Long> playingUsers = new HashSet<>();
 
-    private @NotNull
-    final ConcurrentLinkedQueue<Long> waiters = new ConcurrentLinkedQueue<>();
+    private final @NotNull ConcurrentLinkedQueue<Long> waiters = new ConcurrentLinkedQueue<>();
 
     private final @NotNull Queue<Runnable> tasks = new ConcurrentLinkedQueue<>();
 
@@ -99,7 +93,7 @@ public class GameMechanicsImpl implements GameMechanics {
                 try {
                     nextTask.run();
                 } catch (RuntimeException ex) {
-                    LOGGER.error("Cant handle game task", ex);
+                    LOGGER.error("Can't handle game task", ex);
                 }
             }
         }

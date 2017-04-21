@@ -9,7 +9,7 @@ import java.util.List;
  */
 public class ServerSnap {
     @NotNull List<ServerPlayerSnap> players;
-    @NotNull BallCoords ballCoords;
+//    @NotNull BallCoords ballCoords;
     private long serverFrameTime;
 
     public @NotNull List<ServerPlayerSnap> getPlayers() {
@@ -20,13 +20,13 @@ public class ServerSnap {
         this.players = players;
     }
 
-    public @NotNull BallCoords ballCoords() {
-        return ballCoords;
-    }
-
-    public void setBallCoords(BallCoords ballCoords) {
-        this.ballCoords = ballCoords;
-    }
+//    public @NotNull BallCoords getBallCoords() {
+//        return ballCoords;
+//    }
+//
+//    public void setBallCoords(@NotNull BallCoords ballCoords) {
+//        this.ballCoords = ballCoords;
+//    }
 
     public long getServerFrameTime() {
         return serverFrameTime;

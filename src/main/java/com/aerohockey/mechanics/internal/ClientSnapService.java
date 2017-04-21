@@ -3,7 +3,7 @@ package com.aerohockey.mechanics.internal;
 import com.aerohockey.mechanics.GameSession;
 import com.aerohockey.mechanics.avatar.GameUser;
 import com.aerohockey.mechanics.base.ClientSnap;
-import com.aerohockey.mechanics.base.PlatformCoords;
+import com.aerohockey.mechanics.base.Platform;
 import org.jetbrains.annotations.NotNull;
 import org.springframework.stereotype.Service;
 
@@ -40,14 +40,11 @@ public class ClientSnapService {
             for (ClientSnap snap : playerSnaps) {
                 processMovement(player, snap.getDirection());
             }
-            final ClientSnap lastSnap = playerSnaps.get(playerSnaps.size() - 1);
-
-            //TODO:Firing
         }
     }
 
     private void processMovement(@NotNull GameUser gameUser, @NotNull String direction) {
-        final PlatformCoords platform = gameUser.getPlatform();
+        final Platform platform = gameUser.getPlatform();
         switch (direction) {
             case "left": {
                 gameUser.setPlatform(movePlatform(platform, -10));
@@ -63,8 +60,8 @@ public class ClientSnapService {
         }
     }
 
-    private PlatformCoords movePlatform(@NotNull PlatformCoords platform, double dx) {
-        final PlatformCoords newCoords = new PlatformCoords(platform.x + dx);
+    private Platform movePlatform(@NotNull Platform platform, double dx) {
+        final Platform newCoords = new Platform(platform.x + dx);
         if (newCoords.x > PLAYGROUND_WIDTH - platform.platformWidth/2) {
             newCoords.x = PLAYGROUND_WIDTH - platform.platformWidth/2;
         } else if (newCoords.x < platform.platformWidth/2) {

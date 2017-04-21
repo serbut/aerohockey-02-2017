@@ -1,11 +1,15 @@
 package com.aerohockey.mechanics;
 
+import com.aerohockey.mechanics.avatar.Ball;
 import com.aerohockey.mechanics.avatar.GameUser;
 import com.aerohockey.model.UserProfile;
 import org.jetbrains.annotations.NotNull;
 
-import java.util.Objects;
 import java.util.concurrent.atomic.AtomicLong;
+
+import static com.aerohockey.mechanics.Config.PLAYGROUND_WIDTH;
+import static com.aerohockey.mechanics.avatar.Ball.BALL_RADIUS;
+import static com.aerohockey.mechanics.base.Platform.PLATFORM_HEIGHT;
 
 /**
  * Created by sergeybutorin on 14.04.17.
@@ -15,31 +19,13 @@ public class GameSession {
     private final @NotNull Long sessionId;
     private final @NotNull GameUser first;
     private final @NotNull GameUser second;
+    private final @NotNull Ball ball;
 
     public GameSession(@NotNull UserProfile user1, @NotNull UserProfile user2) {
         this.sessionId = ID_GENERATOR.getAndIncrement();
         this.first = new GameUser(user1);
         this.second =  new GameUser(user2);
-    }
-
-    public @NotNull GameUser getEnemy(@NotNull GameUser user) {
-        if (Objects.equals(user, first)) {
-            return second;
-        }
-        if (Objects.equals(user, second)) {
-            return first;
-        }
-        throw new IllegalArgumentException("Requested enemy for game but user not participant");
-    }
-
-    public @NotNull GameUser getSelf(@NotNull Long userId) {
-        if (first.getUserProfile().getId() == userId) {
-            return first;
-        }
-        if (second.getUserProfile().getId() == userId) {
-            return second;
-        }
-        throw new IllegalArgumentException("Request self for game but user not participate it");
+        this.ball = new Ball(PLAYGROUND_WIDTH/2, PLATFORM_HEIGHT + BALL_RADIUS);
     }
 
     public @NotNull GameUser getFirst() {
@@ -48,6 +34,10 @@ public class GameSession {
 
     public @NotNull GameUser getSecond() {
         return second;
+    }
+
+    public @NotNull Ball getBall() {
+        return ball;
     }
 
     @Override

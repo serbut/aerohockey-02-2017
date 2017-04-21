@@ -52,7 +52,6 @@ public class GameInitService {
 
     @SuppressWarnings("TooBroadScope")
     private StartGame.Request createInitMessageFor(@NotNull GameSession gameSession, @NotNull Long userId) {
-        final GameUser self = gameSession.getSelf(userId);
         final StartGame.Request initGameMessage = new StartGame.Request();
 
         final List<ServerPlayerSnap> playerSnaps = new ArrayList<>();

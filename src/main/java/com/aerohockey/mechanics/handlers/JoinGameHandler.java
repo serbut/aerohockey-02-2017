@@ -15,10 +15,8 @@ import javax.annotation.PostConstruct;
  */
 @Component
 public class JoinGameHandler extends MessageHandler<JoinGame.Request> {
-    private @NotNull
-    final GameMechanics gameMechanics;
-    private @NotNull
-    final MessageHandlerContainer messageHandlerContainer;
+    private final @NotNull GameMechanics gameMechanics;
+    private final @NotNull MessageHandlerContainer messageHandlerContainer;
 
     public JoinGameHandler(@NotNull GameMechanics gameMechanics, @NotNull MessageHandlerContainer messageHandlerContainer) {
         super(JoinGame.Request.class);

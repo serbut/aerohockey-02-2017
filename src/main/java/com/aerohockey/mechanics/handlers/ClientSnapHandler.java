@@ -15,10 +15,8 @@ import javax.annotation.PostConstruct;
  */
 @Component
 public class ClientSnapHandler extends MessageHandler<ClientSnap> {
-    private @NotNull
-    final GameMechanics gameMechanics;
-    private @NotNull
-    final MessageHandlerContainer messageHandlerContainer;
+    private final @NotNull GameMechanics gameMechanics;
+    private final @NotNull MessageHandlerContainer messageHandlerContainer;
 
     public ClientSnapHandler(@NotNull GameMechanics gameMechanics, @NotNull MessageHandlerContainer messageHandlerContainer) {
         super(ClientSnap.class);

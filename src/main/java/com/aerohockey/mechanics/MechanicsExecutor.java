@@ -22,8 +22,7 @@ public class MechanicsExecutor implements Runnable {
 
     private final @NotNull GameMechanics gameMechanics;
 
-    private @NotNull
-    final Clock clock = Clock.systemDefaultZone();
+    private final @NotNull Clock clock = Clock.systemDefaultZone();
 
     private final Executor tickExecutor = Executors.newSingleThreadExecutor();
 

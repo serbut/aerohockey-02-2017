@@ -2,6 +2,7 @@ package com.aerohockey.mechanics.internal;
 
 import com.aerohockey.mechanics.GameSession;
 import com.aerohockey.mechanics.avatar.GameUser;
+import com.aerohockey.mechanics.base.BallCoords;
 import com.aerohockey.mechanics.base.ServerPlayerSnap;
 import com.aerohockey.mechanics.base.ServerSnap;
 import com.aerohockey.websocket.Message;
@@ -36,10 +37,13 @@ public class ServerSnapService {
         for (GameUser player : players) {
             playersSnaps.add(player.generateSnap());
         }
-        final ServerSnap snap = new ServerSnap();
 
+        gameSession.getBall().move();
+
+        final ServerSnap snap = new ServerSnap();
         snap.setPlayers(playersSnaps);
         snap.setServerFrameTime(frameTime);
+//        snap.setBallCoords(gameSession.getBall().getBallCoords());
         try {
             final Message message = new Message(ServerSnap.class.getName(), objectMapper.writeValueAsString(snap));
             for (GameUser player : players) {
@@ -50,4 +54,8 @@ public class ServerSnapService {
         }
 
     }
+
+//    private BallCoords moveBall() {
+//
+//    }
 }

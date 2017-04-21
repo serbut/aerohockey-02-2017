@@ -20,14 +20,14 @@ public class ClientSnap {
         this.direction = direction;
     }
 
-//    private @NotNull PlatformCoords platformCoords;
+//    private @NotNull Platform platformCoords;
 //    private long frameTime;
 //
-//    public @NotNull PlatformCoords getPlatformCoords() {
+//    public @NotNull Platform getPlatform() {
 //        return platformCoords;
 //    }
 //
-//    public void setPlatformCoords(PlatformCoords platformCoords) {
+//    public void setPlatform(Platform platformCoords) {
 //        this.platformCoords = platformCoords;
 //    }
 //
