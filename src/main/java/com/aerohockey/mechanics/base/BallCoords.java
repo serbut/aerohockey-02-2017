@@ -14,6 +14,7 @@ public class BallCoords {
     public double x;
     public double y;
 
+
     public BallCoords(@JsonProperty("x") double x, @JsonProperty("y") double y) {
         this.x = x;
         this.y = y;

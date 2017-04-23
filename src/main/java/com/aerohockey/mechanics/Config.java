@@ -11,4 +11,5 @@ public class Config {
     public static final int PLATFORM_WIDTH = 60;
 
     public static final int BALL_RADIUS = 5;
+    public static final int SPEED = 1;
 }

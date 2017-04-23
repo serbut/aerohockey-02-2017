@@ -1,5 +1,6 @@
 package com.aerohockey.mechanics;
 
+import com.aerohockey.mechanics.avatar.Ball;
 import com.aerohockey.mechanics.avatar.GameUser;
 import com.aerohockey.mechanics.base.BallCoords;
 import com.aerohockey.model.UserProfile;
@@ -7,9 +8,7 @@ import org.jetbrains.annotations.NotNull;
 
 import java.util.concurrent.atomic.AtomicLong;
 
-import static com.aerohockey.mechanics.Config.BALL_RADIUS;
-import static com.aerohockey.mechanics.Config.PLATFORM_HEIGHT;
-import static com.aerohockey.mechanics.Config.PLAYGROUND_WIDTH;
+import static com.aerohockey.mechanics.Config.*;
 
 /**
  * Created by sergeybutorin on 14.04.17.
@@ -19,13 +18,13 @@ public class GameSession {
     private final @NotNull Long sessionId;
     private final @NotNull GameUser first;
     private final @NotNull GameUser second;
-    private @NotNull BallCoords ball;
+    private @NotNull Ball ball;
 
     public GameSession(@NotNull UserProfile user1, @NotNull UserProfile user2) {
         this.sessionId = ID_GENERATOR.getAndIncrement();
         this.first = new GameUser(user1);
         this.second =  new GameUser(user2);
-        this.ball = new BallCoords(PLAYGROUND_WIDTH/2, PLATFORM_HEIGHT + BALL_RADIUS);
+        this.ball = new Ball(new BallCoords(0, PLAYGROUND_HEIGHT/2));
     }
 
     public @NotNull GameUser getFirst() {
@@ -36,12 +35,12 @@ public class GameSession {
         return second;
     }
 
-    public @NotNull BallCoords getBall() {
+    public @NotNull Ball getBall() {
         return ball;
     }
 
-    public void setBall(@NotNull BallCoords ball) {
-        this.ball = ball;
+    public void setBallCoords(@NotNull BallCoords ballCoords) {
+        this.ball.setCoords(ballCoords);
     }
 
     @Override

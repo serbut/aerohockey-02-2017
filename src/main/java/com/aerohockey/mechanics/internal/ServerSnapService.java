@@ -1,6 +1,7 @@
 package com.aerohockey.mechanics.internal;
 
 import com.aerohockey.mechanics.GameSession;
+import com.aerohockey.mechanics.avatar.Ball;
 import com.aerohockey.mechanics.avatar.GameUser;
 import com.aerohockey.mechanics.base.BallCoords;
 import com.aerohockey.mechanics.base.ServerPlayerSnap;
@@ -15,6 +16,8 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
+
+import static com.aerohockey.mechanics.Config.*;
 
 /**
  * Created by sergeybutorin on 15.04.17.
@@ -38,12 +41,12 @@ public class ServerSnapService {
             playersSnaps.add(player.generateSnap());
         }
 
-        gameSession.setBall(moveBall(gameSession.getBall()));
+        gameSession.getBall().move();
 
         final ServerSnap snap = new ServerSnap();
         snap.setPlayers(playersSnaps);
         snap.setServerFrameTime(frameTime);
-        snap.setBallCoords(gameSession.getBall());
+        snap.setBallCoords(gameSession.getBall().getCoords());
         try {
             final Message message = new Message(ServerSnap.class.getName(), objectMapper.writeValueAsString(snap));
             for (GameUser player : players) {
@@ -53,10 +56,5 @@ public class ServerSnapService {
             throw new RuntimeException("Failed sending snapshot", ex);
         }
 
-    }
-
-    private @NotNull BallCoords moveBall(@NotNull BallCoords ballCoords) {
-        BallCoords newCoords = new BallCoords(ballCoords.x + 1, ballCoords.y + 1);
-        return newCoords;
     }
 }
