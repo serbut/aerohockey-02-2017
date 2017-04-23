@@ -38,12 +38,12 @@ public class ServerSnapService {
             playersSnaps.add(player.generateSnap());
         }
 
-        gameSession.getBall().move();
+        gameSession.setBall(moveBall(gameSession.getBall()));
 
         final ServerSnap snap = new ServerSnap();
         snap.setPlayers(playersSnaps);
         snap.setServerFrameTime(frameTime);
-//        snap.setBallCoords(gameSession.getBall().getBallCoords());
+        snap.setBallCoords(gameSession.getBall());
         try {
             final Message message = new Message(ServerSnap.class.getName(), objectMapper.writeValueAsString(snap));
             for (GameUser player : players) {
@@ -55,7 +55,8 @@ public class ServerSnapService {
 
     }
 
-//    private BallCoords moveBall() {
-//
-//    }
+    private @NotNull BallCoords moveBall(@NotNull BallCoords ballCoords) {
+        BallCoords newCoords = new BallCoords(ballCoords.x + 1, ballCoords.y + 1);
+        return newCoords;
+    }
 }

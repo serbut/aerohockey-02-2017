@@ -9,6 +9,7 @@ import org.springframework.stereotype.Service;
 
 import java.util.*;
 
+import static com.aerohockey.mechanics.Config.PLATFORM_WIDTH;
 import static com.aerohockey.mechanics.Config.PLAYGROUND_WIDTH;
 
 /**
@@ -47,11 +48,11 @@ public class ClientSnapService {
         final Platform platform = gameUser.getPlatform();
         switch (direction) {
             case "left": {
-                gameUser.setPlatform(movePlatform(platform, -10));
+                gameUser.setPlatform(movePlatform(platform, -1));
                 break;
             }
             case "right": {
-                gameUser.setPlatform(movePlatform(platform, 10));
+                gameUser.setPlatform(movePlatform(platform, 1));
                 break;
             }
             default: {
@@ -62,10 +63,10 @@ public class ClientSnapService {
 
     private Platform movePlatform(@NotNull Platform platform, double dx) {
         final Platform newCoords = new Platform(platform.x + dx);
-        if (newCoords.x > PLAYGROUND_WIDTH - platform.platformWidth/2) {
-            newCoords.x = PLAYGROUND_WIDTH - platform.platformWidth/2;
-        } else if (newCoords.x < platform.platformWidth/2) {
-            newCoords.x = platform.platformWidth/2;
+        if (newCoords.x > PLAYGROUND_WIDTH - PLATFORM_WIDTH/2) {
+            newCoords.x = PLAYGROUND_WIDTH - PLATFORM_WIDTH/2;
+        } else if (newCoords.x < PLATFORM_WIDTH/2) {
+            newCoords.x = PLATFORM_WIDTH/2;
         }
         return newCoords;
 

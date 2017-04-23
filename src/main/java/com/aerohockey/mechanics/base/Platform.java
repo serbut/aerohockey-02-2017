@@ -7,14 +7,9 @@ import com.fasterxml.jackson.annotation.JsonProperty;
  */
 @SuppressWarnings("InstanceVariableNamingConvention")
 public class Platform {
-    public static final int PLATFORM_HEIGHT = 5;
+    public double x;
 
     public Platform(@JsonProperty("x") double x) {
         this.x = x;
-        //noinspection MagicNumber
-        platformWidth = 50;
     }
-
-    public double x;
-    public final int platformWidth;
 }

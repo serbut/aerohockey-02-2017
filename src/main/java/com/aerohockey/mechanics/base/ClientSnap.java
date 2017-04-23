@@ -19,23 +19,4 @@ public class ClientSnap {
     public void setDirection(String direction) {
         this.direction = direction;
     }
-
-//    private @NotNull Platform platformCoords;
-//    private long frameTime;
-//
-//    public @NotNull Platform getPlatform() {
-//        return platformCoords;
-//    }
-//
-//    public void setPlatform(Platform platformCoords) {
-//        this.platformCoords = platformCoords;
-//    }
-//
-//    public long getFrameTime() {
-//        return frameTime;
-//    }
-//
-//    public void setFrameTime(long frameTime) {
-//        this.frameTime = frameTime;
-//    }
 }
