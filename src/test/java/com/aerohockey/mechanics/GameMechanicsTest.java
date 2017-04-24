@@ -42,6 +42,8 @@ public class GameMechanicsTest {
     private UserProfile user1;
     private UserProfile user2;
 
+    private final double delta = 0.1;
+
     @Before
     public void setUp () {
         when(remotePointService.isConnected(any())).thenReturn(true);
@@ -67,15 +69,15 @@ public class GameMechanicsTest {
     public void movementTest() {
         final GameSession gameSession = startGame(user1.getId(), user2.getId());
         final @NotNull GameUser firstPlayer = gameSession.getFirst();
-        assertEquals(0, firstPlayer.getPlatform().getCoords().x, 0.1);
+        assertEquals(0, firstPlayer.getPlatform().getCoords().x, delta);
 
         gameMechanics.addClientSnapshot(firstPlayer.getId(), new ClientSnap("right"));
         gameMechanics.gmStep(10);
-        assertEquals(PLATFORM_STEP, firstPlayer.getPlatform().getCoords().x, 0.1);
+        assertEquals(PLATFORM_STEP, firstPlayer.getPlatform().getCoords().x, delta);
 
         gameMechanics.addClientSnapshot(firstPlayer.getId(), new ClientSnap("left"));
         gameMechanics.gmStep(10);
-        assertEquals(0, firstPlayer.getPlatform().getCoords().x, 0.1);
+        assertEquals(0, firstPlayer.getPlatform().getCoords().x, delta);
     }
 
     @Test
@@ -88,10 +90,10 @@ public class GameMechanicsTest {
             gameMechanics.addClientSnapshot(firstPlayer.getId(), new ClientSnap("right"));
             gameMechanics.gmStep(10);
         }
-        assertEquals(movementLength, firstPlayer.getPlatform().getCoords().x, 0.1);
+        assertEquals(movementLength, firstPlayer.getPlatform().getCoords().x, delta);
 
         gameMechanics.addClientSnapshot(firstPlayer.getId(), new ClientSnap("right"));
         gameMechanics.gmStep(10);
-        assertEquals(movementLength, firstPlayer.getPlatform().getCoords().x, 0.1);
+        assertEquals(movementLength, firstPlayer.getPlatform().getCoords().x, delta);
     }
 }

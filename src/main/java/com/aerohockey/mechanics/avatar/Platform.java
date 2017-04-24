@@ -13,10 +13,9 @@ import static com.aerohockey.mechanics.Config.PLAYGROUND_WIDTH;
 public class Platform {
     private PlatformCoords coords;
 
-    private double width;
-    private double height;
+    private final double width;
+    private final double height;
 
-    @SuppressWarnings("MagicNumber")
     public Platform(@NotNull PlatformCoords coords) {
         this.coords = coords;
         this.width = 60;
@@ -33,11 +32,18 @@ public class Platform {
         coords.x = newX;
     }
 
-    public boolean checkBallCollision(boolean isFirst, BallCoords ballCoords) {
+    @SuppressWarnings("OverlyComplexBooleanExpression")
+    public boolean checkBallCollision(boolean isFirst, BallCoords ballCoords, double radius) {
         if (isFirst) {
-            return ballCoords.y < height && ballCoords.x < coords.x + width / 2 && ballCoords.x > coords.x - width / 2;
+            return (ballCoords.y + radius) < height &&
+                    (ballCoords.y + radius) > 0 &&
+                    (ballCoords.x + radius) < coords.x + width/2 &&
+                    (ballCoords.x + radius) > coords.x - width/2;
         } else {
-            return ballCoords.y > PLAYGROUND_HEIGHT - height && ballCoords.x < coords.x + width/2 && ballCoords.x > coords.x - width/2;
+            return (ballCoords.y + radius) > PLAYGROUND_HEIGHT - height &&
+                    (ballCoords.y + radius) < PLAYGROUND_HEIGHT &&
+                    (ballCoords.x + radius) < coords.x + width/2 &&
+                    (ballCoords.x + radius) > coords.x - width/2;
         }
     }
 

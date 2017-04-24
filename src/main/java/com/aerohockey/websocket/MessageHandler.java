@@ -27,5 +27,5 @@ public abstract class MessageHandler<T> {
         }
     }
 
-    public abstract void handle(@NotNull T message, @NotNull Long forUser) throws HandleException;
+    public abstract void handle(@NotNull T message, @NotNull Long forUser);
 }

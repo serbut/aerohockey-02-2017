@@ -18,7 +18,7 @@ public class GameSession {
     private final @NotNull Long sessionId;
     private final @NotNull GameUser first;
     private final @NotNull GameUser second;
-    private @NotNull Ball ball;
+    private final @NotNull Ball ball;
 
     public GameSession(@NotNull UserProfile user1, @NotNull UserProfile user2) {
         this.sessionId = ID_GENERATOR.getAndIncrement();
@@ -39,10 +39,6 @@ public class GameSession {
         return ball;
     }
 
-    public void setBallCoords(@NotNull BallCoords ballCoords) {
-        this.ball.setCoords(ballCoords);
-    }
-
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
@@ -51,7 +47,6 @@ public class GameSession {
         final GameSession session = (GameSession) o;
 
         return sessionId.equals(session.sessionId);
-
     }
 
     @Override

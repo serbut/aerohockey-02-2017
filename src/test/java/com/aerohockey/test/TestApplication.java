@@ -11,8 +11,6 @@ import com.aerohockey.Application;
 import org.springframework.web.socket.WebSocketHandler;
 import org.springframework.web.socket.handler.PerConnectionWebSocketHandler;
 
-import java.util.concurrent.TimeUnit;
-
 /**
  * Created by sergey on 21.03.17.
  */
@@ -20,8 +18,6 @@ import java.util.concurrent.TimeUnit;
 @SpringBootApplication
 @Import(Application.class)
 public class TestApplication {
-    public static final long IDLE_TIMEOUT_MS = TimeUnit.MINUTES.toMillis(1);
-    public static final int BUFFER_SIZE_BYTES = 8192;
 
     public static void main(String[] args) {
         SpringApplication.run(new Object[]{WebSocketConfig.class, Application.class}, args);

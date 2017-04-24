@@ -52,12 +52,11 @@ public class GameSessionService {
         }
     }
 
-    public GameSession startGame(@NotNull UserProfile first, @NotNull UserProfile second) {
+    public void startGame(@NotNull UserProfile first, @NotNull UserProfile second) {
         final GameSession gameSession = new GameSession(first, second);
         gameSessions.add(gameSession);
         usersMap.put(gameSession.getFirst().getId(), gameSession);
         usersMap.put(gameSession.getSecond().getId(), gameSession);
         gameInitService.initGameFor(gameSession);
-        return gameSession;
     }
 }

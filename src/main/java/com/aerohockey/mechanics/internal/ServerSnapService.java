@@ -1,9 +1,7 @@
 package com.aerohockey.mechanics.internal;
 
 import com.aerohockey.mechanics.GameSession;
-import com.aerohockey.mechanics.avatar.Ball;
 import com.aerohockey.mechanics.avatar.GameUser;
-import com.aerohockey.mechanics.base.BallCoords;
 import com.aerohockey.mechanics.base.ServerPlayerSnap;
 import com.aerohockey.mechanics.base.ServerSnap;
 import com.aerohockey.websocket.Message;
@@ -16,8 +14,6 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
-
-import static com.aerohockey.mechanics.Config.*;
 
 /**
  * Created by sergeybutorin on 15.04.17.
@@ -48,6 +44,7 @@ public class ServerSnapService {
         snap.setPlayers(playersSnaps);
         snap.setServerFrameTime(frameTime);
         snap.setBallCoords(gameSession.getBall().getCoords());
+        //noinspection OverlyBroadCatchBlock
         try {
             final Message message = new Message(ServerSnap.class.getName(), objectMapper.writeValueAsString(snap));
             for (GameUser player : players) {

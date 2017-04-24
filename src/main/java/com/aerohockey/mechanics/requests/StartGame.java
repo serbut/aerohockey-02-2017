@@ -13,7 +13,6 @@ public class StartGame {
         private @NotNull Long self;
         private @NotNull List<ServerPlayerSnap> players;
 
-
         public @NotNull Long getSelf() {
             return self;
         }
@@ -21,10 +20,12 @@ public class StartGame {
         public void setSelf(@NotNull Long self) {
             this.self = self;
         }
+
         public @NotNull List<ServerPlayerSnap> getPlayers() {
             return players;
         }
-        public @NotNull void setPlayers(@NotNull List<ServerPlayerSnap> players) {
+
+        public void setPlayers(@NotNull List<ServerPlayerSnap> players) {
             this.players = players;
         }
     }

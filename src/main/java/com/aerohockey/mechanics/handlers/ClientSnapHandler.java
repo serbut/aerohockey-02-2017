@@ -2,7 +2,6 @@ package com.aerohockey.mechanics.handlers;
 
 import com.aerohockey.mechanics.GameMechanics;
 import com.aerohockey.mechanics.base.ClientSnap;
-import com.aerohockey.websocket.HandleException;
 import com.aerohockey.websocket.MessageHandler;
 import com.aerohockey.websocket.MessageHandlerContainer;
 import org.jetbrains.annotations.NotNull;
@@ -30,7 +29,7 @@ public class ClientSnapHandler extends MessageHandler<ClientSnap> {
     }
 
     @Override
-    public void handle(@NotNull ClientSnap message, @NotNull Long forUser) throws HandleException {
+    public void handle(@NotNull ClientSnap message, @NotNull Long forUser) {
         gameMechanics.addClientSnapshot(forUser, message);
     }
 }

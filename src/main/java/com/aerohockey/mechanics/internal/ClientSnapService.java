@@ -3,14 +3,12 @@ package com.aerohockey.mechanics.internal;
 import com.aerohockey.mechanics.GameSession;
 import com.aerohockey.mechanics.avatar.GameUser;
 import com.aerohockey.mechanics.base.ClientSnap;
-import com.aerohockey.mechanics.base.PlatformCoords;
 import org.jetbrains.annotations.NotNull;
 import org.springframework.stereotype.Service;
 
 import java.util.*;
 
 import static com.aerohockey.mechanics.Config.PLATFORM_STEP;
-import static com.aerohockey.mechanics.Config.PLAYGROUND_WIDTH;
 
 /**
  * Created by sergeybutorin on 15.04.17.

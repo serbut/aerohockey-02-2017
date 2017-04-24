@@ -10,7 +10,7 @@ import org.jetbrains.annotations.NotNull;
  */
 public class GameUser {
     private final UserProfile userProfile;
-    private Platform platform;
+    private final Platform platform;
     private int score;
 
     public GameUser(UserProfile userProfile) {
