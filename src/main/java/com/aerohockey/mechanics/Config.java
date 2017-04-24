@@ -6,4 +6,6 @@ package com.aerohockey.mechanics;
 public class Config {
     public static final int PLAYGROUND_WIDTH = 160;
     public static final int PLAYGROUND_HEIGHT = 240;
+
+    public static final double PLATFORM_STEP = 1;
 }

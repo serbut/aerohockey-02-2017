@@ -9,6 +9,7 @@ import org.springframework.stereotype.Service;
 
 import java.util.*;
 
+import static com.aerohockey.mechanics.Config.PLATFORM_STEP;
 import static com.aerohockey.mechanics.Config.PLAYGROUND_WIDTH;
 
 /**
@@ -46,11 +47,11 @@ public class ClientSnapService {
     private void processMovement(@NotNull GameUser gameUser, @NotNull String direction) {
         switch (direction) {
             case "left": {
-                gameUser.getPlatform().move(-1);
+                gameUser.getPlatform().move(-PLATFORM_STEP);
                 break;
             }
             case "right": {
-                gameUser.getPlatform().move(1);
+                gameUser.getPlatform().move(PLATFORM_STEP);
                 break;
             }
             default: {

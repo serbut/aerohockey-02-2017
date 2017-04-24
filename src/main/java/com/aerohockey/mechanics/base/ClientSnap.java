@@ -8,7 +8,7 @@ import org.jetbrains.annotations.NotNull;
 public class ClientSnap {
     private @NotNull String direction;
 
-    ClientSnap(@NotNull String direction) {
+    public ClientSnap(@NotNull String direction) {
         this.direction = direction;
     }
 

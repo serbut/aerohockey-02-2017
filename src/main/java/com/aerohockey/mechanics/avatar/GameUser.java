@@ -11,6 +11,7 @@ import org.jetbrains.annotations.NotNull;
 public class GameUser {
     private final UserProfile userProfile;
     private Platform platform;
+    private int score;
 
     public GameUser(UserProfile userProfile) {
         this.userProfile = userProfile;
@@ -32,10 +33,6 @@ public class GameUser {
         return platform;
     }
 
-    public void setPlatform(PlatformCoords platformCoords) {
-        this.platform.setCoords(platformCoords);
-    }
-
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
@@ -48,5 +45,13 @@ public class GameUser {
     @Override
     public int hashCode() {
         return (int)this.getId();
+    }
+
+    public int getScore() {
+        return score;
+    }
+
+    public void setScore(int score) {
+        this.score = score;
     }
 }
