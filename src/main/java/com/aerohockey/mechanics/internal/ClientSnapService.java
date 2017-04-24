@@ -3,13 +3,12 @@ package com.aerohockey.mechanics.internal;
 import com.aerohockey.mechanics.GameSession;
 import com.aerohockey.mechanics.avatar.GameUser;
 import com.aerohockey.mechanics.base.ClientSnap;
-import com.aerohockey.mechanics.base.Platform;
+import com.aerohockey.mechanics.base.PlatformCoords;
 import org.jetbrains.annotations.NotNull;
 import org.springframework.stereotype.Service;
 
 import java.util.*;
 
-import static com.aerohockey.mechanics.Config.PLATFORM_WIDTH;
 import static com.aerohockey.mechanics.Config.PLAYGROUND_WIDTH;
 
 /**
@@ -45,31 +44,19 @@ public class ClientSnapService {
     }
 
     private void processMovement(@NotNull GameUser gameUser, @NotNull String direction) {
-        final Platform platform = gameUser.getPlatform();
         switch (direction) {
             case "left": {
-                gameUser.setPlatform(movePlatform(platform, -1));
+                gameUser.getPlatform().move(-1);
                 break;
             }
             case "right": {
-                gameUser.setPlatform(movePlatform(platform, 1));
+                gameUser.getPlatform().move(1);
                 break;
             }
             default: {
                 break;
             }
         }
-    }
-
-    private Platform movePlatform(@NotNull Platform platform, double dx) {
-        final Platform newCoords = new Platform(platform.x + dx);
-        if (newCoords.x > PLAYGROUND_WIDTH - PLATFORM_WIDTH/2) {
-            newCoords.x = PLAYGROUND_WIDTH - PLATFORM_WIDTH/2;
-        } else if (newCoords.x < PLATFORM_WIDTH/2) {
-            newCoords.x = PLATFORM_WIDTH/2;
-        }
-        return newCoords;
-
     }
 
     public void clear() {

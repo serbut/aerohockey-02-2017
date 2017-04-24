@@ -41,7 +41,8 @@ public class ServerSnapService {
             playersSnaps.add(player.generateSnap());
         }
 
-        gameSession.getBall().move();
+        gameSession.getBall().move(gameSession.getFirst().getPlatform(),
+                gameSession.getSecond().getPlatform());
 
         final ServerSnap snap = new ServerSnap();
         snap.setPlayers(playersSnaps);
