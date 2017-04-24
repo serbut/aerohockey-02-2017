@@ -17,7 +17,7 @@ public class Ball {
 
     public Ball(BallCoords coords) {
         this.coords = coords;
-        this.speedX = 3;
+        this.speedX = 0;
         this.speedY = 3;
         this.radius = 5;
     }
@@ -32,12 +32,21 @@ public class Ball {
             newX = coords.x - speedX;
         }
         if (newY < firstPlatform.getHeight() || newY > PLAYGROUND_HEIGHT - secondPlatform.getHeight()) {
-            if (firstPlatform.checkBallCollision(true, new BallCoords(newX, newY)) || secondPlatform.checkBallCollision(false, new BallCoords(newX, newY))) {
-                speedY = -speedY;
+            if (firstPlatform.checkBallCollision(true, new BallCoords(newX, newY))) {
+                final double dSpeed = 4 * (newX - firstPlatform.getCoords().x)/firstPlatform.getWidth();
+                speedX += dSpeed;
+                newX = coords.x + speedX;
+                speedY = dSpeed - speedY;
                 newY = coords.y - speedY;
-            } else {
+            } else if (secondPlatform.checkBallCollision(false, new BallCoords(newX, newY))) {
+                final double dSpeed = 4 * (newX - secondPlatform.getCoords().x)/secondPlatform.getWidth();
+                speedX += dSpeed;
+                newX = coords.x + speedX;
+                speedY = dSpeed - speedY;
+                newY = coords.y - speedY;
+            } else if (newY < 0 || newY > PLAYGROUND_HEIGHT) { // goal
                 speedY = -speedY;
-                newY = PLAYGROUND_HEIGHT / 2; // goal
+                newY = PLAYGROUND_HEIGHT / 2;
             }
         }
         coords.x = newX;

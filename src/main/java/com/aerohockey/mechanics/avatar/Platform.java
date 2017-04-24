@@ -12,6 +12,7 @@ import static com.aerohockey.mechanics.Config.PLAYGROUND_WIDTH;
  */
 public class Platform {
     private PlatformCoords coords;
+
     private double width;
     private double height;
 
@@ -46,6 +47,10 @@ public class Platform {
 
     public double getHeight() {
         return height;
+    }
+
+    public double getWidth() {
+        return width;
     }
 
     public void setCoords(PlatformCoords coords) {
