@@ -37,8 +37,7 @@ public class ServerSnapService {
             playersSnaps.add(player.generateSnap());
         }
 
-        gameSession.getBall().move(gameSession.getFirst().getPlatform(),
-                gameSession.getSecond().getPlatform());
+        gameSession.getBall().move(gameSession.getFirst(), gameSession.getSecond());
 
         final ServerSnap snap = new ServerSnap();
         snap.setPlayers(playersSnaps);
@@ -53,6 +52,5 @@ public class ServerSnapService {
         } catch (IOException ex) {
             throw new RuntimeException("Failed sending snapshot", ex);
         }
-
     }
 }

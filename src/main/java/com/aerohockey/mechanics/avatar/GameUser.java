@@ -11,10 +11,11 @@ import org.jetbrains.annotations.NotNull;
 public class GameUser {
     private final UserProfile userProfile;
     private final Platform platform;
-    private int score;
+    private byte score;
 
     public GameUser(UserProfile userProfile) {
         this.userProfile = userProfile;
+        this.score = 0;
         platform = new Platform(new PlatformCoords(0));
     }
 
@@ -22,9 +23,14 @@ public class GameUser {
         return userProfile.getId();
     }
 
+    public void addScore() {
+        this.score += 1;
+    }
+
     public @NotNull ServerPlayerSnap generateSnap() {
         final ServerPlayerSnap result = new ServerPlayerSnap();
         result.setUserId(getId());
+        result.setScore(score);
         result.setPlatform(platform.getCoords());
         return result;
     }
@@ -45,13 +51,5 @@ public class GameUser {
     @Override
     public int hashCode() {
         return (int)this.getId();
-    }
-
-    public int getScore() {
-        return score;
-    }
-
-    public void setScore(int score) {
-        this.score = score;
     }
 }

@@ -26,54 +26,55 @@ public class Ball {
         this.radius = 5;
     }
 
-    public void move(@NotNull Platform firstPlatform, @NotNull Platform secondPlatform) {
-        double newX = coords.x + speedX;
-        double newY = coords.y + speedY;
+    public void move(@NotNull GameUser first, @NotNull GameUser second) {
+        final Platform firstPlatform = first.getPlatform();
+        final Platform secondPlatform = second.getPlatform();
+        BallCoords newCoords = new BallCoords(coords.x + speedX, coords.y + speedY);
 
-        if (newY < firstPlatform.getHeight() || newY > PLAYGROUND_HEIGHT - secondPlatform.getHeight()) {
-            if (firstPlatform.checkBallCollision(true, new BallCoords(newX, newY), radius)) {
-                final double dSpeed;
-                if (firstPlatform.getCoords().x * newX < 0) {
-                    dSpeed = 4 * (firstPlatform.getCoords().x - newX) / firstPlatform.getWidth();
-                } else {
-                    dSpeed = 4 * (newX - firstPlatform.getCoords().x) / firstPlatform.getWidth();
-                }
-                speedX += dSpeed;
-                checkSpeedX();
-                newX = coords.x + speedX;
-                speedY = sqrt(speedAbs * speedAbs - speedX * speedX);
-                newY = coords.y - speedY;
-            } else if (secondPlatform.checkBallCollision(false, new BallCoords(newX, newY), radius)) {
-                final double dSpeed;
-                if (firstPlatform.getCoords().x * newX < 0) {
-                    dSpeed = 4 * (secondPlatform.getCoords().x - newX) / firstPlatform.getWidth();
-                } else {
-                    dSpeed = 4 * (newX - secondPlatform.getCoords().x) / secondPlatform.getWidth();
-                }
-                speedX += dSpeed;
-                checkSpeedX();
-                newX = coords.x + speedX;
-                speedY = -sqrt(speedAbs * speedAbs - speedX * speedX);
-                newY = coords.y - speedY;
-            } else if (newY < 0 || newY > PLAYGROUND_HEIGHT) { // goal
+        if (newCoords.y < firstPlatform.getHeight() || newCoords.y > PLAYGROUND_HEIGHT - secondPlatform.getHeight()) {
+            if (firstPlatform.checkBallCollision(true, newCoords, radius)) {
+                newCoords = platformCollision(firstPlatform, newCoords);
+            } else if (secondPlatform.checkBallCollision(false, newCoords, radius)) {
+                newCoords = platformCollision(secondPlatform, newCoords);
+            } else if (newCoords.y < 0) {
+                second.addScore();
                 speedY = -speedY;
-                newY = PLAYGROUND_HEIGHT / 2;
+                newCoords.y = PLAYGROUND_HEIGHT / 2;
+            } else if (newCoords.y > PLAYGROUND_HEIGHT) {
+                first.addScore();
+                speedY = -speedY;
+                newCoords.y = PLAYGROUND_HEIGHT / 2;
             }
         }
-        if (newX > PLAYGROUND_WIDTH/2 - radius ||
-                newX < -PLAYGROUND_WIDTH/2 + radius) {
+        if (newCoords.x > PLAYGROUND_WIDTH/2 - radius ||
+                newCoords.x < -PLAYGROUND_WIDTH/2 + radius) {
             speedX = -speedX;
-            newX = coords.x - speedX;
+            newCoords.x = coords.x - speedX;
         }
-        coords.x = newX;
-        coords.y = newY;
+        coords = newCoords;
     }
 
 
     private void checkSpeedX() {
-        if (abs(speedX) > 0.9 * speedAbs) {
-            speedX = signum(speedX) * 0.9 * speedAbs;
+        final double maxAngle = 0.9;
+        if (abs(speedX) > maxAngle * speedAbs) {
+            speedX = signum(speedX) * maxAngle * speedAbs;
         }
+    }
+
+    private BallCoords platformCollision(Platform platform, BallCoords ballCoords) {
+        final double dSpeed;
+        if (platform.getCoords().x * ballCoords.x < 0) {
+            dSpeed = 4 * (platform.getCoords().x - ballCoords.x) / platform.getWidth();
+        } else {
+            dSpeed = 4 * (ballCoords.x - platform.getCoords().x) / platform.getWidth();
+        }
+        speedX += dSpeed;
+        checkSpeedX();
+        ballCoords.x = coords.x + speedX;
+        speedY = -signum(speedY) * sqrt(speedAbs * speedAbs - speedX * speedX);
+        ballCoords.y = coords.y - speedY;
+        return ballCoords;
     }
 
     public BallCoords getCoords() {
