@@ -12,10 +12,12 @@ public class GameUser {
     private final UserProfile userProfile;
     private final Platform platform;
     private byte score;
+    private boolean isTop;
 
-    public GameUser(UserProfile userProfile) {
+    public GameUser(UserProfile userProfile, boolean isTop) {
         this.userProfile = userProfile;
         this.score = 0;
+        this.isTop = isTop;
         platform = new Platform(new PlatformCoords(0));
     }
 
@@ -28,7 +30,7 @@ public class GameUser {
     }
 
     public @NotNull ServerPlayerSnap generateSnap(boolean self) {
-        final PlatformCoords platformCoords = new PlatformCoords(platform.getCoords().x);
+        final PlatformCoords platformCoords = new PlatformCoords(isTop ? -platform.getCoords().x : platform.getCoords().x);
 
         final ServerPlayerSnap result = new ServerPlayerSnap();
         result.setUserId(getId());
@@ -42,6 +44,10 @@ public class GameUser {
 
     public Platform getPlatform() {
         return platform;
+    }
+
+    public boolean isTop() {
+        return isTop;
     }
 
     @Override

@@ -16,23 +16,23 @@ import static com.aerohockey.mechanics.Config.*;
 public class GameSession {
     private static final AtomicLong ID_GENERATOR = new AtomicLong(0);
     private final @NotNull Long sessionId;
-    private final @NotNull GameUser first;
-    private final @NotNull GameUser second;
+    private final @NotNull GameUser top;
+    private final @NotNull GameUser bottom;
     private final @NotNull Ball ball;
 
     public GameSession(@NotNull UserProfile user1, @NotNull UserProfile user2) {
         this.sessionId = ID_GENERATOR.getAndIncrement();
-        this.first = new GameUser(user1);
-        this.second =  new GameUser(user2);
+        this.top = new GameUser(user1, true);
+        this.bottom =  new GameUser(user2, false);
         this.ball = new Ball(new BallCoords(0, PLAYGROUND_HEIGHT/2));
     }
 
-    public @NotNull GameUser getFirst() {
-        return first;
+    public @NotNull GameUser getTop() {
+        return top;
     }
 
-    public @NotNull GameUser getSecond() {
-        return second;
+    public @NotNull GameUser getBottom() {
+        return bottom;
     }
 
     public @NotNull Ball getBall() {

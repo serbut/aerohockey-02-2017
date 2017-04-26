@@ -43,19 +43,19 @@ public class GameSessionService {
 
     public void notifyGameIsOver(@NotNull GameSession gameSession) {
         final boolean exists = gameSessions.remove(gameSession);
-        usersMap.remove(gameSession.getFirst().getId());
-        usersMap.remove(gameSession.getSecond().getId());
+        usersMap.remove(gameSession.getTop().getId());
+        usersMap.remove(gameSession.getBottom().getId());
         if (exists) {
-            remotePointService.cutDownConnection(gameSession.getFirst().getId());
-            remotePointService.cutDownConnection(gameSession.getSecond().getId());
+            remotePointService.cutDownConnection(gameSession.getTop().getId());
+            remotePointService.cutDownConnection(gameSession.getBottom().getId());
         }
     }
 
     public void startGame(@NotNull UserProfile first, @NotNull UserProfile second) {
         final GameSession gameSession = new GameSession(first, second);
         gameSessions.add(gameSession);
-        usersMap.put(gameSession.getFirst().getId(), gameSession);
-        usersMap.put(gameSession.getSecond().getId(), gameSession);
+        usersMap.put(gameSession.getTop().getId(), gameSession);
+        usersMap.put(gameSession.getBottom().getId(), gameSession);
         gameInitService.initGameFor(gameSession);
     }
 }

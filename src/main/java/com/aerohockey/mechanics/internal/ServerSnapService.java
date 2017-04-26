@@ -30,17 +30,22 @@ public class ServerSnapService {
 
     public void sendSnapshotsFor(@NotNull GameSession gameSession, long frameTime) {
         final Collection<GameUser> players = new ArrayList<>();
-        players.add(gameSession.getFirst());
-        players.add(gameSession.getSecond());
+        players.add(gameSession.getTop());
+        players.add(gameSession.getBottom());
 
-        gameSession.getBall().move(gameSession.getFirst(), gameSession.getSecond());
+        gameSession.getBall().move(gameSession.getTop(), gameSession.getBottom());
+
+        final ServerSnap snap = new ServerSnap();
+        snap.setServerFrameTime(frameTime);
 
         //noinspection OverlyBroadCatchBlock
         try {
             for (GameUser player : players) {
-                final ServerSnap snap = new ServerSnap();
-                snap.setServerFrameTime(frameTime);
-                snap.setBallCoords(gameSession.getBall().getCoords());
+                if (player.isTop()) {
+                    snap.setBallCoords(gameSession.getBall().getCoords(true));
+                } else {
+                    snap.setBallCoords(gameSession.getBall().getCoords(false));
+                }
                 final List<ServerPlayerSnap> playersSnaps = new ArrayList<>();
                 for (GameUser p : players) {
                     if (p.equals(player)) {

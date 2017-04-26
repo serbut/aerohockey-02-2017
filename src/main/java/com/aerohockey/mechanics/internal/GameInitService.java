@@ -31,8 +31,8 @@ public class GameInitService {
 
     public void initGameFor(@NotNull GameSession gameSession) {
         final Collection<GameUser> players = new ArrayList<>();
-        players.add(gameSession.getFirst());
-        players.add(gameSession.getSecond());
+        players.add(gameSession.getTop());
+        players.add(gameSession.getBottom());
         for (GameUser player : players) {
             final StartGame.Request initMessage = createInitMessageFor(gameSession, player.getId());
             //noinspection OverlyBroadCatchBlock
@@ -55,8 +55,8 @@ public class GameInitService {
         final List<ServerPlayerSnap> playerSnaps = new ArrayList<>();
 
         final Collection<GameUser> players = new ArrayList<>();
-        players.add(gameSession.getFirst());
-        players.add(gameSession.getSecond());
+        players.add(gameSession.getTop());
+        players.add(gameSession.getBottom());
         for (GameUser player : players) {
             for (GameUser p : players) {
                 if (p.equals(player)) {

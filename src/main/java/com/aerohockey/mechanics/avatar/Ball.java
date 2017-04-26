@@ -77,7 +77,11 @@ public class Ball {
         return ballCoords;
     }
 
-    public BallCoords getCoords() {
-        return coords;
+    public BallCoords getCoords(boolean isFirst) {
+        if (!isFirst) {
+            return coords;
+        } else {
+            return new BallCoords(-coords.x, PLAYGROUND_HEIGHT - coords.y);
+        }
     }
 }

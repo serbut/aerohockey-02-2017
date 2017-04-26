@@ -29,8 +29,8 @@ public class ClientSnapService {
 
     public void processSnapshotsFor(@NotNull GameSession gameSession) {
         final Collection<GameUser> players = new ArrayList<>();
-        players.add(gameSession.getFirst());
-        players.add(gameSession.getSecond());
+        players.add(gameSession.getTop());
+        players.add(gameSession.getBottom());
         for (GameUser player : players) {
             final List<ClientSnap> playerSnaps = getSnapForUser(player.getId());
             if (playerSnaps.isEmpty()) {
@@ -45,11 +45,11 @@ public class ClientSnapService {
     private void processMovement(@NotNull GameUser gameUser, @NotNull String direction) {
         switch (direction) {
             case "left": {
-                gameUser.getPlatform().move(-PLATFORM_STEP);
+                gameUser.getPlatform().move(gameUser.isTop() ? PLATFORM_STEP : -PLATFORM_STEP);
                 break;
             }
             case "right": {
-                gameUser.getPlatform().move(PLATFORM_STEP);
+                gameUser.getPlatform().move(gameUser.isTop() ? -PLATFORM_STEP : PLATFORM_STEP);
                 break;
             }
             default: {

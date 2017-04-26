@@ -68,7 +68,7 @@ public class GameMechanicsTest {
     @Test
     public void movementTest() {
         final GameSession gameSession = startGame(user1.getId(), user2.getId());
-        final @NotNull GameUser firstPlayer = gameSession.getFirst();
+        final @NotNull GameUser firstPlayer = gameSession.getBottom();
         assertEquals(0, firstPlayer.getPlatform().getCoords().x, delta);
 
         gameMechanics.addClientSnapshot(firstPlayer.getId(), new ClientSnap("right"));
@@ -83,7 +83,7 @@ public class GameMechanicsTest {
     @Test
     public void platformWallCollisionTest() {
         final GameSession gameSession = startGame(user1.getId(), user2.getId());
-        final @NotNull GameUser firstPlayer = gameSession.getFirst();
+        final @NotNull GameUser firstPlayer = gameSession.getBottom();
         final double movementLength = PLAYGROUND_WIDTH/2 - firstPlayer.getPlatform().getWidth()/2;
 
         for (int i = 0; i < (movementLength) / PLATFORM_STEP; i++) {
