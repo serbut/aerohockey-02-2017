@@ -32,21 +32,25 @@ public class ServerSnapService {
         final Collection<GameUser> players = new ArrayList<>();
         players.add(gameSession.getFirst());
         players.add(gameSession.getSecond());
-        final List<ServerPlayerSnap> playersSnaps = new ArrayList<>();
-        for (GameUser player : players) {
-            playersSnaps.add(player.generateSnap());
-        }
 
         gameSession.getBall().move(gameSession.getFirst(), gameSession.getSecond());
 
-        final ServerSnap snap = new ServerSnap();
-        snap.setPlayers(playersSnaps);
-        snap.setServerFrameTime(frameTime);
-        snap.setBallCoords(gameSession.getBall().getCoords());
         //noinspection OverlyBroadCatchBlock
         try {
-            final Message message = new Message(ServerSnap.class.getName(), objectMapper.writeValueAsString(snap));
             for (GameUser player : players) {
+                final ServerSnap snap = new ServerSnap();
+                snap.setServerFrameTime(frameTime);
+                snap.setBallCoords(gameSession.getBall().getCoords());
+                final List<ServerPlayerSnap> playersSnaps = new ArrayList<>();
+                for (GameUser p : players) {
+                    if (p.equals(player)) {
+                        playersSnaps.add(p.generateSnap(true));
+                    } else {
+                        playersSnaps.add(p.generateSnap(false));
+                    }
+                }
+                snap.setPlayers(playersSnaps);
+                final Message message = new Message(ServerSnap.class.getName(), objectMapper.writeValueAsString(snap));
                 remotePointService.sendMessageToUser(player.getId(), message);
             }
         } catch (IOException ex) {

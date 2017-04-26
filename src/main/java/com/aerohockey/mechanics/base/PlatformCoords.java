@@ -1,5 +1,7 @@
 package com.aerohockey.mechanics.base;
 
+import com.fasterxml.jackson.annotation.JsonProperty;
+
 /**
  * Created by sergeybutorin on 14.04.17.
  */
@@ -7,7 +9,7 @@ package com.aerohockey.mechanics.base;
 public class PlatformCoords {
     public double x;
 
-    public PlatformCoords() {
-        this.x = (double) 0;
+    public PlatformCoords(@JsonProperty("x") double x) {
+        this.x = x;
     }
 }

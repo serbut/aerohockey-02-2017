@@ -41,7 +41,6 @@ public class GameInitService {
                         objectMapper.writeValueAsString(initMessage));
                 remotePointService.sendMessageToUser(player.getId(), message);
             } catch (IOException e) {
-                //TODO: Reentrance mechanism
                 players.forEach(playerToCutOff -> remotePointService.cutDownConnection(playerToCutOff.getId()
                 ));
                 LOGGER.error("Unnable to start a game", e);
@@ -59,7 +58,13 @@ public class GameInitService {
         players.add(gameSession.getFirst());
         players.add(gameSession.getSecond());
         for (GameUser player : players) {
-            playerSnaps.add(player.generateSnap());
+            for (GameUser p : players) {
+                if (p.equals(player)) {
+                    playerSnaps.add(p.generateSnap(true));
+                } else {
+                    playerSnaps.add(p.generateSnap(false));
+                }
+            }
         }
 
         initGameMessage.setSelf(userId);

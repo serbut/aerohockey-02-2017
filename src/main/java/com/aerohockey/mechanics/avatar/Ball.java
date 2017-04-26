@@ -36,11 +36,11 @@ public class Ball {
                 newCoords = platformCollision(firstPlatform, newCoords);
             } else if (secondPlatform.checkBallCollision(false, newCoords, radius)) {
                 newCoords = platformCollision(secondPlatform, newCoords);
-            } else if (newCoords.y < 0) {
+            } else if (newCoords.y < 0) { //goal for user2
                 second.addScore();
                 speedY = -speedY;
                 newCoords.y = PLAYGROUND_HEIGHT / 2;
-            } else if (newCoords.y > PLAYGROUND_HEIGHT) {
+            } else if (newCoords.y > PLAYGROUND_HEIGHT) { //goal for user1
                 first.addScore();
                 speedY = -speedY;
                 newCoords.y = PLAYGROUND_HEIGHT / 2;

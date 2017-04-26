@@ -16,7 +16,7 @@ public class GameUser {
     public GameUser(UserProfile userProfile) {
         this.userProfile = userProfile;
         this.score = 0;
-        platform = new Platform(new PlatformCoords());
+        platform = new Platform(new PlatformCoords(0));
     }
 
     public long getId() {
@@ -27,11 +27,16 @@ public class GameUser {
         this.score += 1;
     }
 
-    public @NotNull ServerPlayerSnap generateSnap() {
+    public @NotNull ServerPlayerSnap generateSnap(boolean self) {
+        final PlatformCoords platformCoords = new PlatformCoords(platform.getCoords().x);
+
         final ServerPlayerSnap result = new ServerPlayerSnap();
         result.setUserId(getId());
         result.setScore(score);
-        result.setPlatform(platform.getCoords());
+        if(!self) {
+            platformCoords.x *= -1;
+        }
+        result.setPlatform(platformCoords);
         return result;
     }
 

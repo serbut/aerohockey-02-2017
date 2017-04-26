@@ -72,11 +72,11 @@ public class GameMechanicsTest {
         assertEquals(0, firstPlayer.getPlatform().getCoords().x, delta);
 
         gameMechanics.addClientSnapshot(firstPlayer.getId(), new ClientSnap("right"));
-        gameMechanics.gmStep(10);
+        gameMechanics.gmStep(0);
         assertEquals(PLATFORM_STEP, firstPlayer.getPlatform().getCoords().x, delta);
 
         gameMechanics.addClientSnapshot(firstPlayer.getId(), new ClientSnap("left"));
-        gameMechanics.gmStep(10);
+        gameMechanics.gmStep(0);
         assertEquals(0, firstPlayer.getPlatform().getCoords().x, delta);
     }
 
@@ -88,12 +88,12 @@ public class GameMechanicsTest {
 
         for (int i = 0; i < (movementLength) / PLATFORM_STEP; i++) {
             gameMechanics.addClientSnapshot(firstPlayer.getId(), new ClientSnap("right"));
-            gameMechanics.gmStep(10);
+            gameMechanics.gmStep(0);
         }
         assertEquals(movementLength, firstPlayer.getPlatform().getCoords().x, delta);
 
         gameMechanics.addClientSnapshot(firstPlayer.getId(), new ClientSnap("right"));
-        gameMechanics.gmStep(10);
+        gameMechanics.gmStep(0);
         assertEquals(movementLength, firstPlayer.getPlatform().getCoords().x, delta);
     }
 }
