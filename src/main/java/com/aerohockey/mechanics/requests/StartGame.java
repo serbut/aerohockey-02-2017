@@ -9,6 +9,7 @@ import java.util.List;
  * Created by sergeybutorin on 13.04.17.
  */
 public class StartGame {
+    @SuppressWarnings({"unused", "NullableProblems"})
     public static class Request {
         private @NotNull Long self;
         private @NotNull List<ServerPlayerSnap> players;

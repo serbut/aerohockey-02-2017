@@ -13,5 +13,6 @@ public interface GameMechanics {
 
     void gmStep(long frameTime);
 
+    @SuppressWarnings("EmptyMethod")
     void reset();
 }

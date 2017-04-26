@@ -7,6 +7,7 @@ import java.util.List;
 /**
  * Created by sergeybutorin on 15.04.17.
  */
+@SuppressWarnings({"unused", "NullableProblems"})
 public class ServerSnap {
     @NotNull List<ServerPlayerSnap> players;
     @NotNull BallCoords ballCoords;

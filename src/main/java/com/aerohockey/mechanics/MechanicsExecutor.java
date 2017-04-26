@@ -2,8 +2,6 @@ package com.aerohockey.mechanics;
 
 import com.aerohockey.mechanics.utils.TimeHelper;
 import org.jetbrains.annotations.NotNull;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -17,7 +15,6 @@ import java.util.concurrent.Executors;
  */
 @Service
 public class MechanicsExecutor implements Runnable {
-    private static final @NotNull Logger LOGGER = LoggerFactory.getLogger(MechanicsExecutor.class);
     private static final long STEP_TIME = 30;
 
     private final @NotNull GameMechanics gameMechanics;

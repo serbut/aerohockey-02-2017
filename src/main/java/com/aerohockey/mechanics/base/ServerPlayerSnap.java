@@ -3,6 +3,7 @@ package com.aerohockey.mechanics.base;
 /**
  * Created by sergeybutorin on 16.04.17.
  */
+@SuppressWarnings("unused")
 public class ServerPlayerSnap {
     private long userId;
     private byte score;

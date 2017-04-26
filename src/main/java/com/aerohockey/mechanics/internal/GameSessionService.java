@@ -6,7 +6,6 @@ import com.aerohockey.websocket.RemotePointService;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import org.springframework.stereotype.Service;
-import org.springframework.web.socket.CloseStatus;
 
 import java.util.HashMap;
 import java.util.LinkedHashSet;
@@ -47,8 +46,8 @@ public class GameSessionService {
         usersMap.remove(gameSession.getFirst().getId());
         usersMap.remove(gameSession.getSecond().getId());
         if (exists) {
-            remotePointService.cutDownConnection(gameSession.getFirst().getId(), CloseStatus.SERVER_ERROR);
-            remotePointService.cutDownConnection(gameSession.getSecond().getId(), CloseStatus.SERVER_ERROR);
+            remotePointService.cutDownConnection(gameSession.getFirst().getId());
+            remotePointService.cutDownConnection(gameSession.getSecond().getId());
         }
     }
 

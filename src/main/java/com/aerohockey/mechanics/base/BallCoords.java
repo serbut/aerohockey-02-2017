@@ -5,7 +5,7 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 /**
  * Created by sergeybutorin on 14.04.17.
  */
-@SuppressWarnings("InstanceVariableNamingConvention")
+@SuppressWarnings({"InstanceVariableNamingConvention", "PublicField"})
 public class BallCoords {
     public double x;
     public double y;

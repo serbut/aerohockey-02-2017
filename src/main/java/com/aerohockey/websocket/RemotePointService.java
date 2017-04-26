@@ -35,11 +35,11 @@ public class RemotePointService {
         sessions.remove(userId);
     }
 
-    public void cutDownConnection(Long userId, @NotNull CloseStatus closeStatus) {
+    public void cutDownConnection(Long userId) {
         final WebSocketSession webSocketSession = sessions.get(userId);
         if (webSocketSession != null && webSocketSession.isOpen()) {
             try {
-                webSocketSession.close(closeStatus);
+                webSocketSession.close(CloseStatus.SERVER_ERROR);
             } catch (IOException ignore) {
             }
         }

@@ -16,7 +16,7 @@ public class GameUser {
     public GameUser(UserProfile userProfile) {
         this.userProfile = userProfile;
         this.score = 0;
-        platform = new Platform(new PlatformCoords(0));
+        platform = new Platform(new PlatformCoords());
     }
 
     public long getId() {

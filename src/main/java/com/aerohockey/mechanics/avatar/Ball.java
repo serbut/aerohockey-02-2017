@@ -15,7 +15,7 @@ public class Ball {
     private BallCoords coords;
     private double speedX;
     private double speedY;
-    private double speedAbs;
+    private final double speedAbs;
     private final double radius;
 
     public Ball(BallCoords coords) {

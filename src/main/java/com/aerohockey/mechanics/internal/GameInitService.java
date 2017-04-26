@@ -11,7 +11,6 @@ import org.jetbrains.annotations.NotNull;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
-import org.springframework.web.socket.CloseStatus;
 
 import java.io.IOException;
 import java.util.*;
@@ -43,8 +42,8 @@ public class GameInitService {
                 remotePointService.sendMessageToUser(player.getId(), message);
             } catch (IOException e) {
                 //TODO: Reentrance mechanism
-                players.forEach(playerToCutOff -> remotePointService.cutDownConnection(playerToCutOff.getId(),
-                        CloseStatus.SERVER_ERROR));
+                players.forEach(playerToCutOff -> remotePointService.cutDownConnection(playerToCutOff.getId()
+                ));
                 LOGGER.error("Unnable to start a game", e);
             }
         }
