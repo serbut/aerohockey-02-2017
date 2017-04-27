@@ -35,6 +35,14 @@ public class GameInitService {
         players.add(gameSession.getBottom());
         for (GameUser player : players) {
             final StartGame.Request initMessage = createInitMessageFor(gameSession, player.getId());
+
+            if (player.isTop()) {
+                initMessage.setOpponentRating(gameSession.getBottom().getRating());
+                initMessage.setOpponentLogin(gameSession.getBottom().getLogin());
+            } else {
+                initMessage.setOpponentRating(gameSession.getTop().getRating());
+                initMessage.setOpponentLogin(gameSession.getTop().getLogin());
+            }
             //noinspection OverlyBroadCatchBlock
             try {
                 final Message message = new Message(StartGame.Request.class.getName(),

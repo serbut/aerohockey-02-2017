@@ -21,6 +21,14 @@ public class GameUser {
         platform = new Platform(new PlatformCoords(0));
     }
 
+    public int getRating() {
+        return userProfile.getRating();
+    }
+
+    public String getLogin() {
+        return userProfile.getLogin();
+    }
+
     public long getId() {
         return userProfile.getId();
     }
