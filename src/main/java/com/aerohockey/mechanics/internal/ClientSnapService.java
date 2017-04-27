@@ -17,6 +17,12 @@ import static com.aerohockey.mechanics.Config.PLATFORM_STEP;
 public class ClientSnapService {
     private final Map<Long, List<ClientSnap>> snaps = new HashMap<>();
 
+    private final @NotNull BallMovementService ballMovementService;
+
+    public ClientSnapService(@NotNull BallMovementService ballMovementService) {
+        this.ballMovementService = ballMovementService;
+    }
+
     public void pushClientSnap(@NotNull Long user, @NotNull ClientSnap snap) {
         this.snaps.putIfAbsent(user, new ArrayList<>());
         final List<ClientSnap> clientSnaps = snaps.get(user);
@@ -40,6 +46,7 @@ public class ClientSnapService {
                 processMovement(player, snap.getDirection());
             }
         }
+        ballMovementService.registerBallToMove(gameSession.getBall(), gameSession);
     }
 
     private void processMovement(@NotNull GameUser gameUser, @NotNull String direction) {

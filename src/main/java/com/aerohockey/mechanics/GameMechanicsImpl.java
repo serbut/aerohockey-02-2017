@@ -1,6 +1,7 @@
 package com.aerohockey.mechanics;
 
 import com.aerohockey.mechanics.base.ClientSnap;
+import com.aerohockey.mechanics.internal.BallMovementService;
 import com.aerohockey.mechanics.internal.ClientSnapService;
 import com.aerohockey.mechanics.internal.GameSessionService;
 import com.aerohockey.mechanics.internal.ServerSnapService;
@@ -31,6 +32,8 @@ public class GameMechanicsImpl implements GameMechanics {
 
     private final @NotNull RemotePointService remotePointService;
 
+    private final @NotNull BallMovementService ballMovementService;
+
     private final @NotNull GameSessionService gameSessionService;
 
     private @NotNull Set<Long> playingUsers = new HashSet<>();
@@ -40,13 +43,14 @@ public class GameMechanicsImpl implements GameMechanics {
     private final @NotNull Queue<Runnable> tasks = new ConcurrentLinkedQueue<>();
 
     public GameMechanicsImpl(@NotNull AccountService accountService, @NotNull ServerSnapService serverSnapService,
-                             @NotNull RemotePointService remotePointService,
+                             @NotNull RemotePointService remotePointService, @NotNull BallMovementService ballMovementService,
                              @NotNull GameSessionService gameSessionService) {
         this.accountService = accountService;
         this.serverSnapService = serverSnapService;
         this.remotePointService = remotePointService;
+        this.ballMovementService = ballMovementService;
         this.gameSessionService = gameSessionService;
-        this.clientSnapService = new ClientSnapService();
+        this.clientSnapService = new ClientSnapService(ballMovementService);
     }
 
     @Override
@@ -102,6 +106,8 @@ public class GameMechanicsImpl implements GameMechanics {
             clientSnapService.processSnapshotsFor(session);
         }
 
+        ballMovementService.executeMoves(frameTime);
+
         final Iterator<GameSession> iterator = gameSessionService.getSessions().iterator();
         final List<GameSession> sessionsToTerminate = new ArrayList<>();
         while (iterator.hasNext()) {
@@ -117,6 +123,7 @@ public class GameMechanicsImpl implements GameMechanics {
 
         tryStartGames();
         clientSnapService.clear();
+        ballMovementService.clear();
     }
 
     @Override

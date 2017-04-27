@@ -33,7 +33,7 @@ public class ServerSnapService {
         players.add(gameSession.getTop());
         players.add(gameSession.getBottom());
 
-        gameSession.getBall().move(gameSession.getTop(), gameSession.getBottom());
+//        gameSession.getBall().move(gameSession.getTop(), gameSession.getBottom(), frameTime);
 
         final ServerSnap snap = new ServerSnap();
         snap.setServerFrameTime(frameTime);

@@ -15,11 +15,13 @@ public class Platform {
 
     private final double width;
     private final double height;
+    private boolean isTop;
 
-    public Platform(@NotNull PlatformCoords coords) {
+    public Platform(@NotNull PlatformCoords coords, boolean isTop) {
         this.coords = coords;
         this.width = 60;
         this.height = 20;
+        this.isTop = isTop;
     }
 
     public void move(double dx) {
@@ -33,8 +35,8 @@ public class Platform {
     }
 
     @SuppressWarnings("OverlyComplexBooleanExpression")
-    public boolean checkBallCollision(boolean isFirst, BallCoords ballCoords, double radius) {
-        if (isFirst) {
+    public boolean checkBallCollision(BallCoords ballCoords, double radius) {
+        if (isTop) {
             return (ballCoords.y + radius) < height &&
                     (ballCoords.y + radius) > 0 &&
                     (ballCoords.x + radius) < coords.x + width/2 &&

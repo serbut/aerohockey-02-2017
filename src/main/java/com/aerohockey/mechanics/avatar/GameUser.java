@@ -18,7 +18,7 @@ public class GameUser {
         this.userProfile = userProfile;
         this.score = 0;
         this.isTop = isTop;
-        platform = new Platform(new PlatformCoords(0));
+        platform = new Platform(new PlatformCoords(0), isTop);
     }
 
     public int getRating() {
