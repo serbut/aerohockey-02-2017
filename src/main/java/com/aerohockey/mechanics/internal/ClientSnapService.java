@@ -43,20 +43,20 @@ public class ClientSnapService {
                 continue;
             }
             for (ClientSnap snap : playerSnaps) {
-                processMovement(player, snap.getDirection());
+                processMovement(player, snap.getDirection(), snap.getClientframeTime());
             }
         }
         ballMovementService.registerBallToMove(gameSession.getBall(), gameSession);
     }
 
-    private void processMovement(@NotNull GameUser gameUser, @NotNull String direction) {
+    private void processMovement(@NotNull GameUser gameUser, @NotNull String direction, long clientFrameTime) {
         switch (direction) {
             case "left": {
-                gameUser.getPlatform().move(gameUser.isTop() ? PLATFORM_STEP : -PLATFORM_STEP);
+                gameUser.getPlatform().move(gameUser.isTop() ? PLATFORM_STEP * clientFrameTime : -PLATFORM_STEP * clientFrameTime);
                 break;
             }
             case "right": {
-                gameUser.getPlatform().move(gameUser.isTop() ? -PLATFORM_STEP : PLATFORM_STEP);
+                gameUser.getPlatform().move(gameUser.isTop() ? -PLATFORM_STEP * clientFrameTime : PLATFORM_STEP * clientFrameTime);
                 break;
             }
             default: {
