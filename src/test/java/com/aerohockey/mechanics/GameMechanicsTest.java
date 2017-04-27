@@ -75,9 +75,9 @@ public class GameMechanicsTest {
         gameMechanics.gmStep(0);
         assertEquals(PLATFORM_STEP, firstPlayer.getPlatform().getCoords().x, delta);
 
-        gameMechanics.addClientSnapshot(firstPlayer.getId(), new ClientSnap("left", 1));
+        gameMechanics.addClientSnapshot(firstPlayer.getId(), new ClientSnap("left", 2));
         gameMechanics.gmStep(0);
-        assertEquals(0, firstPlayer.getPlatform().getCoords().x, delta);
+        assertEquals(-PLATFORM_STEP, firstPlayer.getPlatform().getCoords().x, delta);
     }
 
     @Test

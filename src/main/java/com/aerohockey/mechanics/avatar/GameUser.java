@@ -12,7 +12,7 @@ public class GameUser {
     private final UserProfile userProfile;
     private final Platform platform;
     private byte score;
-    private boolean isTop;
+    private final boolean isTop;
 
     public GameUser(UserProfile userProfile, boolean isTop) {
         this.userProfile = userProfile;

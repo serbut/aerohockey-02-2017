@@ -7,7 +7,7 @@ public class Config {
     public static final int PLAYGROUND_WIDTH = 160;
     public static final int PLAYGROUND_HEIGHT = 240;
 
-    public static final double PLATFORM_STEP = 1;
+    public static final double PLATFORM_STEP = 0.05;
     public static final int DECELERATION = 4;
     public static final double MAX_ANGLE = 0.9;
 }

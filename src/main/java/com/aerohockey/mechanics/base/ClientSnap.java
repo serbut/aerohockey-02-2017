@@ -1,5 +1,6 @@
 package com.aerohockey.mechanics.base;
 
+import com.fasterxml.jackson.annotation.JsonProperty;
 import org.jetbrains.annotations.NotNull;
 
 /**
@@ -7,18 +8,18 @@ import org.jetbrains.annotations.NotNull;
  */
 public class ClientSnap {
     private final @NotNull String direction;
-    private long clientframeTime;
+    private final long frameTime;
 
-    public ClientSnap(@NotNull String direction, long clientframeTime) {
+    public ClientSnap(@NotNull @JsonProperty("button") String direction, @JsonProperty("frameTime") long frameTime) {
         this.direction = direction;
-        this.clientframeTime = clientframeTime;
+        this.frameTime = frameTime;
     }
 
     public @NotNull String getDirection() {
         return direction;
     }
 
-    public long getClientframeTime() {
-        return clientframeTime;
+    public long getFrameTime() {
+        return frameTime;
     }
 }

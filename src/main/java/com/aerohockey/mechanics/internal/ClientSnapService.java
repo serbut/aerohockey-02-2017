@@ -43,7 +43,7 @@ public class ClientSnapService {
                 continue;
             }
             for (ClientSnap snap : playerSnaps) {
-                processMovement(player, snap.getDirection(), snap.getClientframeTime());
+                processMovement(player, snap.getDirection(), snap.getFrameTime());
             }
         }
         ballMovementService.registerBallToMove(gameSession.getBall(), gameSession);

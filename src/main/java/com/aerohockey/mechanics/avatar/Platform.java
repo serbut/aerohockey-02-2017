@@ -15,7 +15,7 @@ public class Platform {
 
     private final double width;
     private final double height;
-    private boolean isTop;
+    private final boolean isTop;
 
     public Platform(@NotNull PlatformCoords coords, boolean isTop) {
         this.coords = coords;
