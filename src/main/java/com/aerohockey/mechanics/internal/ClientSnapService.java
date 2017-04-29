@@ -1,9 +1,7 @@
 package com.aerohockey.mechanics.internal;
 
 import com.aerohockey.mechanics.GameSession;
-import com.aerohockey.mechanics.avatar.Ball;
 import com.aerohockey.mechanics.avatar.GameUser;
-import com.aerohockey.mechanics.base.BallCoords;
 import com.aerohockey.mechanics.base.ClientSnap;
 import org.jetbrains.annotations.NotNull;
 import org.springframework.stereotype.Service;
@@ -45,20 +43,20 @@ public class ClientSnapService {
                 continue;
             }
             for (ClientSnap snap : playerSnaps) {
-                processMovement(player, snap.getDirection(), gameSession.getBall(), snap.getFrameTime());
+                processMovement(player, snap.getDirection(), snap.getFrameTime());
             }
         }
         ballMovementService.registerBallToMove(gameSession.getBall(), gameSession);
     }
 
-    private void processMovement(@NotNull GameUser gameUser, @NotNull String direction, Ball ball, long clientFrameTime) {
+    private void processMovement(@NotNull GameUser gameUser, @NotNull String direction, long clientFrameTime) {
         switch (direction) {
             case "left": {
-                gameUser.getPlatform().move(gameUser.isTop() ? PLATFORM_STEP * clientFrameTime : -PLATFORM_STEP * clientFrameTime, ball);
+                gameUser.getPlatform().move(gameUser.isTop() ? PLATFORM_STEP * clientFrameTime : -PLATFORM_STEP * clientFrameTime);
                 break;
             }
             case "right": {
-                gameUser.getPlatform().move(gameUser.isTop() ? -PLATFORM_STEP * clientFrameTime : PLATFORM_STEP * clientFrameTime, ball);
+                gameUser.getPlatform().move(gameUser.isTop() ? -PLATFORM_STEP * clientFrameTime : PLATFORM_STEP * clientFrameTime);
                 break;
             }
             default: {

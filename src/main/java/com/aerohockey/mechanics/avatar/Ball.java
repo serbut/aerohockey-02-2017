@@ -27,7 +27,6 @@ public class Ball {
     }
 
     public void move(@NotNull GameUser first, @NotNull GameUser second, long frameTime) {
-//        frameTime = 20;
         final Platform firstPlatform = first.getPlatform();
         final Platform secondPlatform = second.getPlatform();
         final BallCoords newCoords = new BallCoords(coords.x + speedX * frameTime, coords.y + speedY * frameTime);
@@ -39,12 +38,23 @@ public class Ball {
             coords.y += speedY * frameTime;
             return;
         }
+        
         if (newCoords.y < firstPlatform.getHeight() + radius || newCoords.y > PLAYGROUND_HEIGHT - secondPlatform.getHeight() - radius) {
             if (firstPlatform.checkBallCollision(newCoords, radius)) {
-                platformCollision(firstPlatform, newCoords, frameTime);
+                if (!platformEdgeCollision(firstPlatform, frameTime) &&
+                        coords.y < firstPlatform.getHeight() + radius) {
+                    ballInsidePlatformCollision(firstPlatform);
+                } else {
+                    platformCollision(firstPlatform, newCoords, frameTime);
+                }
                 return;
             } else if (secondPlatform.checkBallCollision(newCoords, radius)) {
-                platformCollision(secondPlatform, newCoords, frameTime);
+                if (!platformEdgeCollision(secondPlatform, frameTime) &&
+                        coords.y > PLAYGROUND_HEIGHT - secondPlatform.getHeight() - radius) {
+                    ballInsidePlatformCollision(firstPlatform);
+                } else {
+                    platformCollision(secondPlatform, newCoords, frameTime);
+                }
                 return;
             } else if (newCoords.y < 0) { //goal for user2
                 second.addScore();
@@ -59,14 +69,26 @@ public class Ball {
         coords = newCoords;
     }
 
-    private void platformCollision(Platform platform, BallCoords ballCoords, long frameTime) {
-        if (coords.x < platform.getCoords().x - platform.getWidth()/2 - radius || // check platform edge collision
-                coords.x > platform.getCoords().x + platform.getWidth()/2 + radius) {
+    private boolean platformEdgeCollision(Platform platform, long frameTime) {
+        if (coords.x < platform.getCoords().x - platform.getWidth() / 2 - radius + PLATFORM_STEP * frameTime ||
+                coords.x > platform.getCoords().x + platform.getWidth() / 2 + radius - PLATFORM_STEP * frameTime) {
             speedX = -speedX;
             coords.x += speedX * frameTime;
             coords.y += speedY * frameTime;
-            return;
+            return true;
         }
+        return false;
+    }
+
+    private void ballInsidePlatformCollision(Platform platform) {
+        if(coords.x > platform.getCoords().x - platform.getWidth() / 2 - radius ||
+                coords.x < platform.getCoords().x + platform.getWidth() / 2 - radius) {
+            speedY = -speedY;
+            coords.y = PLAYGROUND_HEIGHT / 2;
+        }
+    }
+
+    private void platformCollision(Platform platform, BallCoords ballCoords, long frameTime) {
         if (platform.getCoords().x * ballCoords.x < 0) {
             speedX = PLATFORM_BENDING * speedAbs * (platform.getCoords().x - ballCoords.x) / (platform.getWidth() / 2 + radius);
         } else {
@@ -83,9 +105,5 @@ public class Ball {
         } else {
             return new BallCoords(-coords.x, PLAYGROUND_HEIGHT - coords.y);
         }
-    }
-
-    public double getRadius() {
-        return radius;
     }
 }
