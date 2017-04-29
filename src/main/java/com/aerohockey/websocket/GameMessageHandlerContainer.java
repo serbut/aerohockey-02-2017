@@ -38,6 +38,4 @@ public class GameMessageHandlerContainer implements MessageHandlerContainer {
     public <T> void registerHandler(@NotNull Class<T> clazz, MessageHandler<T> handler) {
         handlerMap.put(clazz, handler);
     }
-
-
 }
