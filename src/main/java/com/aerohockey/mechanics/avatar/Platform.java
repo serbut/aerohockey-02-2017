@@ -24,14 +24,16 @@ public class Platform {
         this.isTop = isTop;
     }
 
-    public void move(double dx) {
+    public void move(double dx, Ball ball) {
         double newX = coords.x + dx;
-        if (newX > PLAYGROUND_WIDTH/2 - width/2) {
-            newX = PLAYGROUND_WIDTH/2 - width/2;
-        } else if (newX < -PLAYGROUND_WIDTH/2 + width/2) {
-            newX = -PLAYGROUND_WIDTH/2 + width/2;
+        if (!checkBallCollision(ball.getCoords(isTop), ball.getRadius())) {
+            if (newX > PLAYGROUND_WIDTH / 2 - width / 2) {
+                newX = PLAYGROUND_WIDTH / 2 - width / 2;
+            } else if (newX < -PLAYGROUND_WIDTH / 2 + width / 2) {
+                newX = -PLAYGROUND_WIDTH / 2 + width / 2;
+            }
+            coords.x = newX;
         }
-        coords.x = newX;
     }
 
     public boolean checkBallCollision(BallCoords ballCoords, double radius) {
