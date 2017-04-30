@@ -72,13 +72,13 @@ public class AccountServiceTest {
         assertNotNull(testUser);
         final int ratingValue = 10;
         testUser.changeRating(ratingValue); //increasing rating
-        accountServiceImpl.updateRating(testUser.getId(), ratingValue);
+        accountServiceImpl.updateRating(testUser.getId(), testUser.getRating());
         testUser = accountServiceImpl.getUserByLogin(testUser.getLogin());
         assertNotNull(testUser);
         assertSame(ratingValue, testUser.getRating());
 
         testUser.changeRating(-ratingValue); // decreasing rating
-        accountServiceImpl.updateRating(testUser.getId(), ratingValue);
+        accountServiceImpl.updateRating(testUser.getId(), testUser.getRating());
         testUser = accountServiceImpl.getUserByLogin(testUser.getLogin());
         assertNotNull(testUser);
         assertSame(0, testUser.getRating());
@@ -95,7 +95,7 @@ public class AccountServiceTest {
         assertNotNull(user);
         int ratingValue = 10;
         user.changeRating(ratingValue);
-        accountServiceImpl.updateRating(user.getId(), ratingValue);
+        accountServiceImpl.updateRating(user.getId(), user.getRating());
 
         final List<UserProfile> users = new ArrayList<>();
         users.add(user);
@@ -104,14 +104,14 @@ public class AccountServiceTest {
         assertNotNull(user);
         ratingValue = 5;
         user.changeRating(ratingValue);
-        accountServiceImpl.updateRating(user.getId(), ratingValue);
+        accountServiceImpl.updateRating(user.getId(), user.getRating());
         users.add(user);
 
         user = addUser("user1");
         assertNotNull(user);
         ratingValue = 1;
         user.changeRating(ratingValue);
-        accountServiceImpl.updateRating(user.getId(), ratingValue);
+        accountServiceImpl.updateRating(user.getId(), user.getRating());
         users.add(user);
 
         final List<UserProfile> leaders = accountServiceImpl.getLeaders(1);
