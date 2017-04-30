@@ -39,6 +39,19 @@ public class GameSession {
         return ball;
     }
 
+    public boolean isGameOver() {
+        if (top.getScore() == 7) {
+            top.changeRating(1 + bottom.getRating() / (bottom.getScore() + 1));
+            bottom.changeRating(-bottom.getRating()/10);
+            return true;
+        } else if (bottom.getScore() == 7) {
+            bottom.changeRating(top.getRating() / (top.getScore() + 1));
+            top.changeRating(-top.getRating()/10);
+            return true;
+        }
+        return false;
+    }
+
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;

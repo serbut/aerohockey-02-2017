@@ -114,6 +114,11 @@ public class GameMechanicsImpl implements GameMechanics {
             final GameSession session = iterator.next();
             try {
                 serverSnapService.sendSnapshotsFor(session, frameTime);
+                if (session.isGameOver()) {
+                    sessionsToTerminate.add(session);
+                    accountService.updateRating(session.getTop().getId(), session.getTop().getRating());
+                    accountService.updateRating(session.getBottom().getId(), session.getBottom().getRating());
+                }
             } catch (RuntimeException ex) {
                 LOGGER.error("Failed send snapshots, terminating the session", ex);
                 sessionsToTerminate.add(session);

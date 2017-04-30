@@ -4,7 +4,6 @@ import com.aerohockey.mechanics.base.BallCoords;
 import org.jetbrains.annotations.NotNull;
 
 import static com.aerohockey.mechanics.Config.*;
-import static java.lang.Math.abs;
 import static java.lang.Math.signum;
 import static java.lang.Math.sqrt;
 
@@ -38,20 +37,22 @@ public class Ball {
             coords.y += speedY * frameTime;
             return;
         }
-        
+
         if (newCoords.y < firstPlatform.getHeight() + radius || newCoords.y > PLAYGROUND_HEIGHT - secondPlatform.getHeight() - radius) {
             if (firstPlatform.checkBallCollision(newCoords, radius)) {
-                if (!platformEdgeCollision(firstPlatform, frameTime) &&
+                if (platformEdgeCollision(firstPlatform, frameTime) &&
                         coords.y < firstPlatform.getHeight() + radius) {
                     ballInsidePlatformCollision(firstPlatform);
+                    second.addScore();
                 } else {
                     platformCollision(firstPlatform, newCoords, frameTime);
                 }
                 return;
             } else if (secondPlatform.checkBallCollision(newCoords, radius)) {
-                if (!platformEdgeCollision(secondPlatform, frameTime) &&
+                if (platformEdgeCollision(secondPlatform, frameTime) &&
                         coords.y > PLAYGROUND_HEIGHT - secondPlatform.getHeight() - radius) {
                     ballInsidePlatformCollision(firstPlatform);
+                    first.addScore();
                 } else {
                     platformCollision(secondPlatform, newCoords, frameTime);
                 }
@@ -75,9 +76,9 @@ public class Ball {
             speedX = -speedX;
             coords.x += speedX * frameTime;
             coords.y += speedY * frameTime;
-            return true;
+            return false;
         }
-        return false;
+        return true;
     }
 
     private void ballInsidePlatformCollision(Platform platform) {

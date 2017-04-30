@@ -37,6 +37,14 @@ public class GameUser {
         this.score += 1;
     }
 
+    public byte getScore() {
+        return score;
+    }
+
+    public void changeRating(int value) {
+        userProfile.changeRating(value);
+    }
+
     public @NotNull ServerPlayerSnap generateSnap(boolean self) {
         final PlatformCoords platformCoords = new PlatformCoords(isTop ? -platform.getCoords().x : platform.getCoords().x);
 

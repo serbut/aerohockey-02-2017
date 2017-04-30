@@ -84,11 +84,11 @@ public class AccountServiceImpl implements AccountService{
     }
 
     @Override
-    public void updateRating(@NotNull UserProfile newUser) {
+    public void updateRating(long id, int value) {
         final String query = "UPDATE users SET " +
                 "rating = COALESCE (?, rating) " +
-                "WHERE login = ?";
-        template.update(query, newUser.getRating(), newUser.getLogin());
+                "WHERE id = ?";
+        template.update(query, value, id);
     }
 
     @Override

@@ -15,6 +15,6 @@ public interface AccountService {
     @Nullable UserProfile getUserByLogin(String login);
     @Nullable UserProfile getUserById(Long id);
     List<UserProfile> getLeaders(int page);
-    void updateRating(@NotNull UserProfile newUser);
+    void updateRating(long id, int value);
     void changeData(@NotNull UserProfile newUser);
 }
