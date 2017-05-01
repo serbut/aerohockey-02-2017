@@ -1,10 +1,7 @@
 package com.aerohockey.mechanics;
 
 import com.aerohockey.mechanics.base.ClientSnap;
-import com.aerohockey.mechanics.internal.BallMovementService;
-import com.aerohockey.mechanics.internal.ClientSnapService;
-import com.aerohockey.mechanics.internal.GameSessionService;
-import com.aerohockey.mechanics.internal.ServerSnapService;
+import com.aerohockey.mechanics.internal.*;
 import com.aerohockey.model.UserProfile;
 import com.aerohockey.services.AccountService;
 import com.aerohockey.websocket.RemotePointService;
@@ -36,6 +33,8 @@ public class GameMechanicsImpl implements GameMechanics {
 
     private final @NotNull GameSessionService gameSessionService;
 
+    private final @NotNull GameOverSnapService gameOverSnapService;
+
     private @NotNull Set<Long> playingUsers = new HashSet<>();
 
     private final @NotNull ConcurrentLinkedQueue<Long> waiters = new ConcurrentLinkedQueue<>();
@@ -44,12 +43,13 @@ public class GameMechanicsImpl implements GameMechanics {
 
     public GameMechanicsImpl(@NotNull AccountService accountService, @NotNull ServerSnapService serverSnapService,
                              @NotNull RemotePointService remotePointService, @NotNull BallMovementService ballMovementService,
-                             @NotNull GameSessionService gameSessionService) {
+                             @NotNull GameSessionService gameSessionService, @NotNull GameOverSnapService gameOverSnapService) {
         this.accountService = accountService;
         this.serverSnapService = serverSnapService;
         this.remotePointService = remotePointService;
         this.ballMovementService = ballMovementService;
         this.gameSessionService = gameSessionService;
+        this.gameOverSnapService = gameOverSnapService;
         this.clientSnapService = new ClientSnapService(ballMovementService);
     }
 
@@ -115,6 +115,7 @@ public class GameMechanicsImpl implements GameMechanics {
             try {
                 serverSnapService.sendSnapshotsFor(session, frameTime);
                 if (session.isGameOver()) {
+                    gameOverSnapService.sendSnapshotsFor(session);
                     sessionsToTerminate.add(session);
                     accountService.updateRating(session.getTop().getId(), session.getTop().getRating());
                     accountService.updateRating(session.getBottom().getId(), session.getBottom().getRating());

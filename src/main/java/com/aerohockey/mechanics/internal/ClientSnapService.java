@@ -59,6 +59,10 @@ public class ClientSnapService {
                 gameUser.getPlatform().move(gameUser.isTop() ? -PLATFORM_STEP * clientFrameTime : PLATFORM_STEP * clientFrameTime);
                 break;
             }
+            case "space": {
+                gameUser.getPlatform().move(gameUser.isTop() ? -PLATFORM_STEP * clientFrameTime : PLATFORM_STEP * clientFrameTime);
+                break;
+            }
             default: {
                 break;
             }
