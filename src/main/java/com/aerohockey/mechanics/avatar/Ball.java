@@ -71,8 +71,8 @@ public class Ball {
     }
 
     private boolean platformEdgeCollision(Platform platform, long frameTime) {
-        if (coords.x < platform.getCoords().x - platform.getWidth() / 2 - radius + PLATFORM_STEP * frameTime ||
-                coords.x > platform.getCoords().x + platform.getWidth() / 2 + radius - PLATFORM_STEP * frameTime) {
+        if (coords.x < platform.getCoords().x - platform.getWidth() / 2 - radius + PLATFORM_SPEED * frameTime ||
+                coords.x > platform.getCoords().x + platform.getWidth() / 2 + radius - PLATFORM_SPEED * frameTime) {
             speedX = -speedX;
             coords.x += speedX * frameTime;
             coords.y += speedY * frameTime;

@@ -13,15 +13,15 @@ import static com.aerohockey.mechanics.Config.PLAYGROUND_WIDTH;
 public class Platform {
     private final PlatformCoords coords;
 
+    private final double y;
     private final double width;
     private final double height;
-    private final boolean isTop;
 
     public Platform(@NotNull PlatformCoords coords, boolean isTop) {
         this.coords = coords;
         this.width = 60;
         this.height = 15;
-        this.isTop = isTop;
+        this.y = isTop ? height : PLAYGROUND_HEIGHT - height;
     }
 
     public void move(double dx) {
@@ -35,15 +35,9 @@ public class Platform {
     }
 
     public boolean checkBallCollision(BallCoords ballCoords, double radius) {
-        if (isTop) {
-            return ballCoords.y < height + radius &&
-                    ballCoords.x < coords.x + width/2 + radius &&
-                    ballCoords.x > coords.x - width/2 - radius;
-        } else {
-            return ballCoords.y > PLAYGROUND_HEIGHT - height - radius &&
-                    ballCoords.x < coords.x + width/2 + radius &&
-                    ballCoords.x > coords.x - width/2 - radius;
-        }
+        return Math.abs(y - ballCoords.y) < radius &&
+                 ballCoords.x < coords.x + width/2 + radius &&
+                 ballCoords.x > coords.x - width/2 - radius;
     }
 
     public PlatformCoords getCoords() {

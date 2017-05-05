@@ -8,7 +8,7 @@ import org.springframework.stereotype.Service;
 
 import java.util.*;
 
-import static com.aerohockey.mechanics.Config.PLATFORM_STEP;
+import static com.aerohockey.mechanics.Config.PLATFORM_SPEED;
 
 /**
  * Created by sergeybutorin on 15.04.17.
@@ -52,15 +52,15 @@ public class ClientSnapService {
     private void processMovement(@NotNull GameUser gameUser, @NotNull String direction, long clientFrameTime) {
         switch (direction) {
             case "left": {
-                gameUser.getPlatform().move(gameUser.isTop() ? PLATFORM_STEP * clientFrameTime : -PLATFORM_STEP * clientFrameTime);
+                gameUser.getPlatform().move(gameUser.isTop() ? PLATFORM_SPEED * clientFrameTime : -PLATFORM_SPEED * clientFrameTime);
                 break;
             }
             case "right": {
-                gameUser.getPlatform().move(gameUser.isTop() ? -PLATFORM_STEP * clientFrameTime : PLATFORM_STEP * clientFrameTime);
+                gameUser.getPlatform().move(gameUser.isTop() ? -PLATFORM_SPEED * clientFrameTime : PLATFORM_SPEED * clientFrameTime);
                 break;
             }
             case "space": {
-                gameUser.getPlatform().move(gameUser.isTop() ? -PLATFORM_STEP * clientFrameTime : PLATFORM_STEP * clientFrameTime);
+                gameUser.getPlatform().move(gameUser.isTop() ? -PLATFORM_SPEED * clientFrameTime : PLATFORM_SPEED * clientFrameTime);
                 break;
             }
             default: {

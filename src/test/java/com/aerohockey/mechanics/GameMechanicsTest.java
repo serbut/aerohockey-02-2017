@@ -16,7 +16,7 @@ import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.test.context.junit4.SpringRunner;
 import org.springframework.transaction.annotation.Transactional;
 
-import static com.aerohockey.mechanics.Config.PLATFORM_STEP;
+import static com.aerohockey.mechanics.Config.PLATFORM_SPEED;
 import static com.aerohockey.mechanics.Config.PLAYGROUND_WIDTH;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
@@ -73,11 +73,11 @@ public class GameMechanicsTest {
 
         gameMechanics.addClientSnapshot(firstPlayer.getId(), new ClientSnap("right", 1));
         gameMechanics.gmStep(0);
-        assertEquals(PLATFORM_STEP, firstPlayer.getPlatform().getCoords().x, delta);
+        assertEquals(PLATFORM_SPEED, firstPlayer.getPlatform().getCoords().x, delta);
 
         gameMechanics.addClientSnapshot(firstPlayer.getId(), new ClientSnap("left", 2));
         gameMechanics.gmStep(0);
-        assertEquals(-PLATFORM_STEP, firstPlayer.getPlatform().getCoords().x, delta);
+        assertEquals(-PLATFORM_SPEED, firstPlayer.getPlatform().getCoords().x, delta);
     }
 
     @Test
@@ -86,7 +86,7 @@ public class GameMechanicsTest {
         final @NotNull GameUser firstPlayer = gameSession.getBottom();
         final double movementLength = PLAYGROUND_WIDTH/2 - firstPlayer.getPlatform().getWidth()/2;
 
-        for (int i = 0; i < (movementLength) / PLATFORM_STEP; i++) {
+        for (int i = 0; i < (movementLength) / PLATFORM_SPEED; i++) {
             gameMechanics.addClientSnapshot(firstPlayer.getId(), new ClientSnap("right", 1));
             gameMechanics.gmStep(0);
         }
