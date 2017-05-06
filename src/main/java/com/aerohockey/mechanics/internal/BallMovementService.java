@@ -23,7 +23,7 @@ public class BallMovementService {
         for (Map.Entry<Ball, GameSession> entry : ballsToMove.entrySet()) {
             final Ball ball = entry.getKey();
             final GameSession gameSession = entry.getValue();
-            ball.move(gameSession.getTop(), gameSession.getBottom(), frameTime);
+            ball.move(gameSession, frameTime);
         }
     }
 

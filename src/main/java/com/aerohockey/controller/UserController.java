@@ -46,7 +46,7 @@ public class UserController {
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(new ErrorResponse(ErrorResponse.WRONG_PARAMETERS));
         }
 
-        if (httpSession.getAttribute("userLogin") != null) {
+        if (httpSession.getAttribute("userId") != null) {
             return ResponseEntity.status(HttpStatus.FORBIDDEN).body(new ErrorResponse(ErrorResponse.SESSION_BUSY));
         }
 

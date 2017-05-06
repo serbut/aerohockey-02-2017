@@ -29,7 +29,7 @@ public class GameSession {
         this.sessionId = ID_GENERATOR.getAndIncrement();
         this.top = new GameUser(user1, true);
         this.bottom =  new GameUser(user2, false);
-        this.ball = new Ball(new BallCoords(0, top.getPlatform().getHeight() + 5));
+        this.ball = new Ball(new BallCoords(0, PLAYGROUND_HEIGHT/2));
     }
 
     public @NotNull GameUser getTop() {
