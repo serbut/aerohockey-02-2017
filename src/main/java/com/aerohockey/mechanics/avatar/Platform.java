@@ -20,7 +20,7 @@ public class Platform {
         this.coords = coords;
         this.width = 60;
         this.height = 15;
-        this.y = isTop ? height : PLAYGROUND_HEIGHT - height;
+        this.y = isTop ? 0 : PLAYGROUND_HEIGHT;
     }
 
     public void move(double dx) {
@@ -34,9 +34,8 @@ public class Platform {
     }
 
     public boolean checkBallCollision(BallCoords ballCoords, double radius) {
-        return Math.abs(y - ballCoords.y) < radius &&
-                 ballCoords.x < coords.x + width/2 + radius &&
-                 ballCoords.x > coords.x - width/2 - radius;
+        return Math.abs(y - ballCoords.y) < height + radius &&
+                Math.abs(coords.x - ballCoords.x) < width/2 + radius;
     }
 
     public PlatformCoords getCoords() {
@@ -45,6 +44,10 @@ public class Platform {
 
     public double getWidth() {
         return width;
+    }
+
+    public double getHeight() {
+        return height;
     }
 
     public double getY() {
