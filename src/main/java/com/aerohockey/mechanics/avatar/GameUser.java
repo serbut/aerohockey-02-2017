@@ -5,6 +5,8 @@ import com.aerohockey.mechanics.base.ServerPlayerSnap;
 import com.aerohockey.model.UserProfile;
 import org.jetbrains.annotations.NotNull;
 
+import static com.aerohockey.mechanics.Config.PLAYGROUND_HEIGHT;
+
 /**
  * Created by sergeybutorin on 15.04.17.
  */
@@ -13,11 +15,13 @@ public class GameUser {
     private final Platform platform;
     private byte score;
     private final boolean isTop;
+    private final int [] coordsTransform;
 
     public GameUser(UserProfile userProfile, boolean isTop) {
         this.userProfile = userProfile;
         this.score = 0;
         this.isTop = isTop;
+        this.coordsTransform = isTop ? new int[]{1, 1, 1, 0} : new int[]{-1, -1, -1, PLAYGROUND_HEIGHT};
         platform = new Platform(new PlatformCoords(0), isTop);
     }
 
@@ -41,19 +45,20 @@ public class GameUser {
         return score;
     }
 
+    public int[] getCoordsTransform() {
+        return coordsTransform;
+    }
+
     public void changeRating(int value) {
         userProfile.changeRating(value);
     }
 
-    public @NotNull ServerPlayerSnap generateSnap(boolean self) {
-        final PlatformCoords platformCoords = new PlatformCoords(isTop ? -platform.getCoords().x : platform.getCoords().x);
+    public @NotNull ServerPlayerSnap generateSnap() {
+        final PlatformCoords platformCoords = new PlatformCoords(platform.getCoords().x);
 
         final ServerPlayerSnap result = new ServerPlayerSnap();
         result.setUserId(getId());
         result.setScore(score);
-        if(!self) {
-            platformCoords.x *= -1;
-        }
         result.setPlatform(platformCoords);
         return result;
     }

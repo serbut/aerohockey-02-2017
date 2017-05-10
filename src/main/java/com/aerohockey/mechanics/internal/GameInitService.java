@@ -36,13 +36,10 @@ public class GameInitService {
         for (GameUser player : players) {
             final StartGame.Request initMessage = createInitMessageFor(gameSession, player.getId());
 
-            if (player.isTop()) {
-                initMessage.setOpponentRating(gameSession.getBottom().getRating());
-                initMessage.setOpponentLogin(gameSession.getBottom().getLogin());
-            } else {
-                initMessage.setOpponentRating(gameSession.getTop().getRating());
-                initMessage.setOpponentLogin(gameSession.getTop().getLogin());
-            }
+            initMessage.setOpponentRating(gameSession.getOpponent(player).getRating());
+            initMessage.setOpponentLogin(gameSession.getOpponent(player).getLogin());
+            initMessage.setCoordsTransform(player.getCoordsTransform());
+
             //noinspection OverlyBroadCatchBlock
             try {
                 final Message message = new Message(StartGame.Request.class.getName(),
@@ -65,16 +62,9 @@ public class GameInitService {
         final Collection<GameUser> players = new ArrayList<>();
         players.add(gameSession.getTop());
         players.add(gameSession.getBottom());
-        for (GameUser player : players) {
-            for (GameUser p : players) {
-                if (p.equals(player)) {
-                    playerSnaps.add(p.generateSnap(true));
-                } else {
-                    playerSnaps.add(p.generateSnap(false));
-                }
-            }
+        for (GameUser p : players) {
+            playerSnaps.add(p.generateSnap());
         }
-
         initGameMessage.setSelf(userId);
         initGameMessage.setPlayers(playerSnaps);
         return initGameMessage;

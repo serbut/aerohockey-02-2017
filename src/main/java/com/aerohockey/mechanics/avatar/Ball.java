@@ -31,8 +31,7 @@ public class Ball {
         final Platform secondPlatform = gameSession.getBottom().getPlatform();
         final BallCoords newCoords = new BallCoords(coords.x + speedX * frameTime, coords.y + speedY * frameTime);
 
-        if (newCoords.x > PLAYGROUND_WIDTH / 2 - radius ||
-                newCoords.x < -PLAYGROUND_WIDTH / 2 + radius) {
+        if (Math.abs(newCoords.x) > PLAYGROUND_WIDTH / 2 - radius) {
             speedX = -speedX;
             coords.x += speedX * frameTime;
             coords.y += speedY * frameTime;
@@ -96,11 +95,7 @@ public class Ball {
         }
     }
 
-    public BallCoords getCoords(boolean isTop) {
-        if (!isTop) {
-            return coords;
-        } else {
-            return new BallCoords(-coords.x, PLAYGROUND_HEIGHT - coords.y);
-        }
+    public BallCoords getCoords() {
+        return coords;
     }
 }
