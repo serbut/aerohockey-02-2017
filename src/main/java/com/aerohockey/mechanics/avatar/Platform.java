@@ -20,7 +20,7 @@ public class Platform {
         this.coords = coords;
         this.width = 60;
         this.height = 15;
-        this.y = isTop ? 0 : PLAYGROUND_HEIGHT;
+        this.y = isTop ? PLAYGROUND_HEIGHT/2 : -PLAYGROUND_HEIGHT/2;
     }
 
     public void move(double dx) {
