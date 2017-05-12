@@ -39,10 +39,10 @@ public class ServerSnapService {
         //noinspection OverlyBroadCatchBlock
         try {
             for (GameUser player : players) {
-                snap.setBallCoords(gameSession.getBall().getCoords(player.isTop()));
+                snap.setBallCoords(gameSession.getBall().getCoords());
                 final List<ServerPlayerSnap> playersSnaps = new ArrayList<>();
                 for (GameUser p : players) {
-                    playersSnaps.add(p.generateSnap(p.equals(player)));
+                    playersSnaps.add(p.generateSnap());
                 }
                 snap.setPlayers(playersSnaps);
                 final Message message = new Message(ServerSnap.class.getName(), objectMapper.writeValueAsString(snap));

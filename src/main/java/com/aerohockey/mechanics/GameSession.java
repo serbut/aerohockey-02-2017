@@ -8,7 +8,6 @@ import org.jetbrains.annotations.NotNull;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import java.util.Objects;
 import java.util.concurrent.atomic.AtomicLong;
 
 import static com.aerohockey.mechanics.Config.*;
@@ -45,7 +44,7 @@ public class GameSession {
     }
 
     public @NotNull GameUser getOpponent(@NotNull GameUser user) {
-        if (Objects.equals(user, top)) {
+        if (user.equals(top)) {
             return bottom;
         } else {
             return top;

@@ -23,8 +23,4 @@ public class GameOverSnap {
     public int getChangeRating() {
         return changeRating;
     }
-//    public GameOverSnap(long id, int changeRating) {
-//        this.id = id;
-//        this.changeRating = changeRating;
-//    }
 }

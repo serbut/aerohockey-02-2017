@@ -14,6 +14,7 @@ public class StartGame {
         private @NotNull Long self;
         private @NotNull String opponentLogin;
         private @NotNull Integer opponentRating;
+        private @NotNull byte coordsTransform;
         private @NotNull List<ServerPlayerSnap> players;
 
         public @NotNull Long getSelf() {
@@ -46,6 +47,14 @@ public class StartGame {
 
         public void setPlayers(@NotNull List<ServerPlayerSnap> players) {
             this.players = players;
+        }
+
+        public byte getCoordsTransform() {
+            return coordsTransform;
+        }
+
+        public void setCoordsTransform(byte coordsTransform) {
+            this.coordsTransform = coordsTransform;
         }
     }
 }
