@@ -46,8 +46,7 @@ public class Ball {
             return;
         } else if (Math.abs(newCoords.y) > PLAYGROUND_HEIGHT/2) {
             goal(gameSession);
-            speedY = -speedY;
-            newCoords.y = 0;
+            return;
         }
         coords = newCoords;
     }
@@ -55,7 +54,6 @@ public class Ball {
     private void platformCollision(Platform platform, long frameTime, GameSession gameSession) {
         if (!platformEdgeCollision(platform, frameTime)) {
             if (Math.abs(platform.getY() - coords.y) < platform.getHeight() + radius) {
-                ballInsidePlatformCollision(platform);
                 goal(gameSession);
             } else {
                 if (platform.getCoords().x * coords.x < 0) {
@@ -76,6 +74,8 @@ public class Ball {
         } else {
             gameSession.getTop().addScore();
         }
+        speedY = -speedY;
+        coords.y = 0;
     }
 
     private boolean platformEdgeCollision(Platform platform, long frameTime) {
@@ -87,14 +87,6 @@ public class Ball {
         }
         return false;
     }
-
-    private void ballInsidePlatformCollision(Platform platform) {
-        if (Math.abs(platform.getCoords().x - coords.x) > platform.getWidth()/2 + radius) {
-            speedY = -speedY;
-            coords.y = PLAYGROUND_HEIGHT / 2;
-        }
-    }
-
 
     public BallCoords getCoords() {
         return coords;
