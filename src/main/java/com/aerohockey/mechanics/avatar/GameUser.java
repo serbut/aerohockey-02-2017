@@ -19,7 +19,7 @@ public class GameUser {
         this.userProfile = userProfile;
         this.score = 0;
         this.isTop = isTop;
-        this.coordsTransform = isTop ? (byte)1 : -1;
+        this.coordsTransform = isTop ? (byte) 1 : -1;
         platform = new Platform(new PlatformCoords(0), isTop);
     }
 

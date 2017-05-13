@@ -52,11 +52,11 @@ public class ClientSnapService {
     private void processMovement(@NotNull GameUser gameUser, @NotNull String direction, long clientFrameTime) {
         switch (direction) {
             case "left": {
-                gameUser.getPlatform().move(gameUser.isTop() ? PLATFORM_SPEED * clientFrameTime : -PLATFORM_SPEED * clientFrameTime);
+                gameUser.getPlatform().move(PLATFORM_SPEED * clientFrameTime);
                 break;
             }
             case "right": {
-                gameUser.getPlatform().move(gameUser.isTop() ? -PLATFORM_SPEED * clientFrameTime : PLATFORM_SPEED * clientFrameTime);
+                gameUser.getPlatform().move(-PLATFORM_SPEED * clientFrameTime);
                 break;
             }
             case "space": {
