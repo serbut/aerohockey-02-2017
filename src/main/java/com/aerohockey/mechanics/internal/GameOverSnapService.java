@@ -40,7 +40,7 @@ public class GameOverSnapService {
             for (GameUser player : players) {
                 final int value;
                 if (player.getScore() == MAX_SCORE) { //winner
-                    value = 1 + gameSession.getOpponent(player).getRating() / (gameSession.getOpponent(player).getScore() + 1);
+                    value = 1 + Math.abs(gameSession.getOpponent(player).getRating()) / (gameSession.getOpponent(player).getScore() + 1);
                 } else { //loser
                     value = -gameSession.getOpponent(player).getRating()/10;
                 }

@@ -57,11 +57,7 @@ public class Ball {
             if (Math.abs(platform.getY() - coords.y) < platform.getHeight() + radius) {
                 goal(gameSession);
             } else {
-                if (platform.getCoords().x * coords.x < 0) {
-                    speedX = PLATFORM_BENDING * speedAbs * (platform.getCoords().x - coords.x) / (platform.getWidth() / 2 + radius);
-                } else {
-                    speedX = PLATFORM_BENDING * speedAbs * (coords.x - platform.getCoords().x) / (platform.getWidth() / 2 + radius);
-                }
+                speedX = PLATFORM_BENDING * speedAbs * (coords.x - platform.getCoords().x) / (platform.getWidth() / 2 + radius);
                 coords.x += speedX * frameTime;
                 speedY = -signum(speedY) * sqrt(speedAbs * speedAbs - speedX * speedX);
                 coords.y += speedY * frameTime;
