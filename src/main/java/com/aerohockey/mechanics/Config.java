@@ -14,4 +14,10 @@ public class Config {
 
     public static final double BALL_START_SPEED = 0.1;
     public static final double BALL_SPEED_INCREASING = 0.0001;
+
+    public static final byte MAX_BONUS_COUNT = 3;
+    public static final byte BONUS_SIZE = 10;
+    public static final byte BONUS_EXPIRED_TIME = 10;
+    public static final byte TIME_BETWEEN_BONUS = 4;
+    public static final double BONUS_PROBABILITY = 0.005;
 }

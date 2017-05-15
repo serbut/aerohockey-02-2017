@@ -12,13 +12,11 @@ public class GameUser {
     private final UserProfile userProfile;
     private final Platform platform;
     private byte score;
-    private final boolean isTop;
     private final byte coordsTransform;
 
     public GameUser(@NotNull UserProfile userProfile, boolean isTop) {
         this.userProfile = userProfile;
         this.score = 0;
-        this.isTop = isTop;
         this.coordsTransform = isTop ? (byte) 1 : -1;
         platform = new Platform(new PlatformCoords(0), isTop);
     }
@@ -63,10 +61,6 @@ public class GameUser {
 
     public Platform getPlatform() {
         return platform;
-    }
-
-    public boolean isTop() {
-        return isTop;
     }
 
     @Override

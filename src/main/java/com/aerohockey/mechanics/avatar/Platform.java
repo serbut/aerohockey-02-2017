@@ -1,6 +1,6 @@
 package com.aerohockey.mechanics.avatar;
 
-import com.aerohockey.mechanics.base.BallCoords;
+import com.aerohockey.mechanics.base.Coords;
 import com.aerohockey.mechanics.base.PlatformCoords;
 import org.jetbrains.annotations.NotNull;
 
@@ -33,9 +33,9 @@ public class Platform {
         coords.x = newX;
     }
 
-    public boolean checkBallCollision(@NotNull BallCoords ballCoords, double radius) {
-        return Math.abs(y - ballCoords.y) < height + radius &&
-                Math.abs(coords.x - ballCoords.x) < width/2 + radius;
+    public boolean checkBallCollision(@NotNull Coords coords, double radius) {
+        return Math.abs(y - coords.y) < height + radius &&
+                Math.abs(this.coords.x - coords.x) < width/2 + radius;
     }
 
     public PlatformCoords getCoords() {

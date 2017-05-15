@@ -1,7 +1,7 @@
 package com.aerohockey.mechanics.avatar;
 
 import com.aerohockey.mechanics.GameSession;
-import com.aerohockey.mechanics.base.BallCoords;
+import com.aerohockey.mechanics.base.Coords;
 import org.jetbrains.annotations.NotNull;
 
 import static com.aerohockey.mechanics.Config.*;
@@ -12,13 +12,13 @@ import static java.lang.Math.sqrt;
  * Created by sergeybutorin on 23.04.17.
  */
 public class Ball {
-    private BallCoords coords;
+    private Coords coords;
     private double speedX;
     private double speedY;
     private double speedAbs;
     private final double radius;
 
-    public Ball(@NotNull BallCoords coords) {
+    public Ball(@NotNull Coords coords) {
         this.coords = coords;
         this.speedAbs = BALL_START_SPEED;
         this.speedX = 0;
@@ -30,7 +30,7 @@ public class Ball {
         speedAbs += BALL_SPEED_INCREASING;
         final Platform firstPlatform = gameSession.getTop().getPlatform();
         final Platform secondPlatform = gameSession.getBottom().getPlatform();
-        final BallCoords newCoords = new BallCoords(coords.x + speedX * frameTime, coords.y + speedY * frameTime);
+        final Coords newCoords = new Coords(coords.x + speedX * frameTime, coords.y + speedY * frameTime);
 
         if (Math.abs(newCoords.x) > PLAYGROUND_WIDTH / 2 - radius) {
             speedX = -speedX;
@@ -73,7 +73,7 @@ public class Ball {
         }
         speedAbs = BALL_START_SPEED;
         speedX = 0;
-        speedY = speedAbs;
+        speedY = -signum(speedY) * speedAbs;
         coords.x = 0;
         coords.y = 0;
     }
@@ -88,7 +88,7 @@ public class Ball {
         return false;
     }
 
-    public BallCoords getCoords() {
+    public Coords getCoords() {
         return coords;
     }
 }

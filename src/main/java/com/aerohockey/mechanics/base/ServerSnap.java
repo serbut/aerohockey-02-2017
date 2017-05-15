@@ -10,7 +10,7 @@ import java.util.List;
 @SuppressWarnings({"unused", "NullableProblems"})
 public class ServerSnap {
     @NotNull List<ServerPlayerSnap> players;
-    @NotNull BallCoords ballCoords;
+    @NotNull Coords ballCoords;
     private long serverFrameTime;
 
     public @NotNull List<ServerPlayerSnap> getPlayers() {
@@ -21,12 +21,12 @@ public class ServerSnap {
         this.players = players;
     }
 
-    public @NotNull BallCoords getBallCoords() {
+    public @NotNull Coords getBallCoords() {
         return ballCoords;
     }
 
-    public void setBallCoords(@NotNull BallCoords ballCoords) {
-        this.ballCoords = ballCoords;
+    public void setBallCoords(@NotNull Coords coords) {
+        this.ballCoords = coords;
     }
 
     public long getServerFrameTime() {

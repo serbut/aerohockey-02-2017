@@ -1,16 +1,14 @@
 package com.aerohockey.mechanics.base;
 
-import com.fasterxml.jackson.annotation.JsonProperty;
-
 /**
  * Created by sergeybutorin on 14.04.17.
  */
 @SuppressWarnings({"InstanceVariableNamingConvention", "PublicField"})
-public class BallCoords {
+public class Coords {
     public double x;
     public double y;
 
-    public BallCoords(@JsonProperty("x") double x, @JsonProperty("y") double y) {
+    public Coords(double x, double y) {
         this.x = x;
         this.y = y;
     }

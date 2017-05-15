@@ -112,6 +112,7 @@ public class GameMechanicsImpl implements GameMechanics {
         final List<GameSession> sessionsToTerminate = new ArrayList<>();
         while (iterator.hasNext()) {
             final GameSession session = iterator.next();
+            session.bonusManagement();
             try {
                 serverSnapService.sendSnapshotsFor(session, frameTime);
                 if (session.isGameOver()) {
