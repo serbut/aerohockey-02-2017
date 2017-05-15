@@ -33,7 +33,7 @@ public class Platform {
         coords.x = newX;
     }
 
-    public boolean checkBallCollision(BallCoords ballCoords, double radius) {
+    public boolean checkBallCollision(@NotNull BallCoords ballCoords, double radius) {
         return Math.abs(y - ballCoords.y) < height + radius &&
                 Math.abs(coords.x - ballCoords.x) < width/2 + radius;
     }

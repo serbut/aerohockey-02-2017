@@ -15,7 +15,7 @@ public class GameUser {
     private final boolean isTop;
     private final byte coordsTransform;
 
-    public GameUser(UserProfile userProfile, boolean isTop) {
+    public GameUser(@NotNull UserProfile userProfile, boolean isTop) {
         this.userProfile = userProfile;
         this.score = 0;
         this.isTop = isTop;
