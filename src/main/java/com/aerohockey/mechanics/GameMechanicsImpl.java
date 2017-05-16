@@ -27,6 +27,8 @@ public class GameMechanicsImpl implements GameMechanics {
 
     private final @NotNull ServerSnapService serverSnapService;
 
+    private final @NotNull ServerDetailSnapService serverDetailSnapService;
+
     private final @NotNull RemotePointService remotePointService;
 
     private final @NotNull BallMovementService ballMovementService;
@@ -43,9 +45,11 @@ public class GameMechanicsImpl implements GameMechanics {
 
     public GameMechanicsImpl(@NotNull AccountService accountService, @NotNull ServerSnapService serverSnapService,
                              @NotNull RemotePointService remotePointService, @NotNull BallMovementService ballMovementService,
-                             @NotNull GameSessionService gameSessionService, @NotNull GameOverSnapService gameOverSnapService) {
+                             @NotNull GameSessionService gameSessionService, @NotNull GameOverSnapService gameOverSnapService,
+                             @NotNull ServerDetailSnapService serverDetailSnapService) {
         this.accountService = accountService;
         this.serverSnapService = serverSnapService;
+        this.serverDetailSnapService = serverDetailSnapService;
         this.remotePointService = remotePointService;
         this.ballMovementService = ballMovementService;
         this.gameSessionService = gameSessionService;
@@ -114,7 +118,12 @@ public class GameMechanicsImpl implements GameMechanics {
             final GameSession session = iterator.next();
             session.bonusManagement();
             try {
-                serverSnapService.sendSnapshotsFor(session, frameTime);
+                if(session.isStateChanged()) {
+                    serverDetailSnapService.sendSnapshotsFor(session, frameTime);
+                    session.setStateChanged(false);
+                } else {
+                    serverSnapService.sendSnapshotsFor(session, frameTime);
+                }
                 if (session.isGameOver()) {
                     gameOverSnapService.sendSnapshotsFor(session);
                     sessionsToTerminate.add(session);

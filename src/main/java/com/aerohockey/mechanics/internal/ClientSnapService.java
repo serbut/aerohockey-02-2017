@@ -46,7 +46,7 @@ public class ClientSnapService {
                 processMovement(player, snap.getDirection(), snap.getFrameTime());
             }
         }
-        ballMovementService.registerBallToMove(gameSession.getBall(), gameSession);
+        ballMovementService.registerBallToMove(gameSession.getBalls(), gameSession);
     }
 
     private void processMovement(@NotNull GameUser gameUser, @NotNull String direction, long clientFrameTime) {

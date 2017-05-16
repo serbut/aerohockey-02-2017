@@ -6,6 +6,7 @@ import org.jetbrains.annotations.NotNull;
 import org.springframework.stereotype.Service;
 
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 /**
@@ -15,8 +16,10 @@ import java.util.Map;
 public class BallMovementService {
     private final Map<Ball, GameSession> ballsToMove = new HashMap<>();
 
-    public void registerBallToMove(@NotNull Ball ball, @NotNull GameSession gameSession) {
-        ballsToMove.put(ball, gameSession);
+    public void registerBallToMove(@NotNull List<Ball> balls, @NotNull GameSession gameSession) {
+        for (Ball ball : balls) {
+            ballsToMove.put(ball, gameSession);
+        }
     }
 
     public void executeMoves(long frameTime) {

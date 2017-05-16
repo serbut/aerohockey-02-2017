@@ -16,14 +16,14 @@ public class Ball {
     private double speedX;
     private double speedY;
     private double speedAbs;
-    private final double radius;
+    private double radius;
 
     public Ball(@NotNull Coords coords) {
         this.coords = coords;
         this.speedAbs = BALL_START_SPEED;
         this.speedX = 0;
         this.speedY = speedAbs;
-        this.radius = 5;
+        this.radius = BALL_RADIUS;
     }
 
     public void move(@NotNull GameSession gameSession, long frameTime) {
@@ -71,6 +71,9 @@ public class Ball {
         } else {
             gameSession.getTop().addScore();
         }
+
+        gameSession.setStateChanged(true);
+
         speedAbs = BALL_START_SPEED;
         speedX = 0;
         speedY = -signum(speedY) * speedAbs;
@@ -90,5 +93,9 @@ public class Ball {
 
     public Coords getCoords() {
         return coords;
+    }
+
+    public void setRadius(double radius) {
+        this.radius = radius;
     }
 }

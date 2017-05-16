@@ -7,6 +7,10 @@ package com.aerohockey.mechanics.base;
 public class PlatformCoords {
     public double x;
 
+    public PlatformCoords() {
+        this.x = 0;
+    }
+
     public PlatformCoords(double x) {
         this.x = x;
     }

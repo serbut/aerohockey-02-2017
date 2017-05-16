@@ -4,6 +4,7 @@ import com.aerohockey.mechanics.base.Coords;
 import com.aerohockey.mechanics.base.PlatformCoords;
 import org.jetbrains.annotations.NotNull;
 
+import static com.aerohockey.mechanics.Config.PLATFORM_WIDTH;
 import static com.aerohockey.mechanics.Config.PLAYGROUND_HEIGHT;
 import static com.aerohockey.mechanics.Config.PLAYGROUND_WIDTH;
 
@@ -12,13 +13,14 @@ import static com.aerohockey.mechanics.Config.PLAYGROUND_WIDTH;
  */
 public class Platform {
     private final PlatformCoords coords;
+    @SuppressWarnings("InstanceVariableNamingConvention")
     private final double y;
     private final double width;
     private final double height;
 
-    public Platform(@NotNull PlatformCoords coords, boolean isTop) {
-        this.coords = coords;
-        this.width = 60;
+    public Platform(boolean isTop) {
+        this.coords = new PlatformCoords();
+        this.width = PLATFORM_WIDTH;
         this.height = 15;
         this.y = isTop ? PLAYGROUND_HEIGHT/2 : -PLAYGROUND_HEIGHT/2;
     }
@@ -33,9 +35,9 @@ public class Platform {
         coords.x = newX;
     }
 
-    public boolean checkBallCollision(@NotNull Coords coords, double radius) {
-        return Math.abs(y - coords.y) < height + radius &&
-                Math.abs(this.coords.x - coords.x) < width/2 + radius;
+    public boolean checkBallCollision(@NotNull Coords ballCoords, double radius) {
+        return Math.abs(y - ballCoords.y) < height + radius &&
+                Math.abs(this.coords.x - ballCoords.x) < width/2 + radius;
     }
 
     public PlatformCoords getCoords() {

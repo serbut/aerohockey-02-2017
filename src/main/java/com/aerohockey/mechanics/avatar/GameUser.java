@@ -1,6 +1,7 @@
 package com.aerohockey.mechanics.avatar;
 
 import com.aerohockey.mechanics.base.PlatformCoords;
+import com.aerohockey.mechanics.base.ServerPlayerDetailSnap;
 import com.aerohockey.mechanics.base.ServerPlayerSnap;
 import com.aerohockey.model.UserProfile;
 import org.jetbrains.annotations.NotNull;
@@ -18,7 +19,7 @@ public class GameUser {
         this.userProfile = userProfile;
         this.score = 0;
         this.coordsTransform = isTop ? (byte) 1 : -1;
-        platform = new Platform(new PlatformCoords(0), isTop);
+        platform = new Platform(isTop);
     }
 
     public int getRating() {
@@ -54,8 +55,18 @@ public class GameUser {
 
         final ServerPlayerSnap result = new ServerPlayerSnap();
         result.setUserId(getId());
+        result.setCoords(platformCoords);
+        return result;
+    }
+
+    public @NotNull ServerPlayerDetailSnap generateDetailSnap() {
+        final PlatformCoords platformCoords = new PlatformCoords(platform.getCoords().x);
+
+        final ServerPlayerDetailSnap result = new ServerPlayerDetailSnap();
+        result.setUserId(getId());
         result.setScore(score);
-        result.setPlatform(platformCoords);
+        result.setCoords(platformCoords);
+        result.setWidth(platform.getWidth());
         return result;
     }
 

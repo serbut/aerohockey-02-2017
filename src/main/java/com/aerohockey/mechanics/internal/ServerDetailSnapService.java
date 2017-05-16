@@ -3,8 +3,8 @@ package com.aerohockey.mechanics.internal;
 import com.aerohockey.mechanics.GameSession;
 import com.aerohockey.mechanics.avatar.Ball;
 import com.aerohockey.mechanics.avatar.GameUser;
-import com.aerohockey.mechanics.base.ServerPlayerSnap;
-import com.aerohockey.mechanics.base.ServerSnap;
+import com.aerohockey.mechanics.base.ServerDetailSnap;
+import com.aerohockey.mechanics.base.ServerPlayerDetailSnap;
 import com.aerohockey.websocket.Message;
 import com.aerohockey.websocket.RemotePointService;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -18,15 +18,16 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 /**
- * Created by sergeybutorin on 15.04.17.
+ * Created by sergeybutorin on 16/05/2017.
  */
+
 @Service
-public class ServerSnapService {
+public class ServerDetailSnapService {
     private final @NotNull RemotePointService remotePointService;
 
     private final @NotNull ObjectMapper objectMapper = new ObjectMapper();
 
-    public ServerSnapService(@NotNull RemotePointService remotePointService) {
+    public ServerDetailSnapService(@NotNull RemotePointService remotePointService) {
         this.remotePointService = remotePointService;
     }
 
@@ -35,19 +36,20 @@ public class ServerSnapService {
         players.add(gameSession.getTop());
         players.add(gameSession.getBottom());
 
-        final ServerSnap snap = new ServerSnap();
+        final ServerDetailSnap snap = new ServerDetailSnap();
         snap.setServerFrameTime(frameTime);
 
         //noinspection OverlyBroadCatchBlock
         try {
             for (GameUser player : players) {
+                snap.setBonuses(gameSession.getBonuses());
                 snap.setBallsCoords(gameSession.getBalls().stream().map(Ball::getCoords).collect(Collectors.toList()));
-                final List<ServerPlayerSnap> playersSnaps = new ArrayList<>();
+                final List<ServerPlayerDetailSnap> playersSnaps = new ArrayList<>();
                 for (GameUser p : players) {
-                    playersSnaps.add(p.generateSnap());
+                    playersSnaps.add(p.generateDetailSnap());
                 }
                 snap.setPlayers(playersSnaps);
-                final Message message = new Message(ServerSnap.class.getName(), objectMapper.writeValueAsString(snap));
+                final Message message = new Message(ServerDetailSnap.class.getName(), objectMapper.writeValueAsString(snap));
                 remotePointService.sendMessageToUser(player.getId(), message);
             }
         } catch (IOException ex) {

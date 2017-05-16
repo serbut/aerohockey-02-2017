@@ -9,24 +9,24 @@ import java.util.List;
  */
 @SuppressWarnings({"unused", "NullableProblems"})
 public class ServerSnap {
-    @NotNull List<ServerPlayerSnap> players;
-    @NotNull Coords ballCoords;
+    @NotNull List<? extends ServerPlayerSnap> players;
+    @NotNull List<Coords> ballsCoords;
     private long serverFrameTime;
 
-    public @NotNull List<ServerPlayerSnap> getPlayers() {
+    public @NotNull List<? extends ServerPlayerSnap> getPlayers() {
         return players;
     }
 
-    public void setPlayers(@NotNull List<ServerPlayerSnap> players) {
+    public void setPlayers(@NotNull List<? extends ServerPlayerSnap> players) {
         this.players = players;
     }
 
-    public @NotNull Coords getBallCoords() {
-        return ballCoords;
+    public @NotNull List<Coords> getBallsCoords() {
+        return ballsCoords;
     }
 
-    public void setBallCoords(@NotNull Coords coords) {
-        this.ballCoords = coords;
+    public void setBallsCoords(@NotNull List<Coords> balls) {
+        this.ballsCoords = balls;
     }
 
     public long getServerFrameTime() {

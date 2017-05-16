@@ -6,8 +6,7 @@ package com.aerohockey.mechanics.base;
 @SuppressWarnings("unused")
 public class ServerPlayerSnap {
     private long userId;
-    private byte score;
-    private PlatformCoords platform;
+    private PlatformCoords coords;
 
     public long getUserId() {
         return userId;
@@ -17,19 +16,11 @@ public class ServerPlayerSnap {
         userId = id;
     }
 
-    public PlatformCoords getPlatform() {
-        return platform;
+    public PlatformCoords getCoords() {
+        return coords;
     }
 
-    public void setPlatform(PlatformCoords platform) {
-        this.platform = platform;
-    }
-
-    public byte getScore() {
-        return score;
-    }
-
-    public void setScore(byte score) {
-        this.score = score;
+    public void setCoords(PlatformCoords coords) {
+        this.coords = coords;
     }
 }
