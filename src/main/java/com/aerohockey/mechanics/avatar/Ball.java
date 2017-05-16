@@ -1,6 +1,7 @@
 package com.aerohockey.mechanics.avatar;
 
 import com.aerohockey.mechanics.GameSession;
+import com.aerohockey.mechanics.base.BallSnap;
 import com.aerohockey.mechanics.base.Coords;
 import org.jetbrains.annotations.NotNull;
 
@@ -93,6 +94,10 @@ public class Ball {
 
     public Coords getCoords() {
         return coords;
+    }
+
+    public BallSnap getSnap() {
+        return new BallSnap(coords, radius);
     }
 
     public void setRadius(double radius) {

@@ -41,7 +41,7 @@ public class ServerSnapService {
         //noinspection OverlyBroadCatchBlock
         try {
             for (GameUser player : players) {
-                snap.setBallsCoords(gameSession.getBalls().stream().map(Ball::getCoords).collect(Collectors.toList()));
+                snap.setBalls(gameSession.getBalls().stream().map(Ball::getCoords).collect(Collectors.toList()));
                 final List<ServerPlayerSnap> playersSnaps = new ArrayList<>();
                 for (GameUser p : players) {
                     playersSnaps.add(p.generateSnap());

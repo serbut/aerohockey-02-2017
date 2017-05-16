@@ -39,7 +39,7 @@ public class GameSession {
         this.top = new GameUser(user1, true);
         this.bottom = new GameUser(user2, false);
         this.balls = new ArrayList<>();
-        balls.add(new Ball(new Coords(0, 0)));
+        balls.add(new Ball(new Coords()));
         this.bonuses = new ArrayList<>();
         this.lastBonusCreated = ZonedDateTime.now();
         this.activeBonuses = new HashMap<>();

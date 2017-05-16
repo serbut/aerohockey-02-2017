@@ -43,7 +43,7 @@ public class ServerDetailSnapService {
         try {
             for (GameUser player : players) {
                 snap.setBonuses(gameSession.getBonuses());
-                snap.setBallsCoords(gameSession.getBalls().stream().map(Ball::getCoords).collect(Collectors.toList()));
+                snap.setBalls(gameSession.getBalls().stream().map(Ball::getSnap).collect(Collectors.toList()));
                 final List<ServerPlayerDetailSnap> playersSnaps = new ArrayList<>();
                 for (GameUser p : players) {
                     playersSnaps.add(p.generateDetailSnap());
