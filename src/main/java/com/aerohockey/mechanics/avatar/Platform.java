@@ -15,7 +15,7 @@ public class Platform {
     private final PlatformCoords coords;
     @SuppressWarnings("InstanceVariableNamingConvention")
     private final double y;
-    private final double width;
+    private double width;
     private final double height;
 
     public Platform(boolean isTop) {
@@ -38,6 +38,10 @@ public class Platform {
     public boolean checkBallCollision(@NotNull Coords ballCoords, double radius) {
         return Math.abs(y - ballCoords.y) < height + radius &&
                 Math.abs(this.coords.x - ballCoords.x) < width/2 + radius;
+    }
+
+    public void setWidth(double width) {
+        this.width = width;
     }
 
     public PlatformCoords getCoords() {

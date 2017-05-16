@@ -17,9 +17,9 @@ public class Bonus {
     public enum Types {
         BALL_INCREASE,
         BALL_DECREASE,
-/*        BALL_MULTIPLY,
+        BALL_MULTIPLY,
         PLATFORM_INCREASE,
-        PLATFORM_DECREASE*/;
+        PLATFORM_DECREASE;
 
         public static Types getRandom() {
             return values()[(int) (Math.random() * values().length)];
@@ -59,15 +59,19 @@ public class Bonus {
             case BALL_INCREASE:
                 ball.setRadius(BALL_RADIUS * 2);
                 break;
-//            case BALL_MULTIPLY:
-//                //TODO
-//                break;
-//            case PLATFORM_DECREASE:
-//                //TODO
-//
-//                break;
-//            case PLATFORM_INCREASE:
-//                break;
+            case BALL_MULTIPLY:
+                //TODO
+                break;
+            case PLATFORM_DECREASE:
+                //TODO изменять для одного игрока
+                gameSession.getTop().getPlatform().setWidth(PLATFORM_WIDTH / PLATFORM_WIDTH_CHANGE);
+                gameSession.getBottom().getPlatform().setWidth(PLATFORM_WIDTH / PLATFORM_WIDTH_CHANGE);
+                break;
+            case PLATFORM_INCREASE:
+                //TODO изменять для одного игрока
+                gameSession.getTop().getPlatform().setWidth(PLATFORM_WIDTH * PLATFORM_WIDTH_CHANGE);
+                gameSession.getBottom().getPlatform().setWidth(PLATFORM_WIDTH * PLATFORM_WIDTH_CHANGE);
+                break;
         }
     }
 
@@ -77,12 +81,14 @@ public class Bonus {
             case BALL_INCREASE:
                 ball.setRadius(BALL_RADIUS);
                 break;
-//            case BALL_MULTIPLY:
-//                break;
-//            case PLATFORM_DECREASE:
-//                break;
-//            case PLATFORM_INCREASE:
-//                break;
+            case BALL_MULTIPLY:
+                break;
+            case PLATFORM_DECREASE:
+            case PLATFORM_INCREASE:
+                //TODO изменять для одного игрока
+                gameSession.getTop().getPlatform().setWidth(PLATFORM_WIDTH);
+                gameSession.getBottom().getPlatform().setWidth(PLATFORM_WIDTH);
+                break;
         }
     }
 

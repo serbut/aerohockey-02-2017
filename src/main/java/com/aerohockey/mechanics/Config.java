@@ -10,6 +10,7 @@ public class Config {
     public static final double PLATFORM_SPEED = 0.05;
     public static final double PLATFORM_BENDING = 0.9;
     public static final int PLATFORM_WIDTH = 60;
+    public static final double PLATFORM_WIDTH_CHANGE = 1.5;
 
     public static final byte MAX_SCORE = 7;
 
