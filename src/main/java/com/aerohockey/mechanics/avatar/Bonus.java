@@ -1,6 +1,7 @@
 package com.aerohockey.mechanics.avatar;
 
 import com.aerohockey.mechanics.GameSession;
+import com.aerohockey.mechanics.base.BonusSnap;
 import com.aerohockey.mechanics.base.Coords;
 import org.jetbrains.annotations.NotNull;
 
@@ -92,5 +93,9 @@ public class Bonus {
     public double generateCoord(int min, int max) {
         max -= min;
         return (Math.random() * ++max) + min;
+    }
+
+    public BonusSnap getSnap() {
+        return new BonusSnap(coords, type.toString());
     }
 }

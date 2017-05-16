@@ -4,7 +4,6 @@ import com.aerohockey.mechanics.avatar.Bonus;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.List;
-import java.util.Map;
 import java.util.stream.Collectors;
 
 /**
@@ -12,13 +11,14 @@ import java.util.stream.Collectors;
  */
 @SuppressWarnings("NullableProblems")
 public class ServerDetailSnap extends ServerSnap {
-    @NotNull Map<Bonus.Types, Coords> bonuses;
+    @NotNull List<BonusSnap> bonuses;
 
-    public Map<Bonus.Types, Coords> getBonuses() {
+    @SuppressWarnings("unused")
+    public @NotNull List<BonusSnap> getBonuses() {
         return bonuses;
     }
 
     public void setBonuses(@NotNull List<Bonus> bonuses) {
-        this.bonuses = bonuses.stream().collect(Collectors.toMap(Bonus::getType, Bonus::getCoords));
+        this.bonuses = bonuses.stream().map(Bonus::getSnap).collect(Collectors.toList());
     }
 }

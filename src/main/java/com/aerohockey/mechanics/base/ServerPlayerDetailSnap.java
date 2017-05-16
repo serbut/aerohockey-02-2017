@@ -3,6 +3,7 @@ package com.aerohockey.mechanics.base;
 /**
  * Created by sergeybutorin on 16/05/2017.
  */
+@SuppressWarnings("unused")
 public class ServerPlayerDetailSnap extends ServerPlayerSnap {
     private byte score;
     private double width;
