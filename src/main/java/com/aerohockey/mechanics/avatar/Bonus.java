@@ -32,8 +32,8 @@ public class Bonus {
     private Ball ball;
 
     public Bonus() {
-        coords = new Coords(generateCoord(PLAYGROUND_WIDTH / 4, 3 * PLAYGROUND_WIDTH / 4),
-                generateCoord(PLAYGROUND_HEIGHT / 4, 3 * PLAYGROUND_HEIGHT / 4));
+        coords = new Coords(generateCoord(-PLAYGROUND_WIDTH / 4, PLAYGROUND_WIDTH / 4),
+                generateCoord(-PLAYGROUND_HEIGHT / 4, PLAYGROUND_HEIGHT / 4));
         type = Types.getRandom();
         expired = ZonedDateTime.now().plusSeconds(BONUS_EXPIRED_TIME);
     }

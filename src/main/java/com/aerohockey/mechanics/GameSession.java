@@ -10,10 +10,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.time.ZonedDateTime;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 import java.util.concurrent.atomic.AtomicLong;
 
 import static com.aerohockey.mechanics.Config.*;
@@ -107,14 +104,18 @@ public class GameSession {
 
     private void activateBonuses() {
         for (Ball ball : balls) {
-            for (Bonus bonus : bonuses) {
+            final Iterator<Bonus> bonusIterator = bonuses.iterator();
+            while (bonusIterator.hasNext()) {
+                final Bonus bonus = bonusIterator.next();
                 if (bonus.checkBonusCollision(ball.getCoords())) {
                     bonus.execute(this, ball);
                     LOGGER.info("Bonus activated: ", bonus.getType());
                     activeBonuses.put(ZonedDateTime.now().plusSeconds(BONUS_EXPIRED_TIME), bonus);
+                    bonusIterator.remove();
                     stateChanged = true;
                 }
             }
+
         }
     }
 
@@ -123,6 +124,7 @@ public class GameSession {
             if (bonusEntry.getKey().isBefore(ZonedDateTime.now())) {
                 bonusEntry.getValue().deactivate(this);
                 LOGGER.info("Bonus deactivated: ", bonusEntry.getValue().getType());
+                activeBonuses.remove(bonusEntry.getKey());
                 stateChanged = true;
             }
         }
