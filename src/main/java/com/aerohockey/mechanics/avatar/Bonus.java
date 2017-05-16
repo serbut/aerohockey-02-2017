@@ -17,9 +17,9 @@ public class Bonus {
     public enum Types {
         BALL_INCREASE,
         BALL_DECREASE,
-        BALL_MULTIPLY,
+/*        BALL_MULTIPLY,
         PLATFORM_INCREASE,
-        PLATFORM_DECREASE;
+        PLATFORM_DECREASE*/;
 
         public static Types getRandom() {
             return values()[(int) (Math.random() * values().length)];
@@ -38,12 +38,8 @@ public class Bonus {
         expired = ZonedDateTime.now().plusSeconds(BONUS_EXPIRED_TIME);
     }
 
-    public boolean checkBonusCollision(@NotNull Coords ballCoords) {
-        return Math.abs(ballCoords.x - coords.x) < BONUS_SIZE;
-    }
-
-    public Coords getCoords() {
-        return coords;
+    public boolean checkBonusCollision(@NotNull Ball ball) {
+        return (Math.pow((ball.getCoords().x - coords.x), 2) + Math.pow((ball.getCoords().y - coords.y), 2)) < (ball.getRadius() + BONUS_SIZE) * (ball.getRadius() + BONUS_SIZE);
     }
 
     public Types getType() {
@@ -63,15 +59,15 @@ public class Bonus {
             case BALL_INCREASE:
                 ball.setRadius(BALL_RADIUS * 2);
                 break;
-            case BALL_MULTIPLY:
-                //TODO
-                break;
-            case PLATFORM_DECREASE:
-                //TODO
-
-                break;
-            case PLATFORM_INCREASE:
-                break;
+//            case BALL_MULTIPLY:
+//                //TODO
+//                break;
+//            case PLATFORM_DECREASE:
+//                //TODO
+//
+//                break;
+//            case PLATFORM_INCREASE:
+//                break;
         }
     }
 
@@ -81,12 +77,12 @@ public class Bonus {
             case BALL_INCREASE:
                 ball.setRadius(BALL_RADIUS);
                 break;
-            case BALL_MULTIPLY:
-                break;
-            case PLATFORM_DECREASE:
-                break;
-            case PLATFORM_INCREASE:
-                break;
+//            case BALL_MULTIPLY:
+//                break;
+//            case PLATFORM_DECREASE:
+//                break;
+//            case PLATFORM_INCREASE:
+//                break;
         }
     }
 

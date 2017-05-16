@@ -92,6 +92,10 @@ public class Ball {
         return false;
     }
 
+    public double getRadius() {
+        return radius;
+    }
+
     public Coords getCoords() {
         return coords;
     }

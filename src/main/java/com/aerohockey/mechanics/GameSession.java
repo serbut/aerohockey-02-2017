@@ -107,7 +107,7 @@ public class GameSession {
             final Iterator<Bonus> bonusIterator = bonuses.iterator();
             while (bonusIterator.hasNext()) {
                 final Bonus bonus = bonusIterator.next();
-                if (bonus.checkBonusCollision(ball.getCoords())) {
+                if (bonus.checkBonusCollision(ball)) {
                     bonus.execute(this, ball);
                     LOGGER.info("Bonus activated: ", bonus.getType());
                     activeBonuses.put(ZonedDateTime.now().plusSeconds(BONUS_EXPIRED_TIME), bonus);
