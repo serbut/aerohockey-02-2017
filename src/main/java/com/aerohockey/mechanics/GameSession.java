@@ -115,17 +115,18 @@ public class GameSession {
                     stateChanged = true;
                 }
             }
-
         }
     }
 
     private void deactivateBonuses() {
-        for (Map.Entry<ZonedDateTime, Bonus> bonusEntry : activeBonuses.entrySet()) {
+        final Iterator<Map.Entry<ZonedDateTime, Bonus>> bonusIterator = activeBonuses.entrySet().iterator();
+        while (bonusIterator.hasNext()) {
+            final Map.Entry<ZonedDateTime, Bonus> bonusEntry = bonusIterator.next();
             if (bonusEntry.getKey().isBefore(ZonedDateTime.now())) {
                 bonusEntry.getValue().deactivate(this);
                 LOGGER.info("Bonus deactivated: ", bonusEntry.getValue().getType());
-                activeBonuses.remove(bonusEntry.getKey());
                 stateChanged = true;
+                bonusIterator.remove();
             }
         }
     }
