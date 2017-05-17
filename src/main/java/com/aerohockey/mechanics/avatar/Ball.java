@@ -70,6 +70,9 @@ public class Ball {
         getUser(gameSession).addScore();
 
         gameSession.setStateChanged(true);
+        if (gameSession.removeBall(this)) {
+            return;
+        }
 
         speedAbs = BALL_START_SPEED;
         speedX = 0;

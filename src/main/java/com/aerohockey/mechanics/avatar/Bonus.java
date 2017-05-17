@@ -60,7 +60,9 @@ public class Bonus {
                 ball.setRadius(BALL_RADIUS * 2);
                 break;
             case BALL_MULTIPLY:
-                //TODO
+                //TODO: создавать шарики того же радиуса и с той же скоростью
+                gameSession.addBall(new Coords(ball.getCoords().x + 3 * ball.getRadius(), ball.getCoords().y));
+                gameSession.addBall(new Coords(ball.getCoords().x - 3 * ball.getRadius(), ball.getCoords().y));
                 break;
             case PLATFORM_DECREASE:
                 ball.getUser(gameSession).getPlatform().setWidth(PLATFORM_WIDTH / PLATFORM_WIDTH_CHANGE);

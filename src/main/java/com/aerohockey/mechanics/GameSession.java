@@ -113,6 +113,7 @@ public class GameSession {
                     activeBonuses.put(ZonedDateTime.now().plusSeconds(BONUS_EXPIRED_TIME), bonus);
                     bonusIterator.remove();
                     stateChanged = true;
+                    return; //TODO: сейчас проверяется только для первого бонуса
                 }
             }
         }
@@ -137,6 +138,18 @@ public class GameSession {
 
     public void setStateChanged(boolean stateChanged) {
         this.stateChanged = stateChanged;
+    }
+
+    public void addBall(@NotNull Coords ballCoords) {
+        balls.add(new Ball(ballCoords));
+    }
+
+    public boolean removeBall(@NotNull Ball ball) {
+        if (balls.size() > 1) {
+            balls.remove(ball);
+            return true;
+        }
+        return false;
     }
 
     @Override
