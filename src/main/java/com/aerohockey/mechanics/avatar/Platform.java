@@ -26,13 +26,16 @@ public class Platform {
     }
 
     public void move(double dx) {
-        double newX = coords.x + dx;
-        if (newX > PLAYGROUND_WIDTH/2 - width/2) {
-            newX = PLAYGROUND_WIDTH/2 - width/2;
-        } else if (newX < -PLAYGROUND_WIDTH/2 + width/2) {
-            newX = -PLAYGROUND_WIDTH/2 + width/2;
+        coords.x = coords.x + dx;
+        checkSideCollision();
+    }
+
+    public void checkSideCollision() {
+        if (coords.x > PLAYGROUND_WIDTH/2 - width/2) {
+            coords.x = PLAYGROUND_WIDTH/2 - width/2;
+        } else if (coords.x < -PLAYGROUND_WIDTH/2 + width/2) {
+            coords.x = -PLAYGROUND_WIDTH/2 + width/2;
         }
-        coords.x = newX;
     }
 
     public boolean checkBallCollision(@NotNull Coords ballCoords, double radius) {

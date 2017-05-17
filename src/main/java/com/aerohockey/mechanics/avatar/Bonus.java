@@ -70,7 +70,9 @@ public class Bonus {
             case PLATFORM_INCREASE:
                 //TODO изменять для одного игрока
                 gameSession.getTop().getPlatform().setWidth(PLATFORM_WIDTH * PLATFORM_WIDTH_CHANGE);
+                gameSession.getTop().getPlatform().checkSideCollision();
                 gameSession.getBottom().getPlatform().setWidth(PLATFORM_WIDTH * PLATFORM_WIDTH_CHANGE);
+                gameSession.getBottom().getPlatform().checkSideCollision();
                 break;
         }
     }
