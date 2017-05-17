@@ -30,7 +30,7 @@ public class Platform {
         checkSideCollision();
     }
 
-    public void checkSideCollision() {
+    private void checkSideCollision() {
         if (coords.x > PLAYGROUND_WIDTH/2 - width/2) {
             coords.x = PLAYGROUND_WIDTH/2 - width/2;
         } else if (coords.x < -PLAYGROUND_WIDTH/2 + width/2) {
@@ -45,6 +45,7 @@ public class Platform {
 
     public void setWidth(double width) {
         this.width = width;
+        checkSideCollision();
     }
 
     public PlatformCoords getCoords() {

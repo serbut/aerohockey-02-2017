@@ -67,11 +67,7 @@ public class Ball {
     }
 
     private void goal(@NotNull GameSession gameSession) {
-        if (coords.y > 0) {
-            gameSession.getBottom().addScore();
-        } else {
-            gameSession.getTop().addScore();
-        }
+        getUser(gameSession).addScore();
 
         gameSession.setStateChanged(true);
 
@@ -80,6 +76,10 @@ public class Ball {
         speedY = -signum(speedY) * speedAbs;
         coords.x = 0;
         coords.y = 0;
+    }
+
+    public GameUser getUser(@NotNull GameSession gameSession) {
+        return speedY < 0 ? gameSession.getTop() : gameSession.getBottom();
     }
 
     private boolean platformEdgeCollision(@NotNull Platform platform, long frameTime) {

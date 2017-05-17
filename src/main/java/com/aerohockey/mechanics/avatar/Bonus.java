@@ -63,16 +63,10 @@ public class Bonus {
                 //TODO
                 break;
             case PLATFORM_DECREASE:
-                //TODO изменять для одного игрока
-                gameSession.getTop().getPlatform().setWidth(PLATFORM_WIDTH / PLATFORM_WIDTH_CHANGE);
-                gameSession.getBottom().getPlatform().setWidth(PLATFORM_WIDTH / PLATFORM_WIDTH_CHANGE);
+                ball.getUser(gameSession).getPlatform().setWidth(PLATFORM_WIDTH / PLATFORM_WIDTH_CHANGE);
                 break;
             case PLATFORM_INCREASE:
-                //TODO изменять для одного игрока
-                gameSession.getTop().getPlatform().setWidth(PLATFORM_WIDTH * PLATFORM_WIDTH_CHANGE);
-                gameSession.getTop().getPlatform().checkSideCollision();
-                gameSession.getBottom().getPlatform().setWidth(PLATFORM_WIDTH * PLATFORM_WIDTH_CHANGE);
-                gameSession.getBottom().getPlatform().checkSideCollision();
+                ball.getUser(gameSession).getPlatform().setWidth(PLATFORM_WIDTH * PLATFORM_WIDTH_CHANGE);
                 break;
         }
     }
@@ -87,7 +81,6 @@ public class Bonus {
                 break;
             case PLATFORM_DECREASE:
             case PLATFORM_INCREASE:
-                //TODO изменять для одного игрока
                 gameSession.getTop().getPlatform().setWidth(PLATFORM_WIDTH);
                 gameSession.getBottom().getPlatform().setWidth(PLATFORM_WIDTH);
                 break;
