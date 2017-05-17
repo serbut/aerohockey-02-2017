@@ -6,5 +6,5 @@
 
     Команда: Буклин Сергей, Буторин Сергей, Якубов Алексей
     
-## [Heroku](https://fastball-backend.herokuapp.com)
+## [Frontend](http://fastball.herokuapp.com)
 ## [Swagger](https://app.swaggerhub.com/api/serbut/AerohockeyAPI/1.0.0)

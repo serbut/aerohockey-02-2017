@@ -63,6 +63,19 @@ public class AccountServiceImpl implements AccountService{
     }
 
     @Override
+    public @Nullable UserProfile getUserById(Long id) {
+        try {
+            return template.queryForObject("SELECT * FROM users WHERE id = ?", USER_PROFILE_ROW_MAPPER, id);
+        } catch (EmptyResultDataAccessException e) {
+            LOGGER.info("User with id = {} not found.", id);
+            return null;
+        } catch (DataAccessException e) {
+            LOGGER.info(e.getLocalizedMessage());
+            return null;
+        }
+    }
+
+    @Override
     public List<UserProfile> getLeaders(int page) {
         final String query = "SELECT * FROM users " +
                 "ORDER BY rating DESC, login ASC " +
@@ -71,11 +84,11 @@ public class AccountServiceImpl implements AccountService{
     }
 
     @Override
-    public void updateRating(@NotNull UserProfile newUser) {
+    public void updateRating(long id, int value) {
         final String query = "UPDATE users SET " +
                 "rating = COALESCE (?, rating) " +
-                "WHERE login = ?";
-        template.update(query, newUser.getRating(), newUser.getLogin());
+                "WHERE id = ?";
+        template.update(query, value, id);
     }
 
     @Override
