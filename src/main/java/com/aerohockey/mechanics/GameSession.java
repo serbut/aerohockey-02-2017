@@ -64,7 +64,7 @@ public class GameSession {
     }
 
     public boolean isGameOver() {
-        if (top.getScore() == MAX_SCORE || bottom.getScore() == MAX_SCORE) {
+        if (top.getScore() >= MAX_SCORE || bottom.getScore() >= MAX_SCORE) {
             LOGGER.info("Game over: session = " + sessionId + "; " + top.getLogin() + " with score " + top.getScore() +
                     "; " + bottom.getLogin() + " with score " + bottom.getScore());
             return true;
