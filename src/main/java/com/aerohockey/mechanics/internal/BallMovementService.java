@@ -27,6 +27,9 @@ public class BallMovementService {
             final Ball ball = entry.getKey();
             final GameSession gameSession = entry.getValue();
             ball.move(gameSession, frameTime);
+            for (Ball secondBall : gameSession.getBalls()) {
+                ball.twoBallCollision(secondBall, frameTime);
+            }
         }
     }
 

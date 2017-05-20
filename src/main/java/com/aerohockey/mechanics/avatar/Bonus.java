@@ -29,7 +29,7 @@ public class Bonus {
     private final ZonedDateTime expired;
     private final Coords coords;
     private final Types type;
-    private Ball ball;
+    private Ball activatedBall;
 
     public Bonus() {
         coords = new Coords(generateCoord(-PLAYGROUND_WIDTH / 4, PLAYGROUND_WIDTH / 4),
@@ -39,36 +39,30 @@ public class Bonus {
     }
 
     public boolean checkBonusCollision(@NotNull Ball ball) {
-        return (Math.pow((ball.getCoords().x - coords.x), 2) + Math.pow((ball.getCoords().y - coords.y), 2)) < (ball.getRadius() + BONUS_SIZE) * (ball.getRadius() + BONUS_SIZE);
-    }
-
-    public Types getType() {
-        return type;
+        return (Math.pow((ball.getCoords().x - coords.x), 2) + Math.pow((ball.getCoords().y - coords.y), 2)) < Math.pow((ball.getRadius() + BONUS_SIZE), 2);
     }
 
     public ZonedDateTime getExpired() {
         return expired;
     }
 
-    public void execute(@NotNull GameSession gameSession, @NotNull Ball pickedUpBall) {
-        this.ball = pickedUpBall;
+    public void activate(@NotNull GameSession gameSession, @NotNull Ball pickedUpBall) {
+        this.activatedBall = pickedUpBall;
         switch (type) {
             case BALL_DECREASE:
-                ball.setRadius(BALL_RADIUS / 2);
+                activatedBall.setRadius(BALL_RADIUS / 2);
                 break;
             case BALL_INCREASE:
-                ball.setRadius(BALL_RADIUS * 2);
+                activatedBall.setRadius(BALL_RADIUS * 2);
                 break;
             case BALL_MULTIPLY:
-                //TODO: создавать шарики того же радиуса и с той же скоростью
-                gameSession.addBall(new Coords(ball.getCoords().x + 3 * ball.getRadius(), ball.getCoords().y));
-                gameSession.addBall(new Coords(ball.getCoords().x - 3 * ball.getRadius(), ball.getCoords().y));
+                gameSession.addBall(activatedBall.createDuplicate());
                 break;
             case PLATFORM_DECREASE:
-                ball.getUser(gameSession).getPlatform().setWidth(PLATFORM_WIDTH / PLATFORM_WIDTH_CHANGE);
+                activatedBall.getUser(gameSession).getPlatform().setWidth(PLATFORM_WIDTH / PLATFORM_WIDTH_CHANGE);
                 break;
             case PLATFORM_INCREASE:
-                ball.getUser(gameSession).getPlatform().setWidth(PLATFORM_WIDTH * PLATFORM_WIDTH_CHANGE);
+                activatedBall.getUser(gameSession).getPlatform().setWidth(PLATFORM_WIDTH * PLATFORM_WIDTH_CHANGE);
                 break;
         }
     }
@@ -77,7 +71,7 @@ public class Bonus {
         switch (type) {
             case BALL_DECREASE:
             case BALL_INCREASE:
-                ball.setRadius(BALL_RADIUS);
+                activatedBall.setRadius(BALL_RADIUS);
                 break;
             case BALL_MULTIPLY:
                 break;

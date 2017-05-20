@@ -19,12 +19,20 @@ public class Ball {
     private double speedAbs;
     private double radius;
 
-    public Ball(@NotNull Coords coords) {
-        this.coords = coords;
+    public Ball() {
+        this.coords = new Coords();
         this.speedAbs = BALL_START_SPEED;
         this.speedX = 0;
         this.speedY = speedAbs;
         this.radius = BALL_RADIUS;
+    }
+
+    public Ball(double direction, double radius) {
+        this.coords = new Coords();
+        this.speedAbs = BALL_START_SPEED;
+        this.speedX = 0;
+        this.speedY = direction * speedAbs;
+        this.radius = radius;
     }
 
     public void move(@NotNull GameSession gameSession, long frameTime) {
@@ -109,5 +117,32 @@ public class Ball {
 
     public void setRadius(double radius) {
         this.radius = radius;
+    }
+
+    public Ball createDuplicate() {
+        this.coords.x += radius;
+        return new Ball(-signum(speedY), radius);
+    }
+
+    public void twoBallCollision(@NotNull Ball secondBall, long frameTime) {
+        if(this.equals(secondBall)) {
+            return;
+        }
+        if ((Math.pow((secondBall.coords.x - coords.x), 2) + Math.pow((secondBall.coords.y - coords.y), 2)) < Math.pow((secondBall.radius + radius), 2)) {
+            coords.x -= speedX * frameTime;
+            coords.y -= speedY * frameTime;
+
+            secondBall.coords.x -= secondBall.speedX * frameTime;
+            secondBall.coords.y -= secondBall.speedY * frameTime;
+
+            final double newSpeedX = secondBall.speedX;
+            final double newSpeedY = secondBall.speedY;
+
+            secondBall.speedX = speedX;
+            secondBall.speedY = speedY;
+
+            speedX = newSpeedX;
+            speedY = newSpeedY;
+        }
     }
 }

@@ -16,7 +16,6 @@ import java.util.concurrent.ConcurrentLinkedQueue;
 /**
  * Created by sergeybutorin on 14.04.17.
  */
-@SuppressWarnings({"unused", "FieldMayBeFinal"})
 @Service
 public class GameMechanicsImpl implements GameMechanics {
     private static final @NotNull Logger LOGGER = LoggerFactory.getLogger(GameMechanicsImpl.class);
@@ -36,8 +35,6 @@ public class GameMechanicsImpl implements GameMechanics {
     private final @NotNull GameSessionService gameSessionService;
 
     private final @NotNull GameOverSnapService gameOverSnapService;
-
-    private @NotNull Set<Long> playingUsers = new HashSet<>();
 
     private final @NotNull ConcurrentLinkedQueue<Long> waiters = new ConcurrentLinkedQueue<>();
 
@@ -88,6 +85,13 @@ public class GameMechanicsImpl implements GameMechanics {
         matchedPlayers.stream().map(UserProfile::getId).forEach(waiters::add);
     }
 
+    private void finishGames(@NotNull GameSession gameSession) {
+        gameOverSnapService.sendSnapshotsFor(gameSession);
+        accountService.updateRating(gameSession.getTop().getId(), gameSession.getTop().getRating());
+        accountService.updateRating(gameSession.getBottom().getId(), gameSession.getBottom().getRating());
+        gameSessionService.notifyGameIsOver(gameSession);
+    }
+
     private boolean insureCandidate(@NotNull Long candidateId) {
         return remotePointService.isConnected(candidateId) &&
                 accountService.getUserById(candidateId) != null;
@@ -125,17 +129,15 @@ public class GameMechanicsImpl implements GameMechanics {
                     serverSnapService.sendSnapshotsFor(session, frameTime);
                 }
                 if (session.isGameOver()) {
-                    gameOverSnapService.sendSnapshotsFor(session);
                     sessionsToTerminate.add(session);
-                    accountService.updateRating(session.getTop().getId(), session.getTop().getRating());
-                    accountService.updateRating(session.getBottom().getId(), session.getBottom().getRating());
                 }
             } catch (RuntimeException ex) {
                 LOGGER.error("Failed send snapshots, terminating the session", ex);
                 sessionsToTerminate.add(session);
             }
         }
-        sessionsToTerminate.forEach(gameSessionService::notifyGameIsOver);
+
+        sessionsToTerminate.forEach(this::finishGames);
 
         tryStartGames();
         clientSnapService.clear();

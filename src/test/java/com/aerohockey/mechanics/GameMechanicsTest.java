@@ -73,11 +73,11 @@ public class GameMechanicsTest {
 
         gameMechanics.addClientSnapshot(firstPlayer.getId(), new ClientSnap("right", 1));
         gameMechanics.gmStep(0);
-        assertEquals(PLATFORM_SPEED, firstPlayer.getPlatform().getCoords().x, delta);
+        assertEquals(-PLATFORM_SPEED, firstPlayer.getPlatform().getCoords().x, delta);
 
         gameMechanics.addClientSnapshot(firstPlayer.getId(), new ClientSnap("left", 2));
         gameMechanics.gmStep(0);
-        assertEquals(-PLATFORM_SPEED, firstPlayer.getPlatform().getCoords().x, delta);
+        assertEquals(PLATFORM_SPEED, firstPlayer.getPlatform().getCoords().x, delta);
     }
 
     @Test
