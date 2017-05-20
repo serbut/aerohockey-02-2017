@@ -27,12 +27,12 @@ public class Ball {
         this.radius = BALL_RADIUS;
     }
 
-    public Ball(double direction, double radius) {
+    public Ball(double direction) {
         this.coords = new Coords();
         this.speedAbs = BALL_START_SPEED;
         this.speedX = 0;
         this.speedY = direction * speedAbs;
-        this.radius = radius;
+        this.radius = BALL_RADIUS;
     }
 
     public void move(@NotNull GameSession gameSession, long frameTime) {
@@ -111,17 +111,16 @@ public class Ball {
         return coords;
     }
 
+    public double getSpeedY() {
+        return speedY;
+    }
+
     public BallSnap getSnap() {
         return new BallSnap(coords, radius);
     }
 
     public void setRadius(double radius) {
         this.radius = radius;
-    }
-
-    public Ball createDuplicate() {
-        this.coords.x += radius;
-        return new Ball(-signum(speedY), radius);
     }
 
     public void twoBallCollision(@NotNull Ball secondBall, long frameTime) {

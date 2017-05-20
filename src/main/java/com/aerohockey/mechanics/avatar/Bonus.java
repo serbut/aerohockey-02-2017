@@ -8,6 +8,7 @@ import org.jetbrains.annotations.NotNull;
 import java.time.ZonedDateTime;
 
 import static com.aerohockey.mechanics.Config.*;
+import static java.lang.StrictMath.signum;
 
 /**
  * Created by sergeybutorin on 15/05/2017.
@@ -56,7 +57,7 @@ public class Bonus {
                 activatedBall.setRadius(BALL_RADIUS * 2);
                 break;
             case BALL_MULTIPLY:
-                gameSession.addBall(activatedBall.createDuplicate());
+                gameSession.addBall(new Ball(-signum(activatedBall.getSpeedY())));
                 break;
             case PLATFORM_DECREASE:
                 activatedBall.getUser(gameSession).getPlatform().setWidth(PLATFORM_WIDTH / PLATFORM_WIDTH_CHANGE);
