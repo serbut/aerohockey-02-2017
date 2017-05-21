@@ -10,6 +10,7 @@ import org.slf4j.LoggerFactory;
 
 import java.time.ZonedDateTime;
 import java.util.*;
+import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.atomic.AtomicLong;
 
 import static com.aerohockey.mechanics.Config.*;
@@ -38,7 +39,7 @@ public class GameSession {
         balls.add(new Ball());
         this.bonuses = new ArrayList<>();
         this.lastBonusCreated = ZonedDateTime.now();
-        this.activeBonuses = new HashMap<>();
+        this.activeBonuses = new ConcurrentHashMap<>();
         stateChanged = true;
     }
 
