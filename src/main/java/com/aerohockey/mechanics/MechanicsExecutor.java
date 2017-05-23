@@ -59,10 +59,12 @@ public class MechanicsExecutor {
         }
     }
 
-    public void addUser(@NotNull Long user) {
+    public void addUser(@NotNull Long userId) {
         for (GameMechanics mechanics : gameMechanics) {
-            if (mechanics.isUserWaiting()) {
-                mechanics.addUser(user);
+            if (mechanics.isUserWaiting(userId) || mechanics.isUserPlaying(userId)) {
+                return;
+            } else if (mechanics.isCandidatesExists()) {
+                mechanics.addUser(userId);
                 return;
             }
         }
@@ -75,7 +77,7 @@ public class MechanicsExecutor {
                 selectedMechanics = mechanics;
             }
         }
-        selectedMechanics.addUser(user);
+        selectedMechanics.addUser(userId);
     }
 
     public void addClientSnapshot(@NotNull Long userId, @NotNull ClientSnap clientSnap) {
@@ -89,7 +91,7 @@ public class MechanicsExecutor {
 
     public @Nullable GameMechanics getMechanicsForUser(@NotNull Long userId) {
         for (GameMechanics mechanics: gameMechanics) {
-            if (mechanics.isUserPlaying(userId) || mechanics.isUserWaiting()) {
+            if (mechanics.isUserPlaying(userId) || mechanics.isUserWaiting(userId)) {
                 return mechanics;
             }
         }

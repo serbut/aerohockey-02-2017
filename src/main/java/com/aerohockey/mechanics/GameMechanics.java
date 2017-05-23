@@ -10,13 +10,15 @@ import org.jetbrains.annotations.Nullable;
 public interface GameMechanics {
     void addClientSnapshot(@NotNull Long userId, @NotNull ClientSnap gameSnap);
 
-    void addUser(@NotNull Long user);
+    void addUser(@NotNull Long userId);
 
     int getSessionCount();
 
-    boolean isUserWaiting();
+    boolean isUserWaiting(@NotNull Long userId);
 
-    boolean isUserPlaying(@NotNull Long user);
+    boolean isUserPlaying(@NotNull Long userId);
+
+    boolean isCandidatesExists();
 
     @Nullable GameSession getSessionForUser(@NotNull Long userId);
 

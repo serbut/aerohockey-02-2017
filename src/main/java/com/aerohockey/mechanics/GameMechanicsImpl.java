@@ -61,21 +61,26 @@ public class GameMechanicsImpl implements GameMechanics {
     }
 
     @Override
-    public void addUser(@NotNull Long user) {
-        if (gameSessionService.isPlaying(user)) {
+    public void addUser(@NotNull Long userId) {
+        if (gameSessionService.isPlaying(userId)) {
             return;
         }
-        waiters.add(user);
+        waiters.add(userId);
     }
 
     @Override
-    public boolean isUserPlaying(@NotNull Long  user) {
-        return gameSessionService.isPlaying(user);
+    public boolean isUserPlaying(@NotNull Long userId) {
+        return gameSessionService.isPlaying(userId);
     }
 
     @Override
-    public boolean isUserWaiting() {
+    public boolean isCandidatesExists() {
         return !waiters.isEmpty();
+    }
+
+    @Override
+    public boolean isUserWaiting(@NotNull Long userId) {
+        return waiters.contains(userId);
     }
 
     @Override
