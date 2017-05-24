@@ -7,13 +7,17 @@ import com.aerohockey.services.AccountService;
 import com.aerohockey.websocket.RemotePointService;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
+import org.jetbrains.annotations.TestOnly;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import javax.annotation.PostConstruct;
 import java.time.Clock;
+import java.util.Comparator;
+import java.util.Optional;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
+import java.util.stream.Stream;
 
 /**
  * Created by sergeybutorin on 16.04.17.
@@ -22,7 +26,7 @@ import java.util.concurrent.Executors;
 public class MechanicsExecutor {
     private static final long STEP_TIME = 30;
 
-    private static final int THREADS = 4;
+    private static final int THREADS = Runtime.getRuntime().availableProcessors() - 1;
 
     private final AccountService accountService;
 
@@ -59,7 +63,7 @@ public class MechanicsExecutor {
         }
     }
 
-    public void addUser(@NotNull Long userId) {
+    public synchronized void addUser(@NotNull Long userId) {
         for (GameMechanics mechanics : gameMechanics) {
             if (mechanics.isUserWaiting(userId) || mechanics.isUserPlaying(userId)) {
                 return;
@@ -69,18 +73,11 @@ public class MechanicsExecutor {
             }
         }
 
-        GameMechanics selectedMechanics = gameMechanics[0];
-        int min = selectedMechanics.getSessionCount();
-        for (GameMechanics mechanics : gameMechanics) {
-            if (mechanics.getSessionCount() < min) {
-                min = mechanics.getSessionCount();
-                selectedMechanics = mechanics;
-            }
-        }
-        selectedMechanics.addUser(userId);
+        final Optional<GameMechanics> mechanics = Stream.of(gameMechanics).min(Comparator.comparingInt(GameMechanics::getSessionCount));
+        mechanics.ifPresent(gameMechanics -> gameMechanics.addUser(userId));
     }
 
-    public void addClientSnapshot(@NotNull Long userId, @NotNull ClientSnap clientSnap) {
+    public synchronized void addClientSnapshot(@NotNull Long userId, @NotNull ClientSnap clientSnap) {
         for (GameMechanics mechanics: gameMechanics) {
             if (mechanics.isUserPlaying(userId)) {
                 mechanics.addClientSnapshot(userId, clientSnap);
@@ -89,6 +86,7 @@ public class MechanicsExecutor {
         }
     }
 
+    @TestOnly
     public @Nullable GameMechanics getMechanicsForUser(@NotNull Long userId) {
         for (GameMechanics mechanics: gameMechanics) {
             if (mechanics.isUserPlaying(userId) || mechanics.isUserWaiting(userId)) {
