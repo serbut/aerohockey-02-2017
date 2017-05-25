@@ -26,7 +26,7 @@ import java.util.stream.Stream;
 public class MechanicsExecutor {
     private static final long STEP_TIME = 30;
 
-    private static final int THREADS = 4;
+    private static final int THREADS = Math.min(2, Runtime.getRuntime().availableProcessors() - 1);
 
     private final AccountService accountService;
 
