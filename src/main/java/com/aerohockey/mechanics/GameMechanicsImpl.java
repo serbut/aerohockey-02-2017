@@ -57,7 +57,9 @@ public class GameMechanicsImpl implements GameMechanics {
 
     @Override
     public void addClientSnapshot(@NotNull Long userId, @NotNull ClientSnap clientSnap) {
-        tasks.add(() -> clientSnapService.pushClientSnap(userId, clientSnap));
+        if (gameSessionService.isPlaying(userId)) {
+            tasks.add(() -> clientSnapService.pushClientSnap(userId, clientSnap));
+        }
     }
 
     @Override

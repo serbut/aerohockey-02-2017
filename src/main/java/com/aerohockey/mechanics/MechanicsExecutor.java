@@ -26,7 +26,7 @@ import java.util.stream.Stream;
 public class MechanicsExecutor {
     private static final long STEP_TIME = 30;
 
-    private static final int THREADS = Runtime.getRuntime().availableProcessors() - 1;
+    private static final int THREADS = 4;
 
     private final AccountService accountService;
 
@@ -43,7 +43,9 @@ public class MechanicsExecutor {
     private final GameMechanics[] gameMechanics = new GameMechanics[THREADS];
 
     @Autowired
-    public MechanicsExecutor(AccountService accountService, ServerSnapService serverSnapService, ServerDetailSnapService serverDetailSnapService, RemotePointService remotePointService, BallMovementService ballMovementService, GameOverSnapService gameOverSnapService) {
+    public MechanicsExecutor(AccountService accountService, ServerSnapService serverSnapService,
+                             ServerDetailSnapService serverDetailSnapService, RemotePointService remotePointService,
+                             GameOverSnapService gameOverSnapService) {
         this.accountService = accountService;
         this.serverSnapService = serverSnapService;
         this.serverDetailSnapService = serverDetailSnapService;
@@ -77,7 +79,7 @@ public class MechanicsExecutor {
         mechanics.ifPresent(gameMechanics -> gameMechanics.addUser(userId));
     }
 
-    public synchronized void addClientSnapshot(@NotNull Long userId, @NotNull ClientSnap clientSnap) {
+    public void addClientSnapshot(@NotNull Long userId, @NotNull ClientSnap clientSnap) {
         for (GameMechanics mechanics: gameMechanics) {
             if (mechanics.isUserPlaying(userId)) {
                 mechanics.addClientSnapshot(userId, clientSnap);
