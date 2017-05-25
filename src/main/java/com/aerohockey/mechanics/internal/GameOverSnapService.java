@@ -5,8 +5,11 @@ import com.aerohockey.mechanics.avatar.GameUser;
 import com.aerohockey.mechanics.base.GameOverSnap;
 import com.aerohockey.websocket.Message;
 import com.aerohockey.websocket.RemotePointService;
+import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.jetbrains.annotations.NotNull;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
 
 import java.io.IOException;
@@ -20,6 +23,8 @@ import static com.aerohockey.mechanics.Config.MAX_SCORE;
  */
 @Service
 public class GameOverSnapService {
+    private static final @NotNull Logger LOGGER = LoggerFactory.getLogger(GameOverSnapService.class);
+
     private final @NotNull RemotePointService remotePointService;
 
     private final @NotNull ObjectMapper objectMapper = new ObjectMapper();
@@ -35,14 +40,13 @@ public class GameOverSnapService {
 
         final GameOverSnap snap = new GameOverSnap();
 
-        //noinspection OverlyBroadCatchBlock
         try {
             for (GameUser player : players) {
                 final int value;
-                if (player.getScore() == MAX_SCORE) { //winner
-                    value = 1 + Math.abs(gameSession.getOpponent(player).getRating()) / (gameSession.getOpponent(player).getScore() + 1);
+                if (player.getScore() >= MAX_SCORE) { //winner
+                    value = 1 + Math.abs(gameSession.getOpponent(player).getRating())/10;
                 } else { //loser
-                    value = -gameSession.getOpponent(player).getRating()/10;
+                    value = -Math.abs(gameSession.getOpponent(player).getRating())/10;
                 }
                 player.changeRating(value);
 
@@ -50,10 +54,14 @@ public class GameOverSnapService {
                 snap.setChangeRating(value);
 
                 final Message message = new Message(GameOverSnap.class.getName(), objectMapper.writeValueAsString(snap));
-                remotePointService.sendMessageToUser(player.getId(), message);
+                try {
+                    remotePointService.sendMessageToUser(player.getId(), message);
+                } catch (IOException ex) {
+                    LOGGER.error("Failed send snapshots - user disconnected");
+                }
             }
-        } catch (IOException ex) {
-            throw new RuntimeException("Failed sending snapshot", ex);
+        } catch (JsonProcessingException ex) {
+            LOGGER.error("Failed send snapshots", ex);
         }
     }
 }

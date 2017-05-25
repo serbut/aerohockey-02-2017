@@ -3,7 +3,6 @@ package com.aerohockey.mechanics;
 import com.aerohockey.mechanics.avatar.Ball;
 import com.aerohockey.mechanics.avatar.Bonus;
 import com.aerohockey.mechanics.avatar.GameUser;
-import com.aerohockey.mechanics.base.Coords;
 import com.aerohockey.model.UserProfile;
 import org.jetbrains.annotations.NotNull;
 import org.slf4j.Logger;
@@ -11,6 +10,7 @@ import org.slf4j.LoggerFactory;
 
 import java.time.ZonedDateTime;
 import java.util.*;
+import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.atomic.AtomicLong;
 
 import static com.aerohockey.mechanics.Config.*;
@@ -36,10 +36,10 @@ public class GameSession {
         this.top = new GameUser(user1, true);
         this.bottom = new GameUser(user2, false);
         this.balls = new ArrayList<>();
-        balls.add(new Ball(new Coords()));
+        balls.add(new Ball());
         this.bonuses = new ArrayList<>();
         this.lastBonusCreated = ZonedDateTime.now();
-        this.activeBonuses = new HashMap<>();
+        this.activeBonuses = new ConcurrentHashMap<>();
         stateChanged = true;
     }
 
@@ -64,7 +64,7 @@ public class GameSession {
     }
 
     public boolean isGameOver() {
-        if (top.getScore() == MAX_SCORE || bottom.getScore() == MAX_SCORE) {
+        if (top.getScore() >= MAX_SCORE || bottom.getScore() >= MAX_SCORE) {
             LOGGER.info("Game over: session = " + sessionId + "; " + top.getLogin() + " with score " + top.getScore() +
                     "; " + bottom.getLogin() + " with score " + bottom.getScore());
             return true;
@@ -90,30 +90,27 @@ public class GameSession {
             lastBonusCreated = ZonedDateTime.now();
             bonuses.add(new Bonus());
             stateChanged = true;
-            LOGGER.info("New bonus created");
         }
     }
 
     private void removeExpiredBonuses() {
         if (!bonuses.isEmpty() && bonuses.get(0).getExpired().isBefore(ZonedDateTime.now())) {
-            LOGGER.info("Bonus removed");
             bonuses.remove(bonuses.get(0));
             stateChanged = true;
         }
     }
 
     private void activateBonuses() {
-        for (Ball ball : balls) {
+        final List<Ball> ballsToCheck = new ArrayList<>(balls);
+        for (Ball ball : ballsToCheck) {
             final Iterator<Bonus> bonusIterator = bonuses.iterator();
             while (bonusIterator.hasNext()) {
                 final Bonus bonus = bonusIterator.next();
                 if (bonus.checkBonusCollision(ball)) {
-                    bonus.execute(this, ball);
-                    LOGGER.info("Bonus activated: ", bonus.getType());
+                    bonus.activate(this, ball);
                     activeBonuses.put(ZonedDateTime.now().plusSeconds(BONUS_EXPIRED_TIME), bonus);
                     bonusIterator.remove();
                     stateChanged = true;
-                    return; //TODO: сейчас проверяется только для первого бонуса
                 }
             }
         }
@@ -125,7 +122,6 @@ public class GameSession {
             final Map.Entry<ZonedDateTime, Bonus> bonusEntry = bonusIterator.next();
             if (bonusEntry.getKey().isBefore(ZonedDateTime.now())) {
                 bonusEntry.getValue().deactivate(this);
-                LOGGER.info("Bonus deactivated: ", bonusEntry.getValue().getType());
                 stateChanged = true;
                 bonusIterator.remove();
             }
@@ -140,8 +136,8 @@ public class GameSession {
         this.stateChanged = stateChanged;
     }
 
-    public void addBall(@NotNull Coords ballCoords) {
-        balls.add(new Ball(ballCoords));
+    public void addBall(@NotNull Ball ball) {
+        balls.add(ball);
     }
 
     public boolean removeBall(@NotNull Ball ball) {
