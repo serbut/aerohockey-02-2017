@@ -36,10 +36,20 @@ public class Ball {
     }
 
     public void move(@NotNull GameSession gameSession, long frameTime) {
-        speedAbs += BALL_SPEED_INCREASING;
+        final double newSpeedAbs;
+        if (speedAbs > BALL_NORMAL_SPEED) {
+            newSpeedAbs = speedAbs + BALL_SPEED_INCREASING;
+        } else {
+            newSpeedAbs = speedAbs * BALL_START_ACCELERATION;
+        }
+        speedX *= newSpeedAbs/speedAbs;
+        speedY *= newSpeedAbs/speedAbs;
+        speedAbs = newSpeedAbs;
+
+        final Coords newCoords = new Coords(coords.x + speedX * frameTime, coords.y + speedY * frameTime);
+
         final Platform firstPlatform = gameSession.getTop().getPlatform();
         final Platform secondPlatform = gameSession.getBottom().getPlatform();
-        final Coords newCoords = new Coords(coords.x + speedX * frameTime, coords.y + speedY * frameTime);
 
         if (Math.abs(newCoords.x) > PLAYGROUND_WIDTH / 2 - radius) {
             speedX = -speedX;
