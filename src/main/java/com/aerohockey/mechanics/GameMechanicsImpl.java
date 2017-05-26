@@ -1,5 +1,6 @@
 package com.aerohockey.mechanics;
 
+import com.aerohockey.mechanics.avatar.GameUser;
 import com.aerohockey.mechanics.base.ClientSnap;
 import com.aerohockey.mechanics.internal.*;
 import com.aerohockey.model.UserProfile;
@@ -115,8 +116,8 @@ public class GameMechanicsImpl implements GameMechanics {
         matchedPlayers.stream().map(UserProfile::getId).forEach(waiters::add);
     }
 
-    private void finishGames(@NotNull GameSession gameSession) {
-        gameOverSnapService.sendSnapshotsFor(gameSession);
+    private void finishGames(@NotNull GameSession gameSession, @Nullable Long leftPlayerId) {
+        gameOverSnapService.sendSnapshotsFor(gameSession, leftPlayerId);
         accountService.updateRating(gameSession.getTop().getId(), gameSession.getTop().getRating());
         accountService.updateRating(gameSession.getBottom().getId(), gameSession.getBottom().getRating());
         gameSessionService.notifyGameIsOver(gameSession);
@@ -147,23 +148,24 @@ public class GameMechanicsImpl implements GameMechanics {
         ballMovementService.executeMoves(frameTime);
 
         final Iterator<GameSession> iterator = gameSessionService.getSessions().iterator();
-        final List<GameSession> sessionsToTerminate = new ArrayList<>();
+        final HashMap<GameSession, Long> sessionsToTerminate = new HashMap<>();
         while (iterator.hasNext()) {
             final GameSession session = iterator.next();
             session.bonusManagement();
             try {
+                final Long leftPlayerId;
                 if (session.isStateChanged()) {
-                    serverDetailSnapService.sendSnapshotsFor(session, frameTime);
+                    leftPlayerId = serverDetailSnapService.sendSnapshotsFor(session, frameTime);
                     session.setStateChanged(false);
                 } else {
-                    serverSnapService.sendSnapshotsFor(session, frameTime);
+                    leftPlayerId = serverSnapService.sendSnapshotsFor(session, frameTime);
                 }
-                if (session.isGameOver()) {
-                    sessionsToTerminate.add(session);
+                if (session.isGameOver() || leftPlayerId != null) {
+                    sessionsToTerminate.put(session, leftPlayerId);
                 }
             } catch (RuntimeException ex) {
                 LOGGER.error("Failed send snapshots, terminating the session", ex);
-                sessionsToTerminate.add(session);
+                sessionsToTerminate.put(session, null);
             }
         }
 

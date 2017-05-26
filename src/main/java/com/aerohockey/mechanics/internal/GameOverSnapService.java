@@ -8,6 +8,7 @@ import com.aerohockey.websocket.RemotePointService;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
@@ -33,7 +34,7 @@ public class GameOverSnapService {
         this.remotePointService = remotePointService;
     }
 
-    public void sendSnapshotsFor(@NotNull GameSession gameSession) {
+    public void sendSnapshotsFor(@NotNull GameSession gameSession, @Nullable Long leftPlayerId) {
         final Collection<GameUser> players = new ArrayList<>();
         players.add(gameSession.getTop());
         players.add(gameSession.getBottom());
@@ -43,7 +44,7 @@ public class GameOverSnapService {
         try {
             for (GameUser player : players) {
                 final int value;
-                if (player.getScore() >= MAX_SCORE) { //winner
+                if (player.getScore() >= MAX_SCORE || (leftPlayerId != null && leftPlayerId != player.getId())) { //winner
                     value = 1 + Math.abs(gameSession.getOpponent(player).getRating())/10;
                 } else { //loser
                     value = -Math.abs(gameSession.getOpponent(player).getRating())/10;
