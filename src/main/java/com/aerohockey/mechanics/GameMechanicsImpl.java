@@ -1,6 +1,5 @@
 package com.aerohockey.mechanics;
 
-import com.aerohockey.mechanics.avatar.GameUser;
 import com.aerohockey.mechanics.base.ClientSnap;
 import com.aerohockey.mechanics.internal.*;
 import com.aerohockey.model.UserProfile;

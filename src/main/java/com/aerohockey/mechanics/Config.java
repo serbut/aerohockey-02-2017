@@ -15,7 +15,9 @@ public class Config {
     public static final byte MAX_SCORE = 7;
 
     public static final double BALL_RADIUS = 5;
-    public static final double BALL_START_SPEED = 0.13;
+    public static final double BALL_START_SPEED = 0.01;
+    public static final double BALL_START_ACCELERATION = 1.05;
+    public static final double BALL_NORMAL_SPEED = 0.15;
     public static final double BALL_SPEED_INCREASING = 0.0001;
 
     public static final byte MAX_BONUS_COUNT = 3;
