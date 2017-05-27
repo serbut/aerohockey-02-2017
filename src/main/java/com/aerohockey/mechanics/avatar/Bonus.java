@@ -64,7 +64,7 @@ public class Bonus {
                 activatedBall.setRadius(BALL_RADIUS * 2);
                 break;
             case BALL_MULTIPLY:
-                gameSession.addBall(new Ball(-signum(activatedBall.getSpeedY())));
+                gameSession.addBall(new Ball(signum(activatedBall.getSpeedY())));
                 break;
             case PLATFORM_DECREASE:
                 activatedBall.getUser(gameSession).getPlatform().setWidth(PLATFORM_WIDTH / PLATFORM_WIDTH_CHANGE);

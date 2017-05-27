@@ -43,11 +43,12 @@ public class GameOverSnapService {
 
         try {
             for (GameUser player : players) {
-                final int value;
+                final int opponentRating = gameSession.getOpponent(player).getRating();
+                int value = (opponentRating < 10) ? 1 : opponentRating/10;
                 if (player.getScore() >= MAX_SCORE || (leftPlayerId != null && leftPlayerId != player.getId())) { //winner
-                    value = 1 + Math.abs(gameSession.getOpponent(player).getRating())/10;
+                    value += 1;
                 } else { //loser
-                    value = -Math.abs(gameSession.getOpponent(player).getRating())/10;
+                    value *= -1;
                 }
                 player.changeRating(value);
 
