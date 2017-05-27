@@ -88,7 +88,7 @@ public class GameSession {
                 bonuses.size() < MAX_BONUS_COUNT &&
                 Math.random() < BONUS_PROBABILITY) {
             lastBonusCreated = ZonedDateTime.now();
-            bonuses.add(new Bonus());
+            bonuses.add(new Bonus(this));
             stateChanged = true;
         }
     }
@@ -106,7 +106,7 @@ public class GameSession {
             final Iterator<Bonus> bonusIterator = bonuses.iterator();
             while (bonusIterator.hasNext()) {
                 final Bonus bonus = bonusIterator.next();
-                if (bonus.checkBonusCollision(ball)) {
+                if (bonus.checkBallBonusCollision(ball)) {
                     bonus.activate(this, ball);
                     activeBonuses.put(ZonedDateTime.now().plusSeconds(BONUS_EXPIRED_TIME), bonus);
                     bonusIterator.remove();

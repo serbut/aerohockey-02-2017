@@ -35,6 +35,14 @@ public class Ball {
         this.radius = BALL_RADIUS;
     }
 
+    public Ball(@NotNull Coords ballCoords, double radius) {
+        this.coords = ballCoords;
+        this.speedAbs = BALL_START_SPEED;
+        this.speedX = 0;
+        this.speedY = speedAbs;
+        this.radius = radius;
+    }
+
     public void move(@NotNull GameSession gameSession, long frameTime) {
         speedIncrease();
 
@@ -123,6 +131,10 @@ public class Ball {
 
     public Coords getCoords() {
         return coords;
+    }
+
+    public double getSpeedX() {
+        return speedX;
     }
 
     public double getSpeedY() {
