@@ -76,6 +76,10 @@ public class GameSession {
         return bonuses;
     }
 
+    public @NotNull List<Bonus> getActiveBonuses() {
+        return new ArrayList<>(activeBonuses.values());
+    }
+
     public void bonusManagement() {
         generateBonuses();
         removeExpiredBonuses();
@@ -85,7 +89,7 @@ public class GameSession {
 
     private void generateBonuses() {
         if (lastBonusCreated.plusSeconds(TIME_BETWEEN_BONUS).isBefore(ZonedDateTime.now()) &&
-                bonuses.size() < MAX_BONUS_COUNT &&
+                bonuses.size() + activeBonuses.size() < MAX_BONUS_COUNT &&
                 Math.random() < BONUS_PROBABILITY) {
             lastBonusCreated = ZonedDateTime.now();
             bonuses.add(new Bonus(this));
@@ -121,7 +125,7 @@ public class GameSession {
         while (bonusIterator.hasNext()) {
             final Map.Entry<ZonedDateTime, Bonus> bonusEntry = bonusIterator.next();
             if (bonusEntry.getKey().isBefore(ZonedDateTime.now())) {
-                bonusEntry.getValue().deactivate(this);
+                bonusEntry.getValue().deactivate();
                 stateChanged = true;
                 bonusIterator.remove();
             }

@@ -4,6 +4,7 @@ import com.aerohockey.mechanics.GameSession;
 import com.aerohockey.mechanics.base.BonusSnap;
 import com.aerohockey.mechanics.base.Coords;
 import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 
 import java.time.ZonedDateTime;
 import java.util.List;
@@ -17,32 +18,72 @@ import static java.lang.StrictMath.signum;
 public class Bonus {
 
     public enum Types {
+        BALL_SIZE,
+        BALL_MULTIPLY,
+        PLATFORM_SIZE;
+
+        public static @Nullable Types getRandom(@NotNull List<Bonus> bonuses, @NotNull List<Bonus> activeBonuses) {
+            final Types type = values()[(int) (Math.random() * values().length)];
+            for (Bonus bonus : bonuses) {
+                if (bonus.type == type){
+                    return null;
+                }
+            }
+            for (Bonus bonus : activeBonuses) {
+                if (bonus.type == type){
+                    return null;
+                }
+            }
+            return type;
+        }
+    }
+
+    public enum ExtendedTypes {
         BALL_INCREASE,
         BALL_DECREASE,
         BALL_MULTIPLY,
-        PLATFORM_INCREASE,
-        PLATFORM_DECREASE;
+        PLATFORM_DECREASE,
+        PLATFORM_INCREASE;
 
-        public static Types getRandom() {
-            return values()[(int) (Math.random() * values().length)];
+        public static ExtendedTypes getExtendedType(@NotNull Types type) {
+            switch (type) {
+                case BALL_SIZE:
+                    return Math.random() > 1/2 ? BALL_INCREASE : BALL_DECREASE;
+                case PLATFORM_SIZE:
+                    return Math.random() > 1/2 ? PLATFORM_INCREASE : PLATFORM_DECREASE;
+                case BALL_MULTIPLY:
+                default:
+                    return BALL_MULTIPLY;
+            }
         }
     }
 
     private final ZonedDateTime expired;
     private Coords coords;
-    private final Types type;
+    private Types type;
+    private final ExtendedTypes extendedType;
     private Ball activatedBall;
+    private Platform changedPlatform;
 
     public Bonus(@NotNull GameSession gameSession) {
         while (true) {
-            this.coords = new Coords(generateCoord(-PLAYGROUND_WIDTH / 4, PLAYGROUND_WIDTH / 4),
+            type = Types.getRandom(gameSession.getBonuses(), gameSession.getActiveBonuses());
+            if (type == null) {
+                continue;
+            }
+            break;
+        }
+        extendedType = ExtendedTypes.getExtendedType(type);
+
+        while (true) {
+            coords = new Coords(generateCoord(-PLAYGROUND_WIDTH / 4, PLAYGROUND_WIDTH / 4),
                     generateCoord(-PLAYGROUND_HEIGHT / 4, PLAYGROUND_HEIGHT / 4));
             if (isInBallWay(gameSession.getBalls()) || anotherBonusCollision(gameSession.getBonuses())) {
                 continue;
             }
             break;
         }
-        type = Types.getRandom();
+
         expired = ZonedDateTime.now().plusSeconds(BONUS_EXPIRED_TIME);
     }
 
@@ -56,7 +97,7 @@ public class Bonus {
 
     public void activate(@NotNull GameSession gameSession, @NotNull Ball pickedUpBall) {
         this.activatedBall = pickedUpBall;
-        switch (type) {
+        switch (extendedType) {
             case BALL_DECREASE:
                 activatedBall.setRadius(BALL_RADIUS / 2);
                 break;
@@ -67,26 +108,25 @@ public class Bonus {
                 gameSession.addBall(new Ball(signum(activatedBall.getSpeedY())));
                 break;
             case PLATFORM_DECREASE:
-                activatedBall.getUser(gameSession).getPlatform().setWidth(PLATFORM_WIDTH / PLATFORM_WIDTH_CHANGE);
+                changedPlatform = activatedBall.getUser(gameSession).getPlatform();
+                changedPlatform.setWidth(PLATFORM_WIDTH / PLATFORM_WIDTH_CHANGE);
                 break;
             case PLATFORM_INCREASE:
-                activatedBall.getUser(gameSession).getPlatform().setWidth(PLATFORM_WIDTH * PLATFORM_WIDTH_CHANGE);
+                changedPlatform = activatedBall.getUser(gameSession).getPlatform();
+                changedPlatform.setWidth(PLATFORM_WIDTH * PLATFORM_WIDTH_CHANGE);
                 break;
         }
     }
 
-    public void deactivate(@NotNull GameSession gameSession) {
+    public void deactivate() {
         switch (type) {
-            case BALL_DECREASE:
-            case BALL_INCREASE:
+            case BALL_SIZE:
                 activatedBall.setRadius(BALL_RADIUS);
                 break;
             case BALL_MULTIPLY:
                 break;
-            case PLATFORM_DECREASE:
-            case PLATFORM_INCREASE:
-                gameSession.getTop().getPlatform().setWidth(PLATFORM_WIDTH);
-                gameSession.getBottom().getPlatform().setWidth(PLATFORM_WIDTH);
+            case PLATFORM_SIZE:
+                changedPlatform.setWidth(PLATFORM_WIDTH);
                 break;
         }
     }
@@ -122,6 +162,6 @@ public class Bonus {
     }
 
     public BonusSnap getSnap() {
-        return new BonusSnap(coords, type.toString());
+        return new BonusSnap(coords, extendedType.toString());
     }
 }

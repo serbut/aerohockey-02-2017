@@ -25,5 +25,5 @@ public class Config {
     public static final byte MIN_DISTANCE_BETWEEN_BONUSES = BONUS_SIZE * 4;
     public static final byte BONUS_EXPIRED_TIME = 10;
     public static final byte TIME_BETWEEN_BONUS = 4;
-    public static final double BONUS_PROBABILITY = 0.005;
+    public static final double BONUS_PROBABILITY = 0.01;
 }
