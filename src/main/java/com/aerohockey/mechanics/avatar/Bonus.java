@@ -76,9 +76,10 @@ public class Bonus {
         extendedType = ExtendedTypes.getExtendedType(type);
 
         while (true) {
-            coords = new Coords(generateCoord(-PLAYGROUND_WIDTH / 4, PLAYGROUND_WIDTH / 4),
-                    generateCoord(-PLAYGROUND_HEIGHT / 4, PLAYGROUND_HEIGHT / 4));
-            if (isInBallWay(gameSession.getBalls()) || anotherBonusCollision(gameSession.getBonuses())) {
+            coords = new Coords(generateCoord(-PLAYGROUND_WIDTH / 5, PLAYGROUND_WIDTH / 5),
+                    generateCoord(-PLAYGROUND_HEIGHT / 5, PLAYGROUND_HEIGHT / 5));
+            if (Math.abs(coords.x) < BONUS_SIZE || isInBallWay(gameSession.getBalls())
+                    || anotherBonusCollision(gameSession.getBonuses())) {
                 continue;
             }
             break;
@@ -131,7 +132,7 @@ public class Bonus {
         }
     }
 
-    public double generateCoord(int min, int max) {
+    private double generateCoord(int min, int max) {
         max -= min;
         return (Math.random() * ++max) + min;
     }

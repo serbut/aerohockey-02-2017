@@ -153,6 +153,7 @@ public class Ball {
         if(this.equals(secondBall)) {
             return;
         }
+
         if ((Math.pow((secondBall.coords.x - coords.x), 2) + Math.pow((secondBall.coords.y - coords.y), 2)) < Math.pow((secondBall.radius + radius), 2)) {
             coords.x -= speedX * frameTime;
             coords.y -= speedY * frameTime;
@@ -160,12 +161,15 @@ public class Ball {
             secondBall.coords.x -= secondBall.speedX * frameTime;
             secondBall.coords.y -= secondBall.speedY * frameTime;
 
+            final double newSpeedAbs = secondBall.speedAbs;
             final double newSpeedX = secondBall.speedX;
             final double newSpeedY = secondBall.speedY;
 
+            secondBall.speedAbs = speedAbs;
             secondBall.speedX = speedX;
             secondBall.speedY = speedY;
 
+            speedAbs = newSpeedAbs;
             speedX = newSpeedX;
             speedY = newSpeedY;
         }
