@@ -17,12 +17,14 @@ public class Platform {
     private final double y;
     private double width;
     private final double height;
+    private boolean shield;
 
     public Platform(boolean isTop) {
         this.coords = new PlatformCoords();
         this.width = PLATFORM_WIDTH;
         this.height = 15;
         this.y = isTop ? PLAYGROUND_HEIGHT/2 : -PLAYGROUND_HEIGHT/2;
+        this.shield = true;
     }
 
     public void move(double dx) {
@@ -62,5 +64,17 @@ public class Platform {
 
     public double getY() {
         return y;
+    }
+
+    public boolean isShield() {
+        return shield;
+    }
+
+    public void activateShield() {
+        this.shield = true;
+    }
+
+    public void destroyShield() {
+        this.shield = false;
     }
 }

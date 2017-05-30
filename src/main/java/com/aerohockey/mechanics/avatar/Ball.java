@@ -51,12 +51,7 @@ public class Ball {
         final Platform firstPlatform = gameSession.getTop().getPlatform();
         final Platform secondPlatform = gameSession.getBottom().getPlatform();
 
-        if (Math.abs(newCoords.x) > PLAYGROUND_WIDTH / 2 - radius) {
-            speedX = -speedX;
-            coords.x += speedX * frameTime;
-            coords.y += speedY * frameTime;
-            return;
-        }
+        checkWallCollision(newCoords, frameTime);
 
         if (firstPlatform.checkBallCollision(newCoords, radius)) {
             platformCollision(firstPlatform, frameTime, gameSession);
@@ -65,6 +60,10 @@ public class Ball {
             platformCollision(secondPlatform, frameTime, gameSession);
             return;
         } else if (Math.abs(newCoords.y) > PLAYGROUND_HEIGHT/2) {
+            if (checkShieldCollision(newCoords, getUser(gameSession), frameTime)) {
+                checkWallCollision(newCoords, frameTime);
+                return;
+            }
             goal(gameSession);
             return;
         }
@@ -98,7 +97,6 @@ public class Ball {
 
     private void goal(@NotNull GameSession gameSession) {
         getUser(gameSession).addScore();
-
         gameSession.setStateChanged(true);
         if (gameSession.removeBall(this)) {
             return;
@@ -173,5 +171,24 @@ public class Ball {
             speedX = newSpeedX;
             speedY = newSpeedY;
         }
+    }
+
+    private void checkWallCollision(@NotNull Coords newCoords, long frameTime) {
+        if (Math.abs(newCoords.x) > PLAYGROUND_WIDTH / 2 - radius) {
+            speedX = -speedX;
+            newCoords.x = coords.x + speedX * frameTime;
+            newCoords.y = coords.y + speedY * frameTime;
+        }
+    }
+
+    private boolean checkShieldCollision(@NotNull Coords newCoords, @NotNull GameUser player, long frameTime) {
+        if (player.getPlatform().isShield()) {
+            player.getPlatform().destroyShield();
+            speedY = -speedY;
+            newCoords.x = coords.x + speedX * frameTime;
+            newCoords.y = coords.y + speedY * frameTime;
+            return true;
+        }
+        return false;
     }
 }

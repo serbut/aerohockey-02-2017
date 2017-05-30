@@ -20,7 +20,8 @@ public class Bonus {
     public enum Types {
         BALL_SIZE,
         BALL_MULTIPLY,
-        PLATFORM_SIZE;
+        PLATFORM_SIZE,
+        SHIELD;
 
         public static @Nullable Types getRandom(@NotNull List<Bonus> bonuses, @NotNull List<Bonus> activeBonuses) {
             final Types type = values()[(int) (Math.random() * values().length)];
@@ -43,7 +44,8 @@ public class Bonus {
         BALL_DECREASE,
         BALL_MULTIPLY,
         PLATFORM_DECREASE,
-        PLATFORM_INCREASE;
+        PLATFORM_INCREASE,
+        SHIELD;
 
         public static ExtendedTypes getExtendedType(@NotNull Types type) {
             switch (type) {
@@ -51,6 +53,8 @@ public class Bonus {
                     return Math.random() > 1/2 ? BALL_INCREASE : BALL_DECREASE;
                 case PLATFORM_SIZE:
                     return Math.random() > 1/2 ? PLATFORM_INCREASE : PLATFORM_DECREASE;
+                case SHIELD:
+                    return SHIELD;
                 case BALL_MULTIPLY:
                 default:
                     return BALL_MULTIPLY;
@@ -98,6 +102,7 @@ public class Bonus {
 
     public void activate(@NotNull GameSession gameSession, @NotNull Ball pickedUpBall) {
         this.activatedBall = pickedUpBall;
+        this.changedPlatform = activatedBall.getUser(gameSession).getPlatform();
         switch (extendedType) {
             case BALL_DECREASE:
                 activatedBall.setRadius(BALL_RADIUS / 2);
@@ -109,12 +114,13 @@ public class Bonus {
                 gameSession.addBall(new Ball(signum(activatedBall.getSpeedY())));
                 break;
             case PLATFORM_DECREASE:
-                changedPlatform = activatedBall.getUser(gameSession).getPlatform();
                 changedPlatform.setWidth(PLATFORM_WIDTH / PLATFORM_WIDTH_CHANGE);
                 break;
             case PLATFORM_INCREASE:
-                changedPlatform = activatedBall.getUser(gameSession).getPlatform();
                 changedPlatform.setWidth(PLATFORM_WIDTH * PLATFORM_WIDTH_CHANGE);
+                break;
+            case SHIELD:
+                changedPlatform.activateShield();
                 break;
         }
     }
@@ -124,10 +130,11 @@ public class Bonus {
             case BALL_SIZE:
                 activatedBall.setRadius(BALL_RADIUS);
                 break;
-            case BALL_MULTIPLY:
-                break;
             case PLATFORM_SIZE:
                 changedPlatform.setWidth(PLATFORM_WIDTH);
+                break;
+            case BALL_MULTIPLY:
+            case SHIELD:
                 break;
         }
     }
