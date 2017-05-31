@@ -28,7 +28,8 @@ public class Platform {
     }
 
     public void move(double dx) {
-        coords.x = coords.x + dx;
+        final PlatformCoords newCoords = new PlatformCoords(coords.x + dx);
+        coords.x = newCoords.x;
         checkSideCollision();
     }
 
@@ -56,14 +57,6 @@ public class Platform {
 
     public double getWidth() {
         return width;
-    }
-
-    public double getHeight() {
-        return height;
-    }
-
-    public double getY() {
-        return y;
     }
 
     public boolean isShield() {
