@@ -50,9 +50,9 @@ public class Bonus {
         public static ExtendedTypes getExtendedType(@NotNull Types type) {
             switch (type) {
                 case BALL_SIZE:
-                    return Math.random() > 1/2 ? BALL_INCREASE : BALL_DECREASE;
+                    return Math.random() > SIZE_BONUS_PROBABILITY ? BALL_INCREASE : BALL_DECREASE;
                 case PLATFORM_SIZE:
-                    return Math.random() > 1/2 ? PLATFORM_INCREASE : PLATFORM_DECREASE;
+                    return Math.random() > SIZE_BONUS_PROBABILITY ? PLATFORM_INCREASE : PLATFORM_DECREASE;
                 case SHIELD:
                     return SHIELD;
                 case BALL_MULTIPLY:
