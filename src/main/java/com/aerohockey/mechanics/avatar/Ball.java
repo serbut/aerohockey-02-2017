@@ -62,6 +62,7 @@ public class Ball {
         } else if (Math.abs(newCoords.y) > PLAYGROUND_HEIGHT/2) {
             if (checkShieldCollision(newCoords, getUser(gameSession), frameTime)) {
                 checkWallCollision(newCoords, frameTime);
+                gameSession.setStateChanged(true);
                 return;
             }
             goal(gameSession);
