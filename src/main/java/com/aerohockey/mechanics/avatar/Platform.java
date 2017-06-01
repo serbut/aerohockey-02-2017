@@ -23,27 +23,26 @@ public class Platform {
         this.coords = new PlatformCoords();
         this.width = PLATFORM_WIDTH;
         this.height = 15;
-        this.y = isTop ? PLAYGROUND_HEIGHT/2 : -PLAYGROUND_HEIGHT/2;
+        this.y = isTop ? PLAYGROUND_HEIGHT / 2 : -PLAYGROUND_HEIGHT / 2;
         this.shield = true;
     }
 
     public void move(double dx) {
-        final PlatformCoords newCoords = new PlatformCoords(coords.x + dx);
-        coords.x = newCoords.x;
+        coords.x += dx;
         checkSideCollision();
     }
 
     private void checkSideCollision() {
-        if (coords.x > PLAYGROUND_WIDTH/2 - width/2) {
-            coords.x = PLAYGROUND_WIDTH/2 - width/2;
-        } else if (coords.x < -PLAYGROUND_WIDTH/2 + width/2) {
-            coords.x = -PLAYGROUND_WIDTH/2 + width/2;
+        if (coords.x > PLAYGROUND_WIDTH / 2 - width / 2) {
+            coords.x = PLAYGROUND_WIDTH / 2 - width / 2;
+        } else if (coords.x < -PLAYGROUND_WIDTH / 2 + width / 2) {
+            coords.x = -PLAYGROUND_WIDTH / 2 + width / 2;
         }
     }
 
     public boolean checkBallCollision(@NotNull Coords ballCoords, double radius) {
         return Math.abs(y - ballCoords.y) < height + radius &&
-                Math.abs(this.coords.x - ballCoords.x) < width/2 + radius;
+                Math.abs(this.coords.x - ballCoords.x) < width / 2 + radius;
     }
 
     public void setWidth(double width) {
