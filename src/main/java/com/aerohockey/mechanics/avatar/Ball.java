@@ -175,7 +175,7 @@ public class Ball {
             speedX = -speedX;
             newCoords.x = coords.x + speedX * frameTime;
             if (Math.abs(newCoords.x) > PLAYGROUND_WIDTH / 2 - radius) {
-                newCoords.x = PLAYGROUND_WIDTH / 2 - radius;
+                newCoords.x = signum(newCoords.x) * PLAYGROUND_WIDTH / 2 - radius;
             }
             newCoords.y = coords.y + speedY * frameTime;
         }
