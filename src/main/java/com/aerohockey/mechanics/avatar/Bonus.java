@@ -26,12 +26,12 @@ public class Bonus {
         public static @Nullable Types getRandom(@NotNull List<Bonus> bonuses, @NotNull List<Bonus> activeBonuses) {
             final Types type = values()[(int) (Math.random() * values().length)];
             for (Bonus bonus : bonuses) {
-                if (bonus.type == type){
+                if (bonus.type == type) {
                     return null;
                 }
             }
             for (Bonus bonus : activeBonuses) {
-                if (bonus.type == type){
+                if (bonus.type == type) {
                     return null;
                 }
             }
@@ -111,7 +111,13 @@ public class Bonus {
                 activatedBall.setRadius(BALL_RADIUS * 2);
                 break;
             case BALL_MULTIPLY:
-                gameSession.addBall(new Ball(signum(activatedBall.getSpeedY())));
+                final Ball newBall = new Ball(new Coords(0, 0), BALL_RADIUS, signum(activatedBall.getSpeedY()));
+                while (true) {
+                    if (checkNewBall(newBall, gameSession.getBalls())) {
+                        break;
+                    }
+                }
+                gameSession.addBall(newBall);
                 break;
             case PLATFORM_DECREASE:
                 changedPlatform.setWidth(PLATFORM_WIDTH / PLATFORM_WIDTH_CHANGE);
@@ -171,5 +177,16 @@ public class Bonus {
 
     public BonusSnap getSnap() {
         return new BonusSnap(coords, extendedType.toString());
+    }
+
+    private boolean checkNewBall(@NotNull Ball newBall, @NotNull List<Ball> balls) {
+        for (Ball ball : balls) {
+            if ((Math.pow((ball.getCoords().x - newBall.getCoords().x), 2) +
+                    Math.pow((ball.getCoords().y - newBall.getCoords().y), 2)) < Math.pow((ball.getRadius() + newBall.getRadius()), 2)) {
+                newBall.getCoords().y += BALL_RADIUS;
+                return false;
+            }
+        }
+        return true;
     }
 }

@@ -69,4 +69,12 @@ public class Platform {
     public void destroyShield() {
         this.shield = false;
     }
+
+    public double getY() {
+        return y;
+    }
+
+    public double getHeight() {
+        return height;
+    }
 }

@@ -6,6 +6,7 @@ import com.aerohockey.mechanics.base.Coords;
 import org.jetbrains.annotations.NotNull;
 
 import static com.aerohockey.mechanics.Config.*;
+import static java.lang.Math.abs;
 import static java.lang.Math.signum;
 import static java.lang.Math.sqrt;
 
@@ -27,12 +28,12 @@ public class Ball {
         this.radius = BALL_RADIUS;
     }
 
-    public Ball(double direction) {
-        this.coords = new Coords();
+    public Ball(@NotNull Coords ballCoords, double radius, double direction) {
+        this.coords = ballCoords;
         this.speedAbs = BALL_START_SPEED;
         this.speedX = 0;
         this.speedY = direction * speedAbs;
-        this.radius = BALL_RADIUS;
+        this.radius = radius;
     }
 
     public Ball(@NotNull Coords ballCoords, double radius) {
@@ -59,7 +60,7 @@ public class Ball {
         } else if (secondPlatform.checkBallCollision(newCoords, radius)) {
             platformCollision(secondPlatform, frameTime);
             return;
-        } else if (Math.abs(newCoords.y) > PLAYGROUND_HEIGHT / 2) {
+        } else if (abs(newCoords.y) > PLAYGROUND_HEIGHT / 2) {
             if (checkShieldCollision(newCoords, gameSession.getOpponent(getUser(gameSession)), frameTime)) {
                 checkWallCollision(newCoords, frameTime);
                 gameSession.setStateChanged(true);
@@ -85,6 +86,14 @@ public class Ball {
 
     private void platformCollision(@NotNull Platform platform, long frameTime) {
         if (!platformEdgeCollision(platform, frameTime)) {
+            if (abs(coords.x - platform.getCoords().x) < radius + platform.getWidth()/2 &&
+                    Math.abs(platform.getY() - coords.y) < platform.getHeight() + radius) {
+                speedX = -speedX;
+                coords.x += signum(coords.x - platform.getCoords().x) * ((radius + platform.getWidth()/2) - abs(coords.x - platform.getCoords().x));
+                coords.y += speedY * frameTime;
+                return;
+            }
+
             speedX = PLATFORM_BENDING * speedAbs * (coords.x - platform.getCoords().x) / (platform.getWidth() / 2 + radius);
             coords.x += speedX * frameTime;
             speedY = -signum(speedY) * sqrt(speedAbs * speedAbs - speedX * speedX);
@@ -111,7 +120,7 @@ public class Ball {
     }
 
     private boolean platformEdgeCollision(@NotNull Platform platform, long frameTime) {
-        if (Math.abs(platform.getCoords().x - coords.x + speedX * frameTime) > platform.getWidth() / 2 + radius) {
+        if (abs(platform.getCoords().x - coords.x + speedX * frameTime) > platform.getWidth() / 2 + radius) {
             speedX = -speedX;
             coords.x += speedX * frameTime;
             coords.y += speedY * frameTime;
@@ -171,10 +180,10 @@ public class Ball {
     }
 
     private void checkWallCollision(@NotNull Coords newCoords, long frameTime) {
-        if (Math.abs(newCoords.x) > PLAYGROUND_WIDTH / 2 - radius) {
+        if (abs(newCoords.x) > PLAYGROUND_WIDTH / 2 - radius) {
             speedX = -speedX;
             newCoords.x = coords.x + speedX * frameTime;
-            if (Math.abs(newCoords.x) > PLAYGROUND_WIDTH / 2 - radius) {
+            if (abs(newCoords.x) > PLAYGROUND_WIDTH / 2 - radius) {
                 newCoords.x = signum(newCoords.x) * PLAYGROUND_WIDTH / 2 - radius;
             }
             newCoords.y = coords.y + speedY * frameTime;
