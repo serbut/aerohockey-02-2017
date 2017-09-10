@@ -17,34 +17,37 @@ public class Platform {
     private final double y;
     private double width;
     private final double height;
+    private boolean shield;
 
     public Platform(boolean isTop) {
         this.coords = new PlatformCoords();
         this.width = PLATFORM_WIDTH;
         this.height = 15;
-        this.y = isTop ? PLAYGROUND_HEIGHT/2 : -PLAYGROUND_HEIGHT/2;
+        this.y = isTop ? PLAYGROUND_HEIGHT / 2 : -PLAYGROUND_HEIGHT / 2;
+        this.shield = true;
     }
 
     public void move(double dx) {
-        coords.x = coords.x + dx;
+        coords.x += dx;
         checkSideCollision();
     }
 
-    public void checkSideCollision() {
-        if (coords.x > PLAYGROUND_WIDTH/2 - width/2) {
-            coords.x = PLAYGROUND_WIDTH/2 - width/2;
-        } else if (coords.x < -PLAYGROUND_WIDTH/2 + width/2) {
-            coords.x = -PLAYGROUND_WIDTH/2 + width/2;
+    private void checkSideCollision() {
+        if (coords.x > PLAYGROUND_WIDTH / 2 - width / 2) {
+            coords.x = PLAYGROUND_WIDTH / 2 - width / 2;
+        } else if (coords.x < -PLAYGROUND_WIDTH / 2 + width / 2) {
+            coords.x = -PLAYGROUND_WIDTH / 2 + width / 2;
         }
     }
 
     public boolean checkBallCollision(@NotNull Coords ballCoords, double radius) {
         return Math.abs(y - ballCoords.y) < height + radius &&
-                Math.abs(this.coords.x - ballCoords.x) < width/2 + radius;
+                Math.abs(this.coords.x - ballCoords.x) < width / 2 + radius;
     }
 
     public void setWidth(double width) {
         this.width = width;
+        checkSideCollision();
     }
 
     public PlatformCoords getCoords() {
@@ -55,11 +58,23 @@ public class Platform {
         return width;
     }
 
-    public double getHeight() {
-        return height;
+    public boolean isShield() {
+        return shield;
+    }
+
+    public void activateShield() {
+        this.shield = true;
+    }
+
+    public void destroyShield() {
+        this.shield = false;
     }
 
     public double getY() {
         return y;
+    }
+
+    public double getHeight() {
+        return height;
     }
 }
